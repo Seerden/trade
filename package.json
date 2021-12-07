@@ -1,0 +1,12 @@
+{
+  "name": "trade",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm:serve --prefix ./client\" \"npm:start --prefix ./server\""
+  },
+  "keywords": [],
+  "author": "github/seerden",
+  "license": "ISC"
+}

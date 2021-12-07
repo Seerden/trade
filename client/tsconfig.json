@@ -1,0 +1,30 @@
+{ 
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "noImplicitAny": false,
+        "module": "esnext",
+        "target": "ES2020",
+        "jsx": "react-jsx",
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "lib": [
+            "DOM",
+            "DOM.Iterable",
+            "ESNext",
+            "ES2017.Object"
+        ],
+        "allowJs": false,        
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "baseUrl": "./",
+        "paths": {
+            "components/*": ["src/components/*"],
+            "hooks/*": ["src/hooks/*"],
+            "helpers/*": ["src/helpers/*"],
+            "state/*": ["src/state/*"],
+            "types/*": ["src/types/*"]
+        }
+    },
+    "exclude": ["node_modules", "./node_modules"],
+}
