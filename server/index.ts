@@ -3,6 +3,7 @@ import { config } from "dotenv";
 import express from "express";
 import session from "express-session";
 import { createClient } from "redis";
+import { makePooledQuery } from "./price-action/database/pool/query-functions";
 config();
 
 const redisClient = createClient({
@@ -35,6 +36,14 @@ async function main() {
 
     app.get("/", (req, res) => {
         res.json({ message: "/ GET successful" });
+    });
+
+    app.get("/pg", async (req, res) => {
+        const response = await makePooledQuery({
+            text: `select * from price_action`,
+        });
+
+        res.json({ response });
     });
 
     app.listen(process.env.PORT || 5000, () => {
