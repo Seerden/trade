@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { DateDayjsOrString } from "../../../types/date.types";
 import { marketHolidays } from "./market-holidays";
 
-export function isWeekday(date: DateDayjsOrString) {
+export function isWorkday(date: DateDayjsOrString) {
     const dayOfWeek = dayjs(date).day();
     return dayOfWeek > 0 && dayOfWeek < 6;
 }
@@ -12,15 +12,15 @@ export function isWeekday(date: DateDayjsOrString) {
  */
 export function isHoliday(date: DateDayjsOrString) {
     const startOfDay = dayjs(date).startOf("day");
-    const indexInholidays = marketHolidays.findIndex(
+    const indexInHolidays = marketHolidays.findIndex(
         (x) => x.valueOf() == startOfDay.valueOf()
     );
-    return typeof indexInholidays === "number" && indexInholidays >= 0;
+    return typeof indexInHolidays === "number" && indexInHolidays >= 0;
 }
 
 /**
  * Check whether a date (`date` be set to any time of day) is an active market day
  */
 export function isActiveMarketDay(date: DateDayjsOrString) {
-    return isWeekday(date) && !isHoliday(date);
+    return isWorkday(date) && !isHoliday(date);
 }

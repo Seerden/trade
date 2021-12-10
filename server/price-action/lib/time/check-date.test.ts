@@ -1,5 +1,6 @@
+import dayjs from "dayjs";
 import { DateDayjsOrString } from "../../../types/date.types";
-import { isWeekday } from "./check-date";
+import { isActiveMarketDay, isWorkday } from "./check-date";
 
 /* dates given are friday, saturday, sunday */
 const cases = [
@@ -8,9 +9,19 @@ const cases = [
     ["Jan 2, 2022", false],
 ] as Array<[DateDayjsOrString, boolean]>;
 
-describe("is-weekday", () => {
+describe("isWorkday", () => {
     test.each(cases)("returns correct day of week", (date, expected) => {
-        const result = isWeekday(date);
+        const result = isWorkday(date);
         expect(result).toEqual(expected);
+    });
+});
+
+describe("activeMarketDay", () => {
+    const cases: Array<[string, boolean]> = [
+        ["2021 Dec 24", false],
+        ["2021 Dec 10", true],
+    ];
+    test.each(cases)("returns correct value", (date, expected) => {
+        expect(isActiveMarketDay(dayjs(date))).toEqual(expected);
     });
 });
