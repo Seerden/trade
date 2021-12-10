@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { isActiveMarketDay } from "./time-until-session-end";
+import { isActiveMarketDay } from "./time/check-date";
 
 describe("activeMarketDay", () => {
     const cases: Array<[string, boolean]> = [

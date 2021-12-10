@@ -11,9 +11,6 @@
 */
 
 import { redisClient } from "../../store/redis-client";
-import { DateDayjsOrString } from "../../types/date.types";
-import { isHoliday, isWeekday } from "./time/check-date";
-
 /**
  * Want to store lastOneMinuteFetch, lastFiveMinuteFetch, etc. in a redis list of some kind
  * This function then gets the last fetch date for a given time interval (ideally, we'd fetch all intervals)
@@ -22,11 +19,4 @@ import { isHoliday, isWeekday } from "./time/check-date";
 async function getLastFetchDate(): Promise<number> {
     const key = "";
     return +(await redisClient.get(key));
-}
-
-/**
- * Check whether a date (`date` be set to any time of day) is an active market day
- */
-export function isActiveMarketDay(date: DateDayjsOrString) {
-    return isWeekday(date) && !isHoliday(date);
 }
