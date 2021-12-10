@@ -1,6 +1,6 @@
 import axios from "axios";
-import dayjs from "dayjs";
-import type { DateDayjsOrString, DateOrDayjs } from "../../types/date.types";
+import type { DateDayjsOrString } from "../../types/date.types";
+import { dateToTimestamp } from "./time/date-manipulation";
 
 const baseUrl = "https://query2.finance.yahoo.com";
 
@@ -42,12 +42,4 @@ export async function fetchPriceActionForTicker(
     });
 
     return data;
-}
-
-/**
- * Convert a date to a UNIX timestamp, e.g. for use with yf API
- * Note that the yf API expects a timestamp in seconds, whereas in JS we typically work with milliseconds
- */
-function dateToTimestamp(date: DateOrDayjs | string) {
-    return dayjs(date).valueOf() / 1000;
 }

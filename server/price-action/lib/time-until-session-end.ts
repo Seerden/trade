@@ -7,12 +7,7 @@
             update API instantly)
         - if the session is already over, but data for the session wasn't fetched yet: fetch immediately
 
-    Store various data related to fetching in redis (we want to know things like
-        { 
-            fetchType: "daily active", 
-            lastFetchTime: -timestamp-
-        }
-    )
+    Store various data related to fetching in redis. Think of key-value pairs like { oneMinuteFetchDates: [...] }
 */
 
 import { redisClient } from "../../store/redis-client";
