@@ -1,15 +1,8 @@
-import connectRedis from "connect-redis";
 import { config } from "dotenv";
 import express from "express";
 import session from "express-session";
-import { createClient } from "redis";
-import { makePooledQuery } from "./price-action/database/pool/query-functions";
+import { redisClient, RedisStore } from "./store/redis-client";
 config();
-
-const redisClient = createClient({
-    url: "redis://store:6379", // note that `store` is the name we give to the redis service in docker-compose.yml
-});
-const RedisStore = connectRedis(session);
 
 async function main() {
     const app = express();
@@ -34,16 +27,13 @@ async function main() {
     redisClient.on("connected", () => console.log("connected"));
     redisClient.on("error", (e) => console.log(e));
 
+    if (!(process.env.NODE_ENV === "production")) {
+        const devRouter = require("./api/routers/dev-router").devRouter;
+        app.use("/", devRouter);
+    }
+
     app.get("/", (req, res) => {
         res.json({ message: "/ GET successful" });
-    });
-
-    app.get("/pg", async (req, res) => {
-        const response = await makePooledQuery({
-            text: `select * from price_action`,
-        });
-
-        res.json({ response });
     });
 
     app.listen(process.env.PORT || 5000, () => {

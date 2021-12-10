@@ -2,8 +2,6 @@ FROM node:alpine
 
 WORKDIR /trade/server
 
-ENV NODE_ENV=development
-
 COPY package*.json .
 
 RUN npm install
