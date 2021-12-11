@@ -1,8 +1,7 @@
 import axios from "axios";
-import type { DateDayjsOrString } from "../../types/date.types";
-import { dateToTimestamp } from "./time/date-manipulation";
-
-const baseUrl = "https://query2.finance.yahoo.com";
+import type { DateDayjsOrString } from "../../../types/date.types";
+import { yFinanceBaseUrl } from "../constants/urls";
+import { dateToTimestamp } from "../time/date-manipulation";
 
 // query parameters for yahoo!finance v8/finance/chart/TICKER endpoint
 type TickerFetchParams = {
@@ -16,7 +15,8 @@ type TickerFetchParams = {
 export async function fetchPriceActionForTicker(
     ticker: string,
     start: DateDayjsOrString,
-    end: DateDayjsOrString
+    end: DateDayjsOrString,
+    includePrePost = false
 ) {
     /* set up query
         params:
@@ -33,11 +33,12 @@ export async function fetchPriceActionForTicker(
             and end of after-hours of second date. make sure the days are correct        
     */
 
-    const { data } = await axios.get(`${baseUrl}/v8/finance/chart/${ticker}`, {
+    const { data } = await axios.get(`${yFinanceBaseUrl}/v8/finance/chart/${ticker}`, {
         params: {
-            includePrePost: true,
+            includePrePost,
             period1: dateToTimestamp(start),
             period2: dateToTimestamp(end),
+            interval: "5m",
         } as Partial<TickerFetchParams>,
     });
 

@@ -1,7 +1,13 @@
+/* dayjs configuration
+    note that, currently, dayjs extensions are global,
+    keep that in mind for if we ever need to diverge from the
+    extensions applied below
+*/
 import { config } from "dotenv";
 import express from "express";
 import session from "express-session";
 import { redisClient, RedisStore } from "./store/redis-client";
+
 config();
 
 async function main() {
