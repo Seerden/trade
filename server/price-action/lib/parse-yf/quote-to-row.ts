@@ -32,15 +32,17 @@ export function isValidYfResponse(response: YFResponse) {
  * Convert a yf response, which contains field `quote`, which has arrays of volume, close, etc.,
  * and field `timestamp`, which is a list of timestamps, to an array of rows, where each entry
  * has OHLCV+timestamp information for one of the specified time intervals.
+ *
+ * @todo - implement tests
  */
 export function yfResponseToRows(response: YFResponse) {
     if (!isValidYfResponse(response)) return;
 
     const rows: Array<YFRow> = [];
     const { open, high, low, close, volume, timestamp } = response;
-    /* grab the i-th entry of each of the above arrays and create a row for each i
-        on first glance, doens't seem to me like there's a declarative array index 
-        method for this
+    /* grab the i-th entry of each of the above arrays and create a row for each i.
+        On first glance, doesn't seem to me like there's a declarative array index 
+        method for this.
     */
     for (let i = 0; i < open.length; i++) {
         const row: YFRow = {

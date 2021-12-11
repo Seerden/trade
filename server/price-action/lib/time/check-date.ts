@@ -13,7 +13,7 @@ export function isWorkday(date: DateDayjsOrString) {
 export function isHoliday(date: DateDayjsOrString) {
     const startOfDay = dayjs(date).startOf("day");
     const indexInHolidays = marketHolidays.findIndex(
-        (x) => x.valueOf() == startOfDay.valueOf()
+        (marketHoliday) => marketHoliday.valueOf() === startOfDay.valueOf()
     );
     return typeof indexInHolidays === "number" && indexInHolidays >= 0;
 }
