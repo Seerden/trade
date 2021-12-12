@@ -39,3 +39,9 @@
 
 -   Notes:
     -   will retrieve data starting from the actual specified `period1` param. If we specify midnight local time, it'll try to get data starting from that point. If markets closed, then, we do still get volume back. So use New York local time as endpoints just so we don't get overlapping or empty data.
+
+### Possible data ranges:
+
+-   if we set `interval` to `max`, we might end up only getting monthly data, which isn't particularly useful.
+-   set `interval` to `10y` and then we can get daily price action, which is more useful.
+-   1-minute price action only goes back 30 days or so.

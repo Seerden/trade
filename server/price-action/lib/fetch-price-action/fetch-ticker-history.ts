@@ -1,5 +1,8 @@
 import axios from "axios";
+import format from "pg-format";
+import { RawYFResponse } from "../../../types/api.types";
 import type { DateDayjsOrString } from "../../../types/date.types";
+import { makePooledQuery } from "../../database/pool/query-functions";
 import { yFinanceBaseUrl } from "../constants/urls";
 import { dateToTimestamp } from "../time/date-manipulation";
 
@@ -16,6 +19,10 @@ export async function fetchPriceActionForTicker(
     ticker: string,
     start: DateDayjsOrString,
     end: DateDayjsOrString,
+    /* @todo: consider writing out all admissible intervals -- 
+        these are included in each YF response so should be easy to copy-paste
+    */
+    interval: string = "1m",
     includePrePost = false
 ) {
     /* set up query
@@ -36,11 +43,44 @@ export async function fetchPriceActionForTicker(
     const { data } = await axios.get(`${yFinanceBaseUrl}/v8/finance/chart/${ticker}`, {
         params: {
             includePrePost,
+            interval,
             period1: dateToTimestamp(start),
             period2: dateToTimestamp(end),
-            interval: "5m",
         } as Partial<TickerFetchParams>,
     });
 
     return data;
+}
+
+export async function fetchTenYearDailyPriceAction(
+    ticker: string
+): Promise<RawYFResponse> {
+    const { data } = await axios.get(`${yFinanceBaseUrl}/v8/finance/chart/${ticker}`, {
+        params: {
+            interval: "1d",
+            range: "10y",
+        },
+    });
+    return data;
+}
+
+export async function fetchDailyPriceAction(ticker: string) {
+    /* @todo: first check if table exists (using our redis store) -- but first, make sure we update redis store on
+        successful row insert */
+    const tableName = `${ticker}_1d`;
+
+    /* @todo: each returned row will have ticker column. might be more efficient to return each row without the ticker,
+         and to include the ticker once, in a separate column, or not at all (API endpoint already knows ticker, 
+        so we can include it from there 
+        
+        - also might be better to return lists of timestamps, volumes, etc, just like yf api does it.
+            should compare to see JSON size.
+
+        - also should convert the numeric columns to floats, maybe? round them to 4 decimals, pray that js number handling
+        is good enough to not mess up randomly...
+        
+        */
+    return await makePooledQuery({
+        text: format("select * from %I", tableName),
+    });
 }

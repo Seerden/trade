@@ -28,6 +28,9 @@ export type RawYFResponse = {
                     volume: number[];
                     low: number[];
                 }>;
+                adjclose?: Array<{
+                    adjclose: number[];
+                }>;
             };
         }>;
     };

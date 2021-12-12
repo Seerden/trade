@@ -9,7 +9,8 @@
  *
  */
 
-import { YFResponse, YFRow } from "../../../types/api.types";
+import { RawYFResponse, YFResponse, YFRow } from "../../../types/api.types";
+import { makeYfResponseObject } from "./make-response-object";
 
 const quoteKeys = "open close high low volume".split(" ");
 
@@ -29,13 +30,15 @@ export function isValidYfResponse(response: YFResponse) {
 }
 
 /**
- * Convert a yf response, which contains field `quote`, which has arrays of volume, close, etc.,
- * and field `timestamp`, which is a list of timestamps, to an array of rows, where each entry
- * has OHLCV+timestamp information for one of the specified time intervals.
+ * Convert a raw yf response, which contains field `quote`, which has arrays of volume, close, etc.,
+ *      and field `timestamp`, which is a list of timestamps, to an array of rows, where each entry
+ *      has OHLCV+timestamp information for one of the specified time intervals,
+ * into a single flattened object with OHLCV+timestamp
  *
  * @todo - implement tests
  */
-export function yfResponseToRows(response: YFResponse) {
+export function yfResponseToRows(rawResponse: RawYFResponse) {
+    const response = makeYfResponseObject(rawResponse);
     if (!isValidYfResponse(response)) return;
 
     const rows: Array<YFRow> = [];

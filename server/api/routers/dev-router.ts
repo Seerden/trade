@@ -3,7 +3,14 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
-import { fetchPriceActionForTicker } from "../../price-action/lib/fetch-price-action/fetch-ticker-history";
+import { maybeCreateTickerTable } from "../../price-action/database/statements/create-ticker-table";
+import { insertTenYearDailyPriceAction } from "../../price-action/database/statements/insert-ten-year-data";
+import { DEV_dropTickerTables } from "../../price-action/database/_dev/drop-ticker-tables";
+import {
+    fetchDailyPriceAction,
+    fetchPriceActionForTicker,
+} from "../../price-action/lib/fetch-price-action/fetch-ticker-history";
+import { Timescale } from "../../types/store.types";
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -27,5 +34,43 @@ devRouter.get("/ticker/:ticker", async (req, res) => {
         //     chart.result[0].indicators.quote[0];
     } catch (error) {
         console.error(error);
+    }
+});
+
+// devRouter.get("/daily/:ticker", async (req, res) => {
+//     const { ticker } = req.params;
+//     const data = await fetchTenYearDailyPriceAction(ticker);
+//     res.json({ data });
+// });
+
+devRouter.post("/table/:ticker/:timescale", async (req, res) => {
+    const { ticker, timescale } = req.params;
+    console.log(req.params);
+    try {
+        const response = await maybeCreateTickerTable(ticker, timescale as Timescale);
+        res.json({ response });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+devRouter.post("/table/drop", async (req, res) => {
+    res.json({ droppedTables: await DEV_dropTickerTables() });
+});
+
+devRouter.post("/10-year/:ticker", async (req, res) => {
+    const { ticker } = req.params;
+    const insertedRows = await insertTenYearDailyPriceAction(ticker);
+
+    res.json({ insertedRows });
+});
+
+devRouter.get("/1d/:ticker", async (req, res) => {
+    const { ticker } = req.params;
+
+    try {
+        res.json({ data: await fetchDailyPriceAction(ticker) });
+    } catch (error) {
+        res.status(401).json({ error: "error occured while querying database" });
     }
 });
