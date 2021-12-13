@@ -40,7 +40,6 @@ export async function maybeCreateTickerTable(ticker: string, timescale: Timescal
         return await makePooledQueries([
             // create ticker table (e.g. "msft_1m")
             {
-                name: "create ticker table with trigger",
                 text: `
                 create table ${tableName} (
                     ticker varchar(16),
@@ -51,7 +50,6 @@ export async function maybeCreateTickerTable(ticker: string, timescale: Timescal
             },
             // create trigger that will add the correct ticker value to each row on insert
             {
-                name: "create ticker name trigger on insert",
                 text: `
                     create trigger ticker_trigger_${tableName}
                     before insert on ${tableName}
@@ -60,9 +58,8 @@ export async function maybeCreateTickerTable(ticker: string, timescale: Timescal
             },
             // create brin index on timestamp
             {
-                name: "create index on timestamp",
                 text: `
-                    create index idx_timestamp on ${tableName} using brin(timestamp);
+                    create index idx_timestamp_${tableName} on ${tableName} using brin(timestamp);
                 `,
             },
         ]);

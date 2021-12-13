@@ -14,6 +14,8 @@ export async function batchInsertRows(tableName: string, rowsToInsert: Array<YFR
         propertiesInOrder.map((property) => row[property])
     );
 
+    if (!rowObjectsAsArrays.length) return;
+
     const formattedText = format(
         "insert into %I (timestamp, open, high, low, close, volume) values %L returning 1",
         tableName,
@@ -22,7 +24,6 @@ export async function batchInsertRows(tableName: string, rowsToInsert: Array<YFR
 
     try {
         const rows = await makePooledQuery({
-            name: "batch insert price action rows",
             text: formattedText,
         });
         return rows;

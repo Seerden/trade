@@ -45,8 +45,7 @@ export function yfResponseToRows(rawResponse: RawYFResponse) {
     const { open, high, low, close, volume, timestamp } = response;
     /* grab the i-th entry of each of the above arrays and create a row for each i.
         On first glance, doesn't seem to me like there's a declarative array index 
-        method for this.
-    */
+        method for this. Straightforward loop is fastes anyway. */
     for (let i = 0; i < open.length; i++) {
         const row: YFRow = {
             open: open[i],
@@ -56,7 +55,12 @@ export function yfResponseToRows(rawResponse: RawYFResponse) {
             volume: volume[i],
             timestamp: timestamp[i],
         };
-        rows.push(row);
+        if (
+            Object.keys(row).every((key) => !!row[key] || [0, "0"].includes(row[key])) &&
+            ["high", "low"].every((key) => row[key] < 1e6)
+        ) {
+            rows.push(row);
+        }
     }
     return rows;
 }

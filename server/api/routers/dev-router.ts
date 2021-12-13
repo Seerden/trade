@@ -5,11 +5,10 @@ import utc from "dayjs/plugin/utc";
 import express from "express";
 import { maybeCreateTickerTable } from "../../price-action/database/statements/create-ticker-table";
 import { insertTenYearDailyPriceAction } from "../../price-action/database/statements/insert-ten-year-data";
+import { fetchDailyPriceAction } from "../../price-action/database/statements/price-action-query";
 import { DEV_dropTickerTables } from "../../price-action/database/_dev/drop-ticker-tables";
-import {
-    fetchDailyPriceAction,
-    fetchPriceActionForTicker,
-} from "../../price-action/lib/fetch-price-action/fetch-ticker-history";
+import { makeTickerArray } from "../../price-action/database/_dev/tickers/make-tickers-array";
+import { fetchPriceActionForTicker } from "../../price-action/lib/fetch-price-action/fetch-ticker-history";
 import { Timescale } from "../../types/store.types";
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -58,6 +57,16 @@ devRouter.post("/table/drop", async (req, res) => {
     res.json({ droppedTables: await DEV_dropTickerTables() });
 });
 
+// devRouter.post("/10-year-init", async (req, res) => {
+//     try {
+//         const tickersInserted = await insertManyTenYearDaily(tickerList);
+//         res.json({ tickersInserted });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(401).json({ error: "Failed to insert tickers" });
+//     }
+// });
+
 devRouter.post("/10-year/:ticker", async (req, res) => {
     const { ticker } = req.params;
     const insertedRows = await insertTenYearDailyPriceAction(ticker);
@@ -73,4 +82,8 @@ devRouter.get("/1d/:ticker", async (req, res) => {
     } catch (error) {
         res.status(401).json({ error: "error occured while querying database" });
     }
+});
+
+devRouter.get("/tickers", async (req, res) => {
+    res.json({ tickerList: await makeTickerArray() });
 });
