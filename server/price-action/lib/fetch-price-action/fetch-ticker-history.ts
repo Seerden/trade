@@ -17,9 +17,6 @@ export async function fetchPriceActionForTicker(
     ticker: string,
     start: DateDayjsOrString,
     end: DateDayjsOrString,
-    /* @todo: consider writing out all admissible intervals -- 
-        these are included in each YF response so should be easy to copy-paste
-    */
     interval: string = "1m",
     includePrePost = false
 ) {

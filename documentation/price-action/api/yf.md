@@ -45,3 +45,8 @@
 -   if we set `interval` to `max`, we might end up only getting monthly data, which isn't particularly useful.
 -   set `interval` to `10y` and then we can get daily price action, which is more useful.
 -   1-minute price action only goes back 30 days or so.
+
+### Query parameters:
+
+-   To get data from a select date range, use params `{ period1, period2 }`, where each is a UNIX timestamp (in seconds).
+    -   Note that we can query data until (i.e. exclusive of) period2, e.g. if we're on 1m granularity, and we specify `period2=1639404060`, then the last actual timestamp returned from the API is $1639404060-60 = 1639404000$
