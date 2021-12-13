@@ -13,8 +13,8 @@ const holidays2022 = "Jan 17, Feb 21, Apr 15, May 30, Jun 20, Jul 4, Sep 5, Dec 
 
 /**
  * List of US market holidays (days on which the market isn't open at all)
- * note that each of these dates is set to midnight, so we can check if a
+ * @note each of these dates is set to midnight, so we can check if a
  * date is part of this array by setting its time to midnight and comparing
- * its valueOf() to those of each holiday
+ * its `valueOf()` to those of each holiday
  */
 export const marketHolidays = holidays2021.concat(holidays2022);

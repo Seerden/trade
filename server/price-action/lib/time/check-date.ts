@@ -2,6 +2,9 @@ import dayjs from "dayjs";
 import { DateDayjsOrString } from "../../../types/date.types";
 import { marketHolidays } from "./market-holidays";
 
+/**
+ * Check if a date is a workday (workdays are Monday through Friday)
+ */
 export function isWorkday(date: DateDayjsOrString) {
     const dayOfWeek = dayjs(date).day();
     return dayOfWeek > 0 && dayOfWeek < 6;
