@@ -9,9 +9,9 @@ import { maybeCreateTickerTable } from "./create-ticker-table";
  * Batch insert a number of rows into a __single__ ticker table
  */
 export async function batchInsertRows(tableName: string, rowsToInsert: Array<YFRow>) {
-    const propertiesInOrder = "timestamp open high low close volume".split(" ");
+    const columns = "timestamp open high low close volume".split(" ");
     const rowObjectsAsArrays = rowsToInsert.map((row) =>
-        propertiesInOrder.map((property) => row[property])
+        columns.map((property) => row[property])
     );
 
     if (!rowObjectsAsArrays.length) return;

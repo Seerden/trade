@@ -9,7 +9,7 @@ export async function insertManyTenYearDaily(tickers: string[]) {
     try {
         for (const ticker of tickers) {
             if (await tickerTableExists(ticker, "1d")) continue;
-            const inserted = await insertTenYearDailyPriceAction(ticker.toLowerCase());
+            await insertTenYearDailyPriceAction(ticker.toLowerCase());
             /* we're allowed to make a yf API request every 3600/2000 = 1.8 seconds */
 
             // @todo: consider including the following line inside insertTenYearDailyPriceAction

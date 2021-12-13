@@ -4,9 +4,14 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
 import { maybeCreateTickerTable } from "../../price-action/database/statements/create-ticker-table";
+import { insertHistoricalOneMinuteAction } from "../../price-action/database/statements/insert-1m-data";
 import { insertTenYearDailyPriceAction } from "../../price-action/database/statements/insert-ten-year-data";
-import { fetchDailyPriceAction } from "../../price-action/database/statements/price-action-query";
+import {
+    fetchDailyPriceAction,
+    fetchFlatDailyAction,
+} from "../../price-action/database/statements/price-action-query";
 import { DEV_dropTickerTables } from "../../price-action/database/_dev/drop-ticker-tables";
+import { initManyOneMinute } from "../../price-action/database/_dev/historical-1m/store-many-1m";
 import { makeTickerArray } from "../../price-action/database/_dev/tickers/make-tickers-array";
 import { fetchPriceActionForTicker } from "../../price-action/lib/fetch-price-action/fetch-ticker-history";
 import { Timescale } from "../../types/store.types";
@@ -76,14 +81,34 @@ devRouter.post("/10-year/:ticker", async (req, res) => {
 
 devRouter.get("/1d/:ticker", async (req, res) => {
     const { ticker } = req.params;
+    const { flat } = req.query;
 
     try {
-        res.json({ data: await fetchDailyPriceAction(ticker) });
+        if (flat === "true") {
+            res.json({ data: await fetchFlatDailyAction(ticker) });
+        } else {
+            res.json({ data: await fetchDailyPriceAction(ticker) });
+        }
     } catch (error) {
-        res.status(401).json({ error: "error occured while querying database" });
+        res.status(401).json({ error: "Error occured while querying database" });
     }
 });
 
 devRouter.get("/tickers", async (req, res) => {
     res.json({ tickerList: await makeTickerArray() });
+});
+
+devRouter.post("/1m/:ticker", async (req, res) => {
+    const { ticker } = req.params;
+    try {
+        await insertHistoricalOneMinuteAction(ticker, "2021 Nov 14", "2021 Nov 19");
+        res.json({ message: "Successfully inserted rows" });
+    } catch (error) {
+        console.error(error);
+        res.json({ message: "Error inserting rows", error });
+    }
+});
+
+devRouter.post("/init/1m", async (req, res) => {
+    await initManyOneMinute();
 });

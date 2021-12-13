@@ -45,6 +45,7 @@
 -   if we set `interval` to `max`, we might end up only getting monthly data, which isn't particularly useful.
 -   set `interval` to `10y` and then we can get daily price action, which is more useful.
 -   1-minute price action only goes back 30 days or so.
+    -   Note: "Only 7 days worth of 1m granularity data are allowed to be fetched per request".
 
 ### Query parameters:
 

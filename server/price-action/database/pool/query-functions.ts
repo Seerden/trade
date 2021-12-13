@@ -10,7 +10,7 @@ export type QueryArgs = {
 
 /**
  * Make a single query to the PostgreSQL database.
- * @returns single `rows` response with camelCase keys.
+ * @returns single `rows` response
  */
 export async function makePooledQuery<ReturnType = any>(
     queryOptions: QueryArgs
@@ -30,7 +30,7 @@ export async function makePooledQuery<ReturnType = any>(
 
 /**
  * Make multiple queries to the PostgreSQL database in a single go.
- * @returns Array of Postgres response rows with camelCase keys.
+ * @returns Array of Postgres response rows
  */
 export async function makePooledQueries(queries: QueryArgs[]) {
     const client = await pool.connect();
