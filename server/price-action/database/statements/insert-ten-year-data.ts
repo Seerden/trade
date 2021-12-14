@@ -1,7 +1,7 @@
 import format from "pg-format";
 import { YFRow } from "../../../types/api.types";
-import { fetchTenYearDailyPriceAction } from "../../lib/fetch-price-action/fetch-ticker-history";
-import { yfResponseToRows } from "../../lib/parse-yf/quote-to-row";
+import { fetchTenYearDailyPriceAction } from "../../lib/yf/fetch-price-action/fetch-ticker-history";
+import { yfResponseToRows } from "../../lib/yf/parse-yf/quote-to-row";
 import { makePooledQuery } from "../pool/query-functions";
 import { maybeCreateTickerTable } from "./create-ticker-table";
 

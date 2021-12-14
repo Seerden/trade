@@ -6,7 +6,7 @@
  * @see documentation/price-action/api/yf.md for information above yf response shape
  */
 
-import { RawYFResponse, YFResponse, YFRow } from "../../../types/api.types";
+import { RawYFResponse, YFResponse, YFRow } from "../../../../types/api.types";
 import { makeYfResponseObject } from "./make-response-object";
 
 const quoteKeys = "open close high low volume timestamp".split(" ");

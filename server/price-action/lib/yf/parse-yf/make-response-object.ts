@@ -1,4 +1,4 @@
-import { RawYFResponse, YFResponse } from "../../../types/api.types";
+import { RawYFResponse, YFResponse } from "../../../../types/api.types";
 
 /**
  * Convert a raw yf response to a YFResponse object

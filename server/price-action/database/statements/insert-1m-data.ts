@@ -1,8 +1,8 @@
 import format from "pg-format";
 import { YFRow } from "../../../types/api.types";
 import { DateDayjsOrString } from "../../../types/date.types";
-import { fetchPriceActionForTicker } from "../../lib/fetch-price-action/fetch-ticker-history";
-import { yfResponseToRows } from "../../lib/parse-yf/quote-to-row";
+import { fetchPriceActionForTicker } from "../../lib/yf/fetch-price-action/fetch-ticker-history";
+import { yfResponseToRows } from "../../lib/yf/parse-yf/quote-to-row";
 import { makePooledQuery } from "../pool/query-functions";
 
 const columns = "ticker timestamp open close high low volume".split(" ");

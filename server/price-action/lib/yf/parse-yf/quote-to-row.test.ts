@@ -1,4 +1,4 @@
-import { YFResponse } from "../../../types/api.types";
+import { YFResponse } from "../../../../types/api.types";
 import { isValidYfResponse } from "./quote-to-row";
 
 describe("isValidQuoteResponse", () => {

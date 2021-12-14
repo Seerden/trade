@@ -1,8 +1,8 @@
 import axios from "axios";
-import { RawYFResponse } from "../../../types/api.types";
-import type { DateDayjsOrString } from "../../../types/date.types";
-import { yFinanceBaseUrl } from "../constants/urls";
-import { dateToTimestamp } from "../time/date-manipulation";
+import { RawYFResponse } from "../../../../types/api.types";
+import type { DateDayjsOrString } from "../../../../types/date.types";
+import { yFinanceBaseUrl } from "../../constants/urls";
+import { dateToTimestamp } from "../../time/date-manipulation";
 
 // query parameters for yahoo!finance v8/finance/chart/TICKER endpoint
 type TickerFetchParams = {
