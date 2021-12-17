@@ -3,8 +3,8 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
-import { fetchOneMinute } from "../../price-action/database/queries/fetch-price-action";
-import { fetchAndInsertAggregate } from "../../price-action/lib/polygon/requests/aggregate/aggregate-insert";
+import { fetchPriceActionForTicker } from "../../price-action/database/queries/fetch-price-action";
+import { fetchMaxOneMinuteData } from "../../price-action/database/_dev/polygon/max-1m-query";
 import { fetchDailyOHLC } from "../../price-action/lib/polygon/requests/market-snapshot";
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -20,16 +20,12 @@ devRouter.get("/daily/all", async (req, res) => {
     res.json({ response });
 });
 
-devRouter.post("/:ticker/1m/:from/:to/", async (req, res) => {
-    const { ticker, from, to } = req.params;
+devRouter.post("/:ticker/1m/:to", async (req, res) => {
+    const { ticker, to } = req.params;
 
-    res.json({
-        timestampsInserted: await fetchAndInsertAggregate({
-            timespan: "minute",
-            from,
-            to,
-            ticker: ticker.toUpperCase(),
-        }),
+    await fetchMaxOneMinuteData({
+        ticker,
+        to,
     });
 });
 
@@ -37,7 +33,8 @@ devRouter.get("/:ticker/1m/:from/:to", async (req, res) => {
     const { ticker, from, to } = req.params;
     const { limit } = req.query;
 
-    const rows = await fetchOneMinute({
+    const rows = await fetchPriceActionForTicker({
+        timescale: "minute",
         ticker: ticker.toUpperCase(),
         from,
         to,

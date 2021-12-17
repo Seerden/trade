@@ -51,6 +51,6 @@ function mapAggregateResultToPriceAction(result: PolygonAggregateResult, ticker:
  * Take a price action row and add a ticker property with a value
  */
 function withTicker(row: PriceActionRow, ticker: string) {
-    row.ticker = ticker;
+    row.ticker = ticker.toUpperCase();
     return row;
 }

@@ -3,13 +3,18 @@
 */
 
 import format from "pg-format";
+import { Timescale } from "../../../../../types/store.types";
 import { makePooledQuery } from "../../../../database/pool/query-functions";
-import { PolygonAggregateOptions, PolygonTimespan } from "../../types/aggregate.types";
+import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
+import { PermittedTimespan, timescaleToTableName } from "../../../get-table-name";
+import { PolygonAggregateOptions } from "../../types/aggregate.types";
 import { fetchTickerAggregate } from "./aggregate-ticker";
 import { aggregateToPriceActionObjects } from "./aggregate-to-rows";
 
 /**
- * Fetch price aggregate for a ticker and insert OHLCV values into database
+ * - fetch price aggregate for a ticker
+ * - insert OHLCV values into database
+ * - add fetched date range to redis store
  */
 export async function fetchAndInsertAggregate({
     timespan,
@@ -17,7 +22,7 @@ export async function fetchAndInsertAggregate({
     from,
     to,
 }: {
-    timespan: PolygonAggregateOptions["timespan"];
+    timespan: PermittedTimespan;
     ticker: string;
     from: PolygonAggregateOptions["from"];
     to: PolygonAggregateOptions["to"];
@@ -29,27 +34,38 @@ export async function fetchAndInsertAggregate({
         timespan,
         multiplier: 1,
     });
-
     // convert priceActionObjects to arrays for multi-insert with pg-promise
     const rowsForDatabase = aggregateToPriceActionObjects(rawResponse).map((row) => {
         // make sure columns are in the same order as the columns in our query (see format() call below)
         const columns = "ticker, timestamp, open, close, high, low, volume".split(", ");
-
         return columns.map((column) => row[column]);
     });
 
-    // get table name that matches timespan argument
-    const tableName: { [K in PolygonTimespan]: string } = {
-        minute: "price_action_1m",
-        hour: "price_action_1h",
-        day: "price_action_1d",
-    }[timespan];
+    const timestampsInserted: Array<{ timestamp: string | number }> =
+        await makePooledQuery({
+            text: format(
+                `insert into %I (ticker, timestamp, open, close, high, low, volume) values %L returning (timestamp)`,
+                timescaleToTableName(timespan),
+                rowsForDatabase
+            ),
+        });
 
-    return await makePooledQuery({
-        text: format(
-            `insert into %I (ticker, timestamp, open, close, high, low, volume) values %L returning (timestamp)`,
-            tableName,
-            rowsForDatabase
-        ),
-    });
+    if (timestampsInserted.length) {
+        return await storeFetchedDateRange({
+            ticker,
+            timescale: timespanToTimescale(timespan),
+            start: from,
+            end: to,
+        });
+    }
+}
+
+function timespanToTimescale(timespan: string): Timescale {
+    const mapping: { [k in PermittedTimespan]: Timescale } = {
+        minute: "1m",
+        hour: "1h",
+        day: "1d",
+    };
+
+    return mapping[timespan];
 }

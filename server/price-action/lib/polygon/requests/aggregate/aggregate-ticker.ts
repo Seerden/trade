@@ -17,7 +17,7 @@ export async function fetchTickerAggregate({
     const [fromString, toString] = [from, to].map((date) =>
         dayjs(date).format("YYYY-MM-DD")
     );
-    const url = `/v2/aggs/ticker/${ticker}/range/${multiplier}/${timespan}/${fromString}/${toString}`;
+    const url = `/v2/aggs/ticker/${ticker.toUpperCase()}/range/${multiplier}/${timespan}/${fromString}/${toString}`;
     const { data } = await polygon.get(url, { params: { limit, sort } });
     return data as PolygonAggregateResponse;
 }
