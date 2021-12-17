@@ -8,6 +8,7 @@ import type { Timescale } from "../../types/store.types";
  * API query in redis, so we can later compare against already-fetched ranges, to make sure
  * we don't unnecessarily fetch (part of) the same date range again.
  *
+ * @note an example redis key is `ranges:1m:MSFT`
  * @note We store each fetched range as `YYYY-MM-DD,YYYY-MM-DD`, which represents `start,end`
  * of the interval.
  */

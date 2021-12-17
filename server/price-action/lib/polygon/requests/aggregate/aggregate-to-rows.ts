@@ -3,7 +3,10 @@
 */
 
 import { PriceActionRow } from "../../../../../types/database.types";
-import { ohlcResponseKeyMap, priceActionColumns } from "../../constants/response-mapping";
+import {
+    aggregateResponseKeyMap,
+    priceActionColumns,
+} from "../../constants/response-mapping";
 import { PolygonAggregateResponse } from "../../types/aggregate.types";
 import { PolygonAggregateResult } from "../../types/results.types";
 
@@ -34,7 +37,7 @@ export function aggregateToPriceActionObjects(
  */
 function mapAggregateResultToPriceAction(result: PolygonAggregateResult, ticker: string) {
     const res: PriceActionRow = Object.keys(result).reduce((acc, key) => {
-        const mappedKey: string = ohlcResponseKeyMap[key];
+        const mappedKey: string = aggregateResponseKeyMap[key];
 
         if (priceActionColumns.includes(mappedKey)) {
             acc[mappedKey] = result[key];

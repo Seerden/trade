@@ -5,7 +5,8 @@ import utc from "dayjs/plugin/utc";
 import express from "express";
 import { fetchPriceActionForTicker } from "../../price-action/database/queries/fetch-price-action";
 import { fetchMaxOneMinuteData } from "../../price-action/database/_dev/polygon/max-1m-query";
-import { fetchDailyOHLC } from "../../price-action/lib/polygon/requests/market-snapshot";
+import { fetchDailyOHLC } from "../../price-action/lib/polygon/requests/snapshot/snapshot-fetch";
+import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/snapshot-insert";
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -44,4 +45,12 @@ devRouter.get("/:ticker/1m/:from/:to", async (req, res) => {
     });
 
     res.json({ rows });
+});
+
+/**
+ * Fetch and store in our database a market snapshot from a given day
+ */
+devRouter.post("/snapshot/:date", async (req, res) => {
+    const { date } = req.params;
+    res.json({ timestamp: await fetchAndInsertSnapshot({ date }) });
 });

@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import polygon from "../axios-instance";
-import { OHLCFetchOptions, OHLCFetchResponse } from "../types/ohlc.types";
+import polygon from "../../axios-instance";
+import { OHLCFetchOptions, OHLCFetchResponse } from "../../types/ohlc.types";
 
 /**
  * Fetch daily OHLCV for all tickers. Note that we're on a free plan, so we can
