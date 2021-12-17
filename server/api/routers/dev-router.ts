@@ -23,9 +23,11 @@ devRouter.get("/daily/all", async (req, res) => {
 devRouter.post("/:ticker/1m/:to", async (req, res) => {
     const { ticker, to } = req.params;
 
-    await fetchMaxOneMinuteData({
-        ticker,
-        to,
+    res.json({
+        ranges: await fetchMaxOneMinuteData({
+            ticker,
+            to,
+        }),
     });
 });
 

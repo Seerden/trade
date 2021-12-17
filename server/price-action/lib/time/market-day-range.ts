@@ -31,7 +31,7 @@ export function nMarketDayRange({
 
     const sign = start ? 1 : -1; // if `end` specified, we want to walk back, so need to add -1 days per step, hence need sign === -1
 
-    let numMarketDaysInInterval = 1; // start at 1, since we always include either `start` or `end` in the interval
+    let numMarketDaysInInterval = isActiveMarketDay(endpointStartOfDay) ? 1 : 0;
     let otherIntervalEndpoint: Dayjs = endpointStartOfDay;
 
     // walk (backwards or forwards) n-1 days
