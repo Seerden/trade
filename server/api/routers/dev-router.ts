@@ -3,7 +3,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
-import { fetchTickerAggregate } from "../../price-action/lib/polygon/requests/aggregate-ticker";
+import { fetchAndInsertAggregate } from "../../price-action/lib/polygon/requests/aggregate/aggregate-insert";
 import { fetchDailyOHLC } from "../../price-action/lib/polygon/requests/market-snapshot";
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -21,12 +21,13 @@ devRouter.get("/daily/all", async (req, res) => {
 
 devRouter.get("/:ticker/1m/:from/:to/", async (req, res) => {
     const { ticker, from, to } = req.params;
-    const response = await fetchTickerAggregate({
-        ticker: ticker.toUpperCase(),
-        multiplier: 1,
-        timespan: "minute",
-        from,
-        to,
+
+    res.json({
+        timestampsInserted: await fetchAndInsertAggregate({
+            timespan: "minute",
+            from,
+            to,
+            ticker: ticker.toUpperCase(),
+        }),
     });
-    res.json({ response });
 });

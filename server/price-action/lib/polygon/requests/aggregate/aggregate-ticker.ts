@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
-import polygon from "../axios-instance";
+import polygon from "../../axios-instance";
 import {
     PolygonAggregateOptions,
     PolygonAggregateResponse,
-} from "../types/aggregate.types";
+} from "../../types/aggregate.types";
 
 export async function fetchTickerAggregate({
     ticker,

@@ -1,6 +1,7 @@
 import { DateDayjsOrString } from "../../../../types/date.types";
-import { Results } from "./results.types";
+import { PolygonAggregateResults } from "./results.types";
 
+// @dev -- note that these are all admissible timespans. for our purposes, we'll only be using minute, hour, day
 export type PolygonTimespan =
     | "minute"
     | "hour"
@@ -28,5 +29,5 @@ export type PolygonAggregateResponse = {
     request_id: string;
     resultsCount: number;
     status: string;
-    results: Results;
+    results: PolygonAggregateResults;
 };

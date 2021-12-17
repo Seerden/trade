@@ -1,6 +1,5 @@
 import { DateDayjsOrString } from "../../../../types/date.types";
-import { Results } from "./results.types";
-
+import { PolygonAggregateResults } from "./results.types";
 export type OHLCFetchOptions = {
     adjusted?: boolean;
     date: DateDayjsOrString;
@@ -11,7 +10,7 @@ export type OHLCFetchResponse = {
     queryCount: number;
     resultsCount: number;
     adjusted: boolean;
-    results: Results;
+    results: PolygonAggregateResults;
     status: string;
     request_id: string;
     count: number;

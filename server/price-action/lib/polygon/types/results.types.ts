@@ -1,5 +1,4 @@
-export type Results = Array<{
-    T: string;
+export type PolygonAggregateResult = {
     v: number;
     vw: number;
     o: number;
@@ -8,4 +7,6 @@ export type Results = Array<{
     l: number;
     t: number;
     n: number;
-}>;
+};
+
+export type PolygonAggregateResults = PolygonAggregateResult[];
