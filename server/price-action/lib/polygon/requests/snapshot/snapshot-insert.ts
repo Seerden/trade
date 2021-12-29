@@ -7,6 +7,7 @@ import { snapshotToPriceAction } from "./snapshot-to-rows";
 export async function fetchAndInsertSnapshot({ date }: { date: DateDayjsOrString }) {
     const rawResponse = await fetchDailyOHLC({ date });
     const priceActionObjects = snapshotToPriceAction(rawResponse);
+    if (!priceActionObjects.length) return;
 
     const columns = "ticker, timestamp, open, close, high, low, volume".split(", ");
     const priceActionObjectsAsArrays = priceActionObjects.map((row) =>

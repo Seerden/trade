@@ -9,8 +9,11 @@ import type { Timescale } from "../../types/store.types";
  * we don't unnecessarily fetch (part of) the same date range again.
  *
  * @note an example redis key is `ranges:1m:MSFT`
- * @note We store each fetched range as `YYYY-MM-DD,YYYY-MM-DD`, which represents `start,end`
+ *
+ * @note we store each fetched range as `YYYY-MM-DD,YYYY-MM-DD`, which represents `start,end`
  * of the interval.
+ *
+ * @returns all values in the redis list that we pushed the just-fetched range to.
  */
 export async function storeFetchedDateRange({
     ticker,

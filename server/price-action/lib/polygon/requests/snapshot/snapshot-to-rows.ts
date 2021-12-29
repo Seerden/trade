@@ -6,12 +6,10 @@ export function snapshotToPriceAction({ results }: OHLCFetchResponse) {
 
     const priceActionRows = results.map((result) =>
         Object.keys(result).reduce((acc, key) => {
-            if (!(key in snapshotResponseKeyMap)) {
-                return acc;
-            } else {
-                acc[snapshotResponseKeyMap[key]] = result[key];
-                return acc;
-            }
+            if (!(key in snapshotResponseKeyMap)) return acc;
+
+            acc[snapshotResponseKeyMap[key]] = result[key];
+            return acc;
         }, {})
     );
 
