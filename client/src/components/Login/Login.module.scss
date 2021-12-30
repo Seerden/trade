@@ -1,0 +1,64 @@
+@use "../../style/shared";
+
+.Form {
+    padding: 2em 4em;
+    margin: 2em;
+    width: max-content;
+    margin: 2em auto;
+
+    border: 1px solid var(--main);
+    box-shadow: 0 0 0.5em 0 var(--main);
+}
+
+.Input {
+    @extend %input;
+    font-size: var(--text-medium);
+    padding: var(--pad-small);
+    text-indent: calc(2 * var(--pad-small));
+    border: 1px solid var(--secondary);
+}
+
+.Label {
+    display: flex;
+    font-size: var(--text-small);
+    padding-left: var(--pad-small);
+    margin-bottom: 0.3em;
+    user-select: none;
+}
+
+.Fields {
+    display: flex;
+    flex-flow: column wrap;
+    gap: var(--pad-medium);
+    justify-content: center;
+}
+
+.Button,
+.Register {
+    padding: var(--pad-medium) 2em;
+    font-size: var(--text-small);
+    outline: 1px solid transparent;
+
+    transition: all 75ms ease-out;
+
+    &:hover,
+    &:focus,
+    &:active {
+        outline: 1px solid var(--secondary);
+    }
+}
+
+.Register {
+    background-color: var(--light);
+    color: var(--dark-tint);
+}
+
+.Title {
+    @extend %title;
+}
+
+.Buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--pad-medium);
+}

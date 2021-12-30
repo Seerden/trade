@@ -1,3 +1,3 @@
 export function useTicker(ticker: string) {
-	// fetch and process ticker data
+    // fetch and process ticker data
 }

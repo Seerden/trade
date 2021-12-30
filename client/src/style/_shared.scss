@@ -1,0 +1,19 @@
+%input {
+    outline: none;
+    border: none;
+
+    &:focus,
+    &:hover {
+        outline: 1px solid var(--secondary);
+    }
+}
+
+%round {
+    border-radius: 8px;
+}
+
+%title {
+    font-size: 1.5em;
+    margin-bottom: var(--pad-medium);
+    user-select: none;
+}
