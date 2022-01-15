@@ -29,3 +29,14 @@ services:
       - store
     ports:
       - "5000:5000"
+  api-database:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_PASSWORD=$PG_API_PASS
+      - POSTGRES_USER=$PG_API_USER
+      - POSTGRES_DB=$PG_API_DB
+    volumes:
+      - ./api-pg-data:/var/lib/postgresql/data
+      - ../server/api/database-setup:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5432"
