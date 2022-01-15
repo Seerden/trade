@@ -5,6 +5,7 @@ node_modules
 /**/*.env
 
 /**/pg-data
+/**/api-pg-data
 /**/redis-data
 
 /server/**/.rest
