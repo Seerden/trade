@@ -7,10 +7,12 @@ import { isActiveMarketDay } from "./check-date";
  * Given `end`, find the date `n-1` market days before `end`.
  *
  * @usage polygon API response may contain at most 50k rows per query.
- * Since we know how many rows can exist in a day (e.g. for 1-minute bars, there's 16*60=960 bars per day),
- * we can efficiently maximize the query endpoints, by calculating the exact date at which we get these 50k rows
+ * Since we know how many rows can exist in a day (e.g. for 1-minute bars,
+ * there's 16*60=960 bars per day), we can efficiently maximize the query
+ * endpoints, by calculating the exact date at which we get these 50k rows
  *
- * @return start and end dates formatted as YYYY-MM-DD. We choose this since we expect to only use this function as polygon query
+ * @return start and end dates formatted as YYYY-MM-DD. We choose this since
+ * we expect to only use this function as polygon query
  * param, and polygon expects dates formatted like this.
  */
 export function nMarketDayRange({
@@ -21,15 +23,18 @@ export function nMarketDayRange({
     n: number;
     start?: DateDayjsOrString;
     end?: DateDayjsOrString;
-}) {
-    if (n === 0) return;
+}): string[] | undefined {
+    if (n === 0) return undefined;
 
-    const givenEndpoint = start || end; // can't specify both start and end, so use `start` if both are specified
+    // can't specify both start and end, so use `start` if both are specified
+    const givenEndpoint = start || end;
     const endpointStartOfDay = dayjs(givenEndpoint).startOf("day");
 
     if (n === 1) return [endpointStartOfDay.format("YYYY-MM-DD")];
 
-    const sign = start ? 1 : -1; // if `end` specified, we want to walk back, so need to add -1 days per step, hence need sign === -1
+    /* if `end` specified, we want to walk back, so need to add -1 days per step,
+        hence need sign === -1 */
+    const sign = start ? 1 : -1;
 
     let numMarketDaysInInterval = isActiveMarketDay(endpointStartOfDay) ? 1 : 0;
     let otherIntervalEndpoint: Dayjs = endpointStartOfDay;
@@ -38,7 +43,7 @@ export function nMarketDayRange({
     while (numMarketDaysInInterval < n) {
         otherIntervalEndpoint = otherIntervalEndpoint.add(sign * 1, "day");
         if (isActiveMarketDay(otherIntervalEndpoint)) {
-            numMarketDaysInInterval++;
+            numMarketDaysInInterval += 1;
         }
     }
 

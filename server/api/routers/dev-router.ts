@@ -4,9 +4,15 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
 import { fetchPriceActionForTicker } from "../../price-action/database/queries/fetch-price-action";
-import { fetchMaxOneMinuteData } from "../../price-action/database/_dev/polygon/max-1m-query";
+import {
+    // eslint-disable-next-line camelcase
+    dev_firstAndLastMaxOneMinuteDataResultRow,
+    fetchAndInsertMaxOneMinuteData,
+    fetchMaxOneMinuteData,
+} from "../../price-action/database/_dev/polygon/max-1m-query";
 import { fetchDailyOHLC } from "../../price-action/lib/polygon/requests/snapshot/snapshot-fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/snapshot-insert";
+
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -25,11 +31,19 @@ devRouter.post("/:ticker/1m/:to", async (req, res) => {
     const { ticker, to } = req.params;
 
     res.json({
-        ranges: await fetchMaxOneMinuteData({
+        ranges: await fetchAndInsertMaxOneMinuteData({
             ticker,
             to,
         }),
     });
+});
+
+devRouter.get("/:ticker/1m/max/:to", async (req, res) => {
+    const { ticker, to } = req.params;
+
+    const response = await fetchMaxOneMinuteData({ ticker, to });
+
+    res.json({ resultEndpoints: dev_firstAndLastMaxOneMinuteDataResultRow(response) });
 });
 
 devRouter.get("/:ticker/1m/:from/:to", async (req, res) => {

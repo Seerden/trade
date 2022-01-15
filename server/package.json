@@ -34,6 +34,12 @@
     "@types/pg": "^8.6.1",
     "@types/pg-format": "^1.0.2",
     "@types/redis": "^2.8.32",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "eslint": "^8.6.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^16.1.0",
+    "eslint-plugin-import": "^2.25.4",
     "jest": "^27.4.3",
     "ts-jest": "^27.1.0",
     "ts-node-dev": "^1.1.8"
