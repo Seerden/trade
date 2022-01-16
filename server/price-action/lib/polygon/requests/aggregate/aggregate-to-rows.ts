@@ -17,19 +17,16 @@ import { PolygonAggregateResult } from "../../types/results.types";
 export function isValidResponse(response: PolygonAggregateResponse): boolean {
     /* @todo: write functionality to verify that we receive a response shape from poly API,
         in case they ever decide to change their API responses */
-    return true;
+    return response && true;
 }
 
 /**
- * Transform a raw polygon /aggregate response to `PriceActionRow`s
+ * Take a price action row and add a ticker property with a value
  */
-export function aggregateToPriceActionObjects(
-    response: PolygonAggregateResponse
-): Array<PriceActionRow> {
-    if (!isValidResponse(response)) return;
-
-    const { results, ticker } = response;
-    return results.map((result) => mapAggregateResultToPriceAction(result, ticker));
+function withTicker(row: PriceActionRow, ticker: string) {
+    // eslint-disable-next-line no-param-reassign
+    row.ticker = ticker.toUpperCase();
+    return row;
 }
 
 /**
@@ -51,9 +48,13 @@ function mapAggregateResultToPriceAction(result: PolygonAggregateResult, ticker:
 }
 
 /**
- * Take a price action row and add a ticker property with a value
+ * Transform a raw polygon /aggregate response to `PriceActionRow`s
  */
-function withTicker(row: PriceActionRow, ticker: string) {
-    row.ticker = ticker.toUpperCase();
-    return row;
+export function aggregateToPriceActionObjects(
+    response: PolygonAggregateResponse
+): Array<PriceActionRow> {
+    if (!isValidResponse(response)) return [];
+
+    const { results, ticker } = response;
+    return results.map((result) => mapAggregateResultToPriceAction(result, ticker));
 }

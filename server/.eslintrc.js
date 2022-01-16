@@ -11,7 +11,7 @@ module.exports = {
             },
         },
     },
-    extends: ["airbnb-base"],
+    extends: ["airbnb-base", "prettier"],
     parser: "@typescript-eslint/parser",
     parserOptions: {
         ecmaVersion: 13,
@@ -20,6 +20,7 @@ module.exports = {
     plugins: ["@typescript-eslint"],
     rules: {
         "no-console": "off",
+        "no-restricted-syntax": 0,
         "implicit-arrow-linebreak": "off",
         "function-paren-newline": "off",
         "import/prefer-default-export": "off",
