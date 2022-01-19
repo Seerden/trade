@@ -20,3 +20,5 @@ export type OHLCFetchResponse = {
     request_id: string;
     count: number;
 };
+
+export type OHLC = "ticker" | "timestamp" | "open" | "high" | "low" | "close" | "volume";

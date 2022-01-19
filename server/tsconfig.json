@@ -6,6 +6,7 @@
         "target": "ES2020",
         "moduleResolution": "node",
         "sourceMap": true,
+        "noImplicitAny": true,
         "outDir": "dist",
         "lib": ["ES2021"],
         "incremental": true,

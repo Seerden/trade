@@ -1,4 +1,5 @@
 import { DateDayjsOrString } from "../../../../types/date.types";
+import { PermittedTimespan } from "../../get-table-name";
 import { PolygonAggregateResults } from "./results.types";
 
 // @dev -- note that these are all admissible timespans. for our purposes, we'll only be using minute, hour, day
@@ -14,7 +15,9 @@ export type PolygonTimespan =
 export type PolygonAggregateOptions = {
     ticker: string;
     multiplier: number;
-    timespan: PolygonTimespan;
+    /*  polygon actually allows more timespans (see PolygonTimespan type above)
+        but we don't care for any of those, at least not at this point */
+    timespan: PermittedTimespan;
     from: DateDayjsOrString;
     to: DateDayjsOrString;
     adjusted?: boolean;
