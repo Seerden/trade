@@ -33,16 +33,21 @@ function withTicker(row: PriceActionRow, ticker: string) {
  * Map one PolygonAggregateResult to a PriceActionRow
  */
 function mapAggregateResultToPriceAction(result: PolygonAggregateResult, ticker: string) {
-    const res: PriceActionRow = Object.keys(result).reduce((acc, key) => {
-        const mappedKey: string = aggregateResponseKeyMap[key];
+    const res: PriceActionRow = Object.keys(result).reduce(
+        (acc, key: keyof typeof aggregateResponseKeyMap) => {
+            const mappedKey = aggregateResponseKeyMap[key] as keyof PriceActionRow;
 
-        if (priceActionColumns.includes(mappedKey)) {
-            acc[mappedKey] = result[key];
+            if (priceActionColumns.includes(mappedKey)) {
+                const value = result[key];
+
+                (acc[mappedKey] as string | number) = value;
+                return acc;
+            }
+
             return acc;
-        }
-
-        return acc;
-    }, {} as PriceActionRow);
+        },
+        {} as PriceActionRow
+    );
 
     return withTicker(res, ticker);
 }
@@ -58,3 +63,5 @@ export function aggregateToPriceActionObjects(
     const { results, ticker } = response;
     return results.map((result) => mapAggregateResultToPriceAction(result, ticker));
 }
+
+export type valueof<T> = T[keyof T];

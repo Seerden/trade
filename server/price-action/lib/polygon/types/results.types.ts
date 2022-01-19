@@ -1,3 +1,4 @@
+// each key here is also a key of aggregateResponseKeyMap
 export type PolygonAggregateResult = {
     v: number;
     vw: number;

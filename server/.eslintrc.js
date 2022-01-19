@@ -25,6 +25,7 @@ module.exports = {
     plugins: ["@typescript-eslint"],
     rules: {
         "no-console": "off",
+        "no-param-reassign": 0,
         "no-restricted-syntax": 0,
         "implicit-arrow-linebreak": "off",
         "function-paren-newline": "off",
