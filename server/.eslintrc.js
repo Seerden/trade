@@ -11,7 +11,12 @@ module.exports = {
             },
         },
     },
-    extends: ["airbnb-base", "prettier"],
+    extends: [
+        "airbnb-base",
+        "prettier",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+    ],
     parser: "@typescript-eslint/parser",
     parserOptions: {
         ecmaVersion: 13,
@@ -25,7 +30,7 @@ module.exports = {
         "function-paren-newline": "off",
         "import/prefer-default-export": "off",
         "comma-dangle": 0,
-        quotes: ["error", "double"],
+        quotes: ["error", "double", "avoid-escape"],
         indent: ["error", 4],
         "linebreak-style": 0,
         "import/extensions": [
