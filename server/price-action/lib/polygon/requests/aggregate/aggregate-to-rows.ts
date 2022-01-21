@@ -21,7 +21,7 @@ export function isValidResponse(response: PolygonAggregateResponse): boolean {
 }
 
 /**
- * Take a price action row and add a ticker property with a value
+ * Take a price action row and set its ticker property to an uppercase ticker
  */
 function withTicker(row: PriceActionRow, ticker: string) {
     // eslint-disable-next-line no-param-reassign

@@ -16,7 +16,5 @@ export const priceActionColumns = "close high low open timestamp volume".split("
 
 /*  since aggregateResponseKeyMap doesn't contain any complex-typed fields, 
     we can use Object.assign to create an acceptable 'deep' copy  */
-export const snapshotResponseKeyMap = Object.assign(
-    { T: "ticker" },
-    aggregateResponseKeyMap
-);
+// @eslint-ignore: prefers no Object.assign, but we want 'deep copy'
+export const snapshotResponseKeyMap = { T: "ticker", aggregateResponseKeyMap };
