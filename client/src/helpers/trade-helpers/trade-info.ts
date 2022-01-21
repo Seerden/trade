@@ -13,17 +13,19 @@ export function getTradeInfo(trade: Trade) {
         meanSell: meanPrice(
             trade.filter((trade) => trade.action === "sell") as SellTicket[]
         ),
+        realized: undefined,
+        unrealized: undefined,
     };
 }
 
 /**
  * Extract trade quantity from `trade`
  * @todo: currently assume buy and sell quantity are equal, which isn't always true,
- * - trades can be ongoing
+ * - trades can be ongoing,
  * - user may accidentally close out more than their original position
  *      in this case we'd typically split up the overshooting ticket,
  *      with the excess shares going into a new trade, so this wouldn't
- *      be a problm
+ *      be a problem
  */
 function getTradeQuantity(trade: Trade): number {
     if (!trade.length) return 0;
@@ -38,6 +40,8 @@ function getTradeQuantity(trade: Trade): number {
 
 /**
  * Compute mean {entry or exit} cost basis for a list of tickets
+ * @note: don't compute p&l by subtracting mean buy from mean sell.
+ *  Doesn't work when scaling in/out, obviously
  */
 function meanPrice(ticketsByAction: BuyTicket[] | SellTicket[]): number {
     let cumulativePriceTimesQuantity = 0;
