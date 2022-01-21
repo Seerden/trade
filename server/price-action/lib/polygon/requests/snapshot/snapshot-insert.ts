@@ -11,10 +11,11 @@ export async function fetchAndInsertSnapshot({ date }: { date: DateDayjsOrString
 
     const columns = "ticker, timestamp, open, close, high, low, volume".split(", ");
     const priceActionObjectsAsArrays = priceActionObjects.map((row) =>
+        // @ts-ignore Fix the typing on priceActionObjects and then on row[column]
         columns.map((column) => row[column])
     );
 
-    return await makePooledQuery({
+    return makePooledQuery({
         text: format(
             `
                 insert into price_action_1d (ticker, timestamp, open, close, high, low, volume) values %L 
@@ -22,5 +23,5 @@ export async function fetchAndInsertSnapshot({ date }: { date: DateDayjsOrString
             `,
             priceActionObjectsAsArrays
         ),
-    });
+    }) as unknown;
 }

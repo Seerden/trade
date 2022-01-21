@@ -36,7 +36,6 @@ module.exports = {
         "react/react-in-jsx-scope": "off",
         "react/jsx-first-prop-new-line": [1, "multiline"],
         "react/jsx-max-props-per-line": "off",
-        // "react/jsx-indent-props": [2, 2],
         "react/jsx-closing-bracket-location": [2, "tag-aligned"],
         "react/prop-types": "off",
         "react/display-name": "off",
