@@ -3,6 +3,14 @@
 const path = require("path");
 const miniCss = require("mini-css-extract-plugin");
 
+// 1. import default from the plugin module
+const createStyledComponentsTransformer =
+    require("typescript-plugin-styled-components").default;
+
+// 2. create a transformer;
+// the factory additionally accepts an options object which described below
+const styledComponentsTransformer = createStyledComponentsTransformer();
+
 module.exports = {
     output: {
         path: path.join(__dirname, "dist"),
@@ -27,8 +35,11 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
-                use: {
-                    loader: "ts-loader",
+                loader: "ts-loader",
+                options: {
+                    getCustomTransformers: () => ({
+                        before: [styledComponentsTransformer],
+                    }),
                 },
             },
             {
