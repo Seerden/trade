@@ -1,5 +1,6 @@
+import { getTradeInfo } from "helpers/trade-helpers/trade-info";
 import { FaPlusCircle } from "react-icons/fa";
-import { Trade } from "types/trade.types";
+import { BuyTicket, SellTicket, Trade } from "types/trade.types";
 import {
     StyledTradeCardAverage,
     StyledTradeCardAverages,
@@ -13,24 +14,9 @@ import {
     StyledTradeDateRange,
 } from "./Trades.style";
 
-const mockTrade: Trade = [
-    {
-        action: "buy",
-        price: 1.0,
-        quantity: 1000,
-        ticker: "BBIG",
-        timestamp: new Date().valueOf(),
-    },
-    {
-        action: "sell",
-        price: 1.0,
-        quantity: 1000,
-        ticker: "BBIG",
-        timestamp: new Date().valueOf(),
-    },
-];
-
 export function TradeCard({ trade }: { trade: Trade }) {
+    const { meanBuy, meanSell, quantity } = getTradeInfo(trade);
+
     return (
         <StyledTradeCardGrid>
             <StyledTradeCardTypeWrapper>
@@ -41,18 +27,18 @@ export function TradeCard({ trade }: { trade: Trade }) {
                 </StyledTradeDateRange>
             </StyledTradeCardTypeWrapper>
             <StyledTradeCardProfit>+$950.00</StyledTradeCardProfit>
-            <StyledTradeCardQuantity>2500 shares</StyledTradeCardQuantity>
+            <StyledTradeCardQuantity>{quantity} shares</StyledTradeCardQuantity>
             <StyledTradeCardAverages>
                 <StyledTradeCardExpandTickets>
                     <FaPlusCircle />
                 </StyledTradeCardExpandTickets>
                 <StyledTradeCardAverage>
-                    <span>avg. entry</span>
-                    <span>5.28</span>
+                    <span>avg. sell</span>
+                    <span>{meanSell.toFixed(2)}</span>
                 </StyledTradeCardAverage>
                 <StyledTradeCardAverage>
-                    <span>avg. exit</span>
-                    <span>5.08</span>
+                    <span>avg. buy</span>
+                    <span>{meanBuy.toFixed(2)}</span>
                 </StyledTradeCardAverage>
             </StyledTradeCardAverages>
             <StyledTradeCardChart>CHART HERE</StyledTradeCardChart>
@@ -60,6 +46,23 @@ export function TradeCard({ trade }: { trade: Trade }) {
     );
 }
 
+const mockTrade: [BuyTicket, SellTicket] = [
+    {
+        action: "buy",
+        price: 5.01,
+        quantity: 2500,
+        ticker: "MSFT",
+        timestamp: new Date().valueOf(),
+    },
+    {
+        action: "sell",
+        price: 5.25,
+        quantity: 2500,
+        ticker: "MSFT",
+        timestamp: new Date().valueOf(),
+    },
+];
+
 export function Trades({ ticker }: { ticker: string }) {
-    return <TradeCard trade={[]} />;
+    return <TradeCard trade={mockTrade} />;
 }
