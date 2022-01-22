@@ -47,7 +47,8 @@ function NewTicket() {
                     step={0.01}
                     min={0}
                     value={price}
-                    onChange={(e) => setPrice(setValueToFixed(e, 2))}
+                    onChange={(e) => setPrice(e.target.value)}
+                    onBlur={(e) => setPrice(setValueToFixed(e, 2))}
                 />
             </StyledFormField>
 
