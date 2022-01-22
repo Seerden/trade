@@ -9,7 +9,7 @@ const App = () => {
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="tickets">
-                        <Route path="/" element={<></>} />
+                        <Route index element={<></>} />
                     </Route>
 
                     <Route path="ticker/:tickerId" element={<Ticker />} />

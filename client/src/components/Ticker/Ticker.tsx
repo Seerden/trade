@@ -1,4 +1,5 @@
 import TickerInfo from "./TickerInfo/TickerInfo";
+import NewTicket from "./Tickets/NewTicket/NewTicket";
 import { Trades } from "./Trades/Trades";
 
 function Ticker() {
@@ -6,6 +7,7 @@ function Ticker() {
         <div>
             <TickerInfo />
             <Trades ticker={"msft"} />
+            <NewTicket />
         </div>
     );
 }
