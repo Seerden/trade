@@ -1,11 +1,13 @@
 import styled from "styled-components";
 
 const inputHeight = "1.5rem";
+const borderColor = "#cfcfcf";
+const color = "#555";
 
 export const StyledLabel = styled.label`
     width: 100%;
-    background-color: #cfcfcf;
-    color: #555;
+    background-color: ${borderColor};
+    color: ${color};
     font-weight: 500;
     padding: 0.2rem;
 
@@ -16,7 +18,7 @@ export const StyledLabel = styled.label`
 
 /** input element */
 export const StyledInput = styled.input`
-    border: 2px solid #cfcfcf;
+    border: 2px solid ${borderColor};
     width: 5rem;
 
     &:active,
@@ -54,11 +56,11 @@ export const StyledForm = styled.form`
 /** button element
  * @param hasBorder add border (top, right, buttom), intended for the input toggle in the Date field
  */
-export const StyledButton = styled.button<{ hasBorder: boolean }>`
+export const StyledButton = styled.button<{ hasBorder?: boolean }>`
     display: flex;
     border: ${(p) => p.hasBorder && "2px solid #ccc"};
     border-left: none;
-    font-size: 0.89rem;
+    font-size: 0.83rem;
     align-items: center;
     justify-content: center;
     height: 100%;
@@ -67,4 +69,9 @@ export const StyledButton = styled.button<{ hasBorder: boolean }>`
 export const StyledDateInput = styled.span`
     display: grid;
     grid-template-columns: 5fr 1fr;
+`;
+
+export const StyledSubmitButton = styled(StyledButton)`
+    border: 2px solid ${borderColor};
+    color: ${color};
 `;

@@ -8,6 +8,7 @@ import {
     StyledFormField,
     StyledInput,
     StyledLabel,
+    StyledSubmitButton,
 } from "./NewTicket.style";
 
 function NewTicket() {
@@ -65,6 +66,10 @@ function NewTicket() {
                         {inputType === "datetime-local" ? <FiType /> : <MdDateRange />}
                     </Button>
                 </StyledDateInput>
+            </StyledFormField>
+
+            <StyledFormField>
+                <StyledSubmitButton>Save ticket</StyledSubmitButton>
             </StyledFormField>
         </StyledForm>
     );
