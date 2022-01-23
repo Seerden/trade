@@ -1,10 +1,10 @@
-import type { BuyTicket, SellTicket, Trade } from "types/trade.types";
+import type { BuyTicket, SellTicket, Ticket } from "types/trade.types";
 
 /**
  * Take an array of tickets in a trade and extract various data, like P&L, quantity,
  * average buy/sell price, etc.
  */
-export function getTradeInfo(trade: Trade) {
+export function getTradeInfo(trade: Ticket) {
     return {
         quantity: getTradeQuantity(trade),
         meanBuy: meanPrice(
@@ -27,7 +27,7 @@ export function getTradeInfo(trade: Trade) {
  *      with the excess shares going into a new trade, so this wouldn't
  *      be a problem
  */
-function getTradeQuantity(trade: Trade): number {
+function getTradeQuantity(trade: Ticket): number {
     if (!trade.length) return 0;
 
     const buys = trade.filter((ticket) => ticket.action === "buy");

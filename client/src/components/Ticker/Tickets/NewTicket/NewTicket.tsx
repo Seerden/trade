@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import { FiType } from "react-icons/fi";
 import { MdDateRange } from "react-icons/md";
 import {
@@ -10,6 +10,7 @@ import {
     StyledLabel,
     StyledSubmitButton,
 } from "./NewTicket.style";
+import { useNewTicket } from "./useNewTicket";
 
 function NewTicket() {
     const [inputType, setInputType] = useState<React.HTMLInputTypeAttribute>("text");
@@ -18,7 +19,7 @@ function NewTicket() {
         setInputType((current) => (current === "text" ? "datetime-local" : "text"));
     }, [setInputType]);
 
-    function setValueToFixed(e: React.ChangeEvent<HTMLInputElement>, decimals = 2) {
+    function setValueToFixed(e: ChangeEvent<HTMLInputElement>, decimals = 2) {
         return (+e.target.value).toFixed(decimals);
     }
 
@@ -32,7 +33,7 @@ function NewTicket() {
 
             <StyledFormField>
                 <StyledLabel htmlFor="ticker">Ticker</StyledLabel>
-                <StyledInput name="ticker" type="text" />
+                <Input name="ticker" type="text" />
             </StyledFormField>
 
             <StyledFormField>
@@ -42,15 +43,7 @@ function NewTicket() {
 
             <StyledFormField>
                 <StyledLabel htmlFor="price">Price</StyledLabel>
-                <StyledInput
-                    name="price"
-                    type="number"
-                    step={0.01}
-                    min={0}
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    onBlur={(e) => setPrice(setValueToFixed(e, 2))}
-                />
+                <Input name="price" type="number" step={0.01} min={0} />
             </StyledFormField>
 
             <StyledFormField width={"13rem"}>
@@ -96,5 +89,18 @@ function Button({
         >
             {children}
         </StyledButton>
+    );
+}
+
+function Input({ children, ...inputProps }: React.InputHTMLAttributes<HTMLInputElement>) {
+    const [handleChange] = useNewTicket();
+    return (
+        <StyledInput
+            {...inputProps}
+            onChange={(e) => {
+                inputProps.onChange?.(e);
+                handleChange(e);
+            }}
+        />
     );
 }

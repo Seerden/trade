@@ -1,6 +1,6 @@
 import { getTradeInfo } from "helpers/trade-helpers/trade-info";
 import { FaPlusCircle } from "react-icons/fa";
-import { BuyTicket, SellTicket, Trade } from "types/trade.types";
+import { BuyTicket, SellTicket, Ticket } from "types/trade.types";
 import {
     StyledTradeCardAverage,
     StyledTradeCardAverages,
@@ -14,7 +14,7 @@ import {
     StyledTradeDateRange,
 } from "./Trades.style";
 
-export function TradeCard({ trade }: { trade: Trade }) {
+export function TradeCard({ trade }: { trade: Ticket }) {
     const { meanBuy, meanSell, quantity } = getTradeInfo(trade);
 
     return (
