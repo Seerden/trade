@@ -22,7 +22,7 @@ function capitalize(str: string) {
     return str[0].toUpperCase() + str.slice(1);
 }
 
-function ListItem({ path, pathLabel }) {
+function ListItem({ path, pathLabel }: ListItemProps) {
     const label = pathLabel ?? capitalize(path);
 
     return (

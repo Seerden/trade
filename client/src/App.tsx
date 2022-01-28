@@ -3,7 +3,7 @@ import Navigation from "components/Navigation/Navigation";
 import Ticker from "components/Ticker/Ticker";
 import Tickers from "components/Ticker/Tickers";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import * as S from "./App.styles";
+import * as S from "./App.style";
 
 const App = () => {
     return (
