@@ -6,6 +6,7 @@
 import { config } from "dotenv";
 import express from "express";
 import session from "express-session";
+import authRouter from "./api/routers/auth-router";
 import { redisClient, RedisStore } from "./store/redis-client";
 
 config();
@@ -34,9 +35,12 @@ async function main() {
     redisClient.on("error", (e) => console.log(e));
 
     if (!(process.env.NODE_ENV === "production")) {
-        const devRouter = require("./api/routers/dev-router").devRouter;
+        const { devRouter } = await import("./api/routers/dev-router");
         app.use("/", devRouter);
     }
+
+    // @todo - finalize implement auth routes (register, login, logout...)
+    app.use("/auth", authRouter);
 
     app.get("/", (req, res) => {
         res.json({ message: "/ GET successful" });
