@@ -7,7 +7,7 @@ create table tickets (
     timestamp   numeric(16)     not null,
     action      text            not null,
     quantity    numeric         not null,
-    price       numeric(16,6)   not null,
+    price       numeric(16,6)   not null
 );
 
 -- create indexes

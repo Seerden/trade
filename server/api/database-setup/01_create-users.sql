@@ -1,6 +1,6 @@
 -- create users table
 create table users (
-    user_id     serial,
+    user_id     serial      not null    unique,
     username    text        not null    unique  primary key,
     password    text        not null,
     created_at  timestamptz not null    default NOW()
