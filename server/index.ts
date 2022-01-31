@@ -7,7 +7,7 @@ import { config } from "dotenv";
 import express from "express";
 import session from "express-session";
 import authRouter from "./api/routers/auth-router";
-import { redisClient, RedisStore } from "./store/redis-client";
+import { redisSession, startRedis } from "./store/redis-client";
 
 config();
 
@@ -21,18 +21,9 @@ async function main() {
         })
     );
     app.use(express.json());
-    app.use(
-        session({
-            store: new RedisStore({ client: redisClient }),
-            saveUninitialized: false,
-            secret: process.env.SESSION_SECRET,
-            resave: false,
-        })
-    );
+    app.use(session(redisSession));
 
-    await redisClient.connect();
-    redisClient.on("connected", () => console.log("connected"));
-    redisClient.on("error", (e) => console.log(e));
+    await startRedis();
 
     if (!(process.env.NODE_ENV === "production")) {
         const { devRouter } = await import("./api/routers/dev-router");

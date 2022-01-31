@@ -7,3 +7,16 @@ export const redisClient = createClient({
 });
 
 export const RedisStore = connectRedis(session);
+
+export const redisSession: session.SessionOptions = {
+    store: new RedisStore({ client: redisClient }),
+    saveUninitialized: false,
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+};
+
+export async function startRedis() {
+    await redisClient.connect();
+    redisClient.on("connected", () => console.log("connected"));
+    redisClient.on("error", (e) => console.log(e));
+}
