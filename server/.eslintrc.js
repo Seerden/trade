@@ -33,6 +33,7 @@ module.exports = {
         "implicit-arrow-linebreak": "off",
         "function-paren-newline": "off",
         "import/prefer-default-export": "off",
+        "no-await-in-loop": "off",
         "comma-dangle": 0,
         quotes: ["error", "double", "avoid-escape"],
         indent: ["error", 4],
