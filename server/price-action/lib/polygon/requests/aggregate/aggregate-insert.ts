@@ -1,8 +1,8 @@
 /* Insert a number of PriceActionRow objects into the database */
 
 import format from "pg-format";
+import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
 import { Timescale } from "../../../../../types/store.types";
-import { makePooledQuery } from "../../../../database/pool/query-functions";
 import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
 import { PermittedTimespan, timescaleToTableName } from "../../../get-table-name";
 import { PolygonAggregateOptions } from "../../types/aggregate.types";
@@ -53,7 +53,7 @@ export async function insertAggregateIntoDatabase(
     { ticker, from, to, timespan }: InsertArgs["options"]
 ) {
     const timestampsInserted: Array<{ timestamp: string | number }> =
-        await makePooledQuery({
+        await PriceActionApiObject.query({
             text: format(
                 "insert into %I (ticker, timestamp, open, close, high, low, volume) values %L returning (timestamp)",
                 timescaleToTableName(timespan),
@@ -102,7 +102,7 @@ export async function fetchAndInsertAggregate({
     );
 
     const timestampsInserted: Array<{ timestamp: string | number }> =
-        await makePooledQuery({
+        await PriceActionApiObject.query({
             text: format(
                 "insert into %I (ticker, timestamp, open, close, high, low, volume) values %L returning (timestamp)",
                 timescaleToTableName(timespan),

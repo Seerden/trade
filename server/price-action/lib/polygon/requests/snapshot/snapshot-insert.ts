@@ -1,6 +1,6 @@
 import format from "pg-format";
+import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
 import { DateDayjsOrString } from "../../../../../types/date.types";
-import { makePooledQuery } from "../../../../database/pool/query-functions";
 import { fetchDailyOHLC } from "./snapshot-fetch";
 import { snapshotToPriceAction } from "./snapshot-to-rows";
 
@@ -15,7 +15,7 @@ export async function fetchAndInsertSnapshot({ date }: { date: DateDayjsOrString
         columns.map((column) => row[column])
     );
 
-    return makePooledQuery({
+    return PriceActionApiObject.query({
         text: format(
             `
                 insert into price_action_1d (ticker, timestamp, open, close, high, low, volume) values %L 

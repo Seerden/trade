@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser, getUser } from "../../backend-api/helpers/auth-helpers/user";
+import { createUser, getUser } from "../helpers/auth-helpers/user";
 
 const authRouter = express.Router({ mergeParams: true });
 
