@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm:serve --prefix ./client\" \"npm:start --prefix ./server\"",
-    "container-dev": "cd ./_containers && docker-compose --file ./docker-compose.dev.yml up --force-recreate --remove-orphans --build server database api-database"
+    "container-dev": "cd ./_containers && docker-compose --file ./docker-compose.dev.yml up --force-recreate --remove-orphans --build server database api-database store"
   },
   "keywords": [],
   "author": "github/seerden",
