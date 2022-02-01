@@ -1,14 +1,12 @@
-// @todo
-
 import { hash } from "bcrypt";
-import { BackendApiObject } from "../../../database/pools/query-objects";
+import { BackendApiObject as API } from "../../../database/pools/query-objects";
 
 /**
  * Fetch user from database, by username
  */
 export async function getUser(username: string) {
-    return await BackendApiObject.query({
-        text: "select (username, creation_date) from users where username = $1",
+    return await API.query({
+        text: "select username, created_at, password from users where username = $1",
         values: [username],
     });
 }
@@ -21,8 +19,11 @@ type NewUser = {
 export async function createUser({ username, password }: NewUser) {
     const hashedPassword = await hash(password, 10);
 
-    await BackendApiObject.query({
-        text: "insert into users (username, password) values ($1, $2)",
+    return await API.query({
+        text: `
+            insert into users (username, password) values ($1, $2) 
+            returning (username, user_id, created_at)
+        `,
         values: [username, hashedPassword],
     });
 }

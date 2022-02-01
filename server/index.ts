@@ -1,11 +1,9 @@
-/* dayjs configuration
-    note that, currently, dayjs extensions are global,
-    keep that in mind for if we ever need to diverge from the
-    extensions applied below
-*/
 import { config } from "dotenv";
 import express from "express";
 import session from "express-session";
+import passport from "passport";
+import { strategy } from "./api/helpers/auth/passport/config";
+import { getUser } from "./api/helpers/auth/user";
 import authRouter from "./api/routers/auth-router";
 import { redisSession, startRedis } from "./store/redis-client";
 
@@ -21,16 +19,33 @@ async function main() {
         })
     );
     app.use(express.json());
-    app.use(session(redisSession));
 
     await startRedis();
+    app.use(session(redisSession));
+
+    passport.use(strategy);
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    passport.serializeUser((user: any, done) => done(null, user));
+
+    passport.deserializeUser(async (user: { username: string }, done) => {
+        try {
+            const [foundUser] = await getUser(user.username);
+            if ("username" in foundUser) {
+                return done(null, foundUser);
+            }
+            return done("User not found");
+        } catch (e) {
+            done(e);
+        }
+    });
 
     if (!(process.env.NODE_ENV === "production")) {
         const { devRouter } = await import("./api/routers/dev-router");
         app.use("/", devRouter);
     }
 
-    // @todo - finalize implement auth routes (register, login, logout...)
     app.use("/auth", authRouter);
 
     app.get("/", (req, res) => {

@@ -4,6 +4,7 @@ import { createClient } from "redis";
 
 export const redisClient = createClient({
     url: "redis://store:6379", // note that `store` is the name we give to the redis service in docker-compose.yml
+    legacyMode: true,
 });
 
 export const RedisStore = connectRedis(session);
