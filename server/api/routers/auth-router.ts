@@ -24,7 +24,6 @@ authRouter.post("/login", passport.authenticate("local"), (req, res) => {
     res.json({ user: req.user });
 });
 
-// @todo: do we even need two routes? req.isAuthenticated probably false, so can just use single if-else instead of two routes.
 authRouter.get("/me", (req, res) => {
     if (req.isAuthenticated() && req.user) {
         res.send(req.user);
