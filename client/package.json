@@ -13,6 +13,7 @@
     "author": "Christiaan Seerden",
     "license": "ISC",
     "dependencies": {
+        "axios": "^0.25.0",
         "dayjs": "^1.10.7",
         "history": "^5.1.0",
         "react": "^17.0.2",
