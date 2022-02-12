@@ -2,7 +2,6 @@ import { ChangeEvent, useCallback, useState } from "react";
 import { FiType } from "react-icons/fi";
 import { MdDateRange } from "react-icons/md";
 import {
-    StyledButton,
     StyledDateInput,
     StyledForm,
     StyledFormField,
@@ -10,7 +9,7 @@ import {
     StyledLabel,
     StyledSubmitButton,
 } from "./NewTicket.style";
-import { useNewTicket } from "./useNewTicket";
+import { Button, Input } from "./NewTickets.sub";
 
 function NewTicket() {
     const [inputType, setInputType] = useState<React.HTMLInputTypeAttribute>("text");
@@ -69,38 +68,3 @@ function NewTicket() {
 }
 
 export default NewTicket;
-
-function Button({
-    children,
-    hasBorder = false,
-    ...buttonProps
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    hasBorder?: boolean;
-}): JSX.Element {
-    const { name, onClick } = buttonProps;
-    return (
-        <StyledButton
-            hasBorder={hasBorder}
-            onClick={(e) => {
-                e.preventDefault();
-                onClick?.(e);
-            }}
-            name={name}
-        >
-            {children}
-        </StyledButton>
-    );
-}
-
-function Input({ children, ...inputProps }: React.InputHTMLAttributes<HTMLInputElement>) {
-    const [handleChange] = useNewTicket();
-    return (
-        <StyledInput
-            {...inputProps}
-            onChange={(e) => {
-                inputProps.onChange?.(e);
-                handleChange(e);
-            }}
-        />
-    );
-}
