@@ -45,8 +45,8 @@ function Login() {
         e.preventDefault();
 
         try {
-            /* Note: have to destructure `user` so that passport.authenticate() on the backend works properly. */
-            // @todo: figure out a way to always just extract the data field so we don't have to do a double destructure to get fields from response
+            /* @note have to destructure `user` so that passport.authenticate() on the backend works properly. */
+            // @see  https://github.com/Seerden/trade/issues/12
             const { data } = await axios.post<any, { data: UserResponse }>(
                 "/auth/login",
                 { ...user }
@@ -58,8 +58,7 @@ function Login() {
                 - after small timeout, redirect somewhere
             */
 
-            console.log(username);
-            // navigate(`/u/${username}`)
+            navigate(`/u/${username}`);
         } catch (error) {
             // @todo: properly handle the error - sentry?
             console.log(error);
