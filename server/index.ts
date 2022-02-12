@@ -1,5 +1,6 @@
+import cors from "cors";
 import { config } from "dotenv";
-import express from "express";
+import express, { Request, Response } from "express";
 import session from "express-session";
 import passport from "passport";
 import { strategy } from "./api/helpers/auth/passport/config";
@@ -8,6 +9,17 @@ import authRouter from "./api/routers/auth-router";
 import { redisSession, startRedis } from "./store/redis-client";
 
 config();
+
+function logRequests(req: Request, res: Response, next: (...args: any) => any) {
+    const { method, url, body, query } = req;
+    console.log({
+        method,
+        url,
+        body,
+        query,
+    });
+    next();
+}
 
 async function main() {
     const app = express();
@@ -19,6 +31,8 @@ async function main() {
         })
     );
     app.use(express.json());
+    app.use(logRequests);
+    app.use(cors());
 
     await startRedis();
     app.use(session(redisSession));

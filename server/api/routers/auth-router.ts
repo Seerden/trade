@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */ /* @todo: no longer disable once we have a way to transform database snake_case fields to camelCase */
 import express from "express";
 import passport from "passport";
 import { createUser, getUser } from "../helpers/auth/user";
@@ -21,7 +22,14 @@ authRouter.post("/register", async (req, res) => {
 });
 
 authRouter.post("/login", passport.authenticate("local"), (req, res) => {
-    res.json({ user: req.user });
+    const { username, created_at } = req.user as any;
+    const userFieldsForClient = {
+        // @todo feat/auth: this should become a type shared with frontend so we can use it as axios response type
+        username,
+        createdAt: created_at,
+    };
+
+    res.json({ ...userFieldsForClient });
 });
 
 authRouter.get("/me", (req, res) => {
