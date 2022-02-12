@@ -3,6 +3,7 @@ import Login from "components/Login/Login";
 import Navigation from "components/Navigation/Navigation";
 import Ticker from "components/Ticker/Ticker";
 import Tickers from "components/Ticker/Tickers";
+import UserPage from "components/User/UserPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import * as S from "./App.style";
 
@@ -16,6 +17,7 @@ const App = () => {
                 <S.Wrapper>
                     <Routes>
                         <Route path="/" element={<Login />} />
+                        <Route path="u/:username" element={<UserPage />} />
                         <Route path="tickets">
                             <Route index element={<></>} />
                         </Route>
