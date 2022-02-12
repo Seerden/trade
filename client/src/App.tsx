@@ -1,9 +1,12 @@
+import axios from "axios";
 import Login from "components/Login/Login";
 import Navigation from "components/Navigation/Navigation";
 import Ticker from "components/Ticker/Ticker";
 import Tickers from "components/Ticker/Tickers";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import * as S from "./App.style";
+
+axios.defaults.baseURL = "http://localhost:5000";
 
 const App = () => {
     return (
