@@ -13,6 +13,12 @@ const emptyUser: User = {
     password: "",
 };
 
+// this should match the shape of the response sent by the backend - @todo: find some way to unify this, or at least put all these together in a folder somewhere
+type UserResponse = {
+    username: string;
+    created_at: string;
+};
+
 function useLogin() {
     // functionality - @todo: extract to hook later
     const [user, setUser] = useState<User>(emptyUser);
@@ -33,12 +39,6 @@ function useLogin() {
         // validate(name, value)
         updateUser(e);
     }
-
-    // this should match the shape of the response sent by the backend - @todo: find some way to unify this, or at least put all these together in a folder somewhere
-    type UserResponse = {
-        username: string;
-        created_at: string;
-    };
 
     async function onSubmit(e: any /* @todo: add type */) {
         e.preventDefault();
