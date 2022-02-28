@@ -20,8 +20,9 @@ export async function fetchPriceActionForTicker({
     ticker,
     from,
     to,
-    limit = "ALL",
+    limit = "750",
 }: Options) {
+    // @todo: do not include `ticker` field in response.
     return await PriceActionApiObject.query({
         text: format(
             "select * from %I where ticker = '%s' and timestamp between %L and %L limit %L",
