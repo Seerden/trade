@@ -35,7 +35,7 @@ export const StyledField = styled.div`
     align-items: center;
 
     &:not(:nth-of-type(1)) {
-        margin-top: ${({ theme }) => theme.padding.tiny};
+        padding: ${({ theme }) => theme.padding.tiny} 0;
     }
 `;
 

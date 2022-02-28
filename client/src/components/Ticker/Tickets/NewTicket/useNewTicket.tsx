@@ -6,7 +6,9 @@ type NewTicket = Omit<BuyTicket | SellTicket, "timestamp"> & {
 };
 
 export function useNewTicket(logChanges = false) {
-    const [ticket, setTicket] = useState<NewTicket>({} as NewTicket);
+    const [ticket, setTicket] = useState<NewTicket>({
+        action: "buy",
+    } as NewTicket);
 
     useEffect(() => {
         if (logChanges) {
