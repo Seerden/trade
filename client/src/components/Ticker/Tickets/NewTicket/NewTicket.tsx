@@ -11,7 +11,7 @@ import { Field } from "./NewTickets.sub";
 import { useNewTicket } from "./useNewTicket";
 
 function NewTicket() {
-    const { onChange, onSubmit, ticket } = useNewTicket(false);
+    const { onChange, onSubmit, ticket } = useNewTicket({ logChanges: true });
 
     return (
         <StyledNewTicket onSubmit={(e) => onSubmit(e)}>
