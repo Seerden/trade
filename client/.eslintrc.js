@@ -2,45 +2,45 @@ module.exports = {
     env: {
         browser: true,
         es2021: true,
-        node: true,
+        node: true
     },
     extends: [
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
     parser: "@typescript-eslint/parser",
     parserOptions: {
         ecmaFeatures: {
-            jsx: true,
+            jsx: true
         },
         ecmaVersion: 12,
-        sourceType: "module",
+        sourceType: "module"
     },
     plugins: ["react", "@typescript-eslint"],
     settings: {
         react: {
-            version: "detect",
+            version: "detect"
         },
         "import/resolver": {
             alias: {
                 map: [
                     ["components", "src/components"],
-                    ["hooks", "src/hooks"],
-                ],
-            },
-        },
+                    ["hooks", "src/hooks"]
+                ]
+            }
+        }
     },
     rules: {
         "max-len": 0,
         "react/react-in-jsx-scope": "off",
         "react/jsx-first-prop-new-line": [1, "multiline"],
-        "react/jsx-max-props-per-line": "off",
+        "react/jsx-max-props-per-line": [1, { maximum: 1, when: "multiline" }],
         "react/jsx-closing-bracket-location": [2, "tag-aligned"],
         "react/prop-types": "off",
         "react/display-name": "off",
         "no-mixed-spaces-and-tabs": "off",
-        "react/no-unescaped-entities": "off",
+        "react/no-unescaped-entities": "off"
     },
     overrides: [
         {
@@ -49,8 +49,8 @@ module.exports = {
                 "react-hooks/exhaustive-deps": "off",
                 "@typescript-eslint/no-unused-vars": "off",
                 "@typescript-eslint/explicit-module-boundary-types": "off",
-                "no-unused-vars": "off",
-            },
-        },
-    ],
+                "no-unused-vars": "off"
+            }
+        }
+    ]
 };
