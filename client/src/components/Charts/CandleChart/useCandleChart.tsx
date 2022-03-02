@@ -1,4 +1,10 @@
-import { OHLC } from "./_.types";
+// @todo: temporary
+type OHLC = {
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+};
 
 type Props = {
     data: OHLC[];
