@@ -32,6 +32,8 @@ export default function Register() {
                 </div>
                 <StyledButtons>
                     <StyledButton type="submit" value="Register" />
+                    {/* @todo: rename isRegisterButton to isFaded or something */}
+                    <StyledButton type="button" value="Sign in" isRegisterButton />
                 </StyledButtons>
             </StyledFields>
         </StyledForm>
