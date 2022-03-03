@@ -1,3 +1,5 @@
+import { useAuth } from "hooks/auth/useAuth";
+import { Link } from "react-router-dom";
 import {
     StyledButton,
     StyledButtons,
@@ -11,7 +13,30 @@ import useLogin from "./useLogin";
 
 function Login() {
     const { onChange, onSubmit } = useLogin();
+    const { isLoggedIn, user, logout } = useAuth();
 
+    if (isLoggedIn) {
+        return (
+            // using styled form just so that style is consistent between the
+            // two render cases, but this should really be just another element type
+            <StyledForm>
+                <p>You're already logged in.</p>
+                <p>
+                    Go to <Link to={`/u/${user}`}>your profile</Link>
+                </p>
+                <p>
+                    <StyledButton
+                        type="button"
+                        onClick={e => {
+                            e.preventDefault();
+                            logout();
+                        }}
+                        value="Log out"
+                    />
+                </p>
+            </StyledForm>
+        );
+    }
     return (
         <StyledForm onSubmit={onSubmit}>
             <StyledTitle>Log in</StyledTitle>
