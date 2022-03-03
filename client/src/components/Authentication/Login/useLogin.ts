@@ -10,7 +10,7 @@ type User = {
 
 const emptyUser: User = {
     username: "",
-    password: "",
+    password: ""
 };
 
 // this should match the shape of the response sent by the backend - @todo: find some way to unify this, or at least put all these together in a folder somewhere
@@ -20,7 +20,6 @@ type UserResponse = {
 };
 
 function useLogin() {
-    // functionality - @todo: extract to hook later
     const [user, setUser] = useState<User>(emptyUser);
     const navigate = useNavigate();
 
@@ -28,7 +27,7 @@ function useLogin() {
         e: React.ChangeEvent<HTMLInputElement> /* @todo: change event type? */
     ): void {
         const { name, value } = e.target;
-        setUser((user) => ({ ...user, [name]: value }));
+        setUser(user => ({ ...user, [name]: value }));
     }
 
     function onChange(e: React.ChangeEvent<HTMLInputElement>): void {
@@ -66,7 +65,7 @@ function useLogin() {
 
     return {
         onChange,
-        onSubmit,
+        onSubmit
     } as const;
 }
 
