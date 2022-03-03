@@ -1,3 +1,4 @@
+import localStorageUser from "helpers/local-storage-user";
 import { useMemo } from "react";
 import { useRecoilState } from "recoil";
 import { User, userState } from "./state/user.atom";
@@ -11,20 +12,28 @@ export function useAuth() {
     }, [user]);
 
     function login(user: User): void {
+        // set user atom
         setUser(user);
+
+        // set user in local storage
+        localStorageUser.set(user);
     }
 
     // @todo: could also use resetRecoilState
     function logout(): void {
+        // reset user atom
         setUser({
-            username: "",
+            username: ""
         });
+
+        // remove user from local storage
+        localStorageUser.delete();
     }
 
     return {
         user,
         login,
         logout,
-        isLoggedIn,
+        isLoggedIn
     } as const;
 }
