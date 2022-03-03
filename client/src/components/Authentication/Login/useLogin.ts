@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAuth } from "hooks/auth/useAuth";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -21,6 +22,7 @@ type UserResponse = {
 
 function useLogin() {
     const [user, setUser] = useState<User>(emptyUser);
+    const { login, user: currentUser } = useAuth();
     const navigate = useNavigate();
 
     function updateUser(
@@ -50,11 +52,13 @@ function useLogin() {
                 { ...user }
             );
             const { username, created_at } = data;
-            /*
-                - set user state
-                - flash a message
-                - after small timeout, redirect somewhere
-            */
+            /**
+             * @todo:
+             * [x] set user state
+             * [ ] flash a message
+             * [ ] after small timeout, redirect somewhere
+             */
+            login({ username });
 
             navigate(`/u/${username}`);
         } catch (error) {

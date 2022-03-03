@@ -2,6 +2,7 @@ import axios from "axios";
 import Login from "components/Authentication/Login/Login";
 // import NewTicket from "components/Ticker/Tickets/NewTicket/NewTicket";
 import { theme } from "helpers/theme/theme";
+import { useAuth } from "hooks/auth/useAuth";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
@@ -32,6 +33,12 @@ function Test() {
 }
 
 const App = () => {
+    const { user } = useAuth();
+
+    useEffect(() => {
+        console.log({ user });
+    }, [user]);
+
     return (
         <div className="App">
             <BrowserRouter>
