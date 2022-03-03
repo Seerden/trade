@@ -7,7 +7,8 @@ export type User = {
 
 export const userState = atom<User>({
     default: {
-        username: "",
+        // consider getting the default from local storage or something
+        username: ""
     },
-    key: "auth/user",
+    key: "auth/user"
 });
