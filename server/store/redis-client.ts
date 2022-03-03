@@ -14,6 +14,10 @@ export const redisSession: session.SessionOptions = {
     saveUninitialized: false,
     secret: process.env.SESSION_SECRET,
     resave: false,
+    cookie: {
+        maxAge: 7 * 24 * 3600 * 1000, // max age is a week by default
+        secure: process.env.NODE_ENV === "production",
+    },
 };
 
 export async function startRedis() {

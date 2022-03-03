@@ -10,6 +10,7 @@ const CandleChart = lazy(() => import("./components/Charts/CandleChart/CandleCha
 const NewTickets = lazy(() => import("components/Ticker/Tickets/NewTicket/NewTickets"));
 
 axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.withCredentials = true;
 
 function Test() {
     const [data, setData] = useState<Record<string, any>>();

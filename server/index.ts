@@ -32,7 +32,14 @@ async function main() {
     );
     app.use(express.json());
     app.use(logRequests);
-    app.use(cors());
+    app.use(
+        cors({
+            // @todo: origin should probably be different in production
+            origin: "http://localhost:3000",
+            methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+            credentials: true,
+        })
+    );
 
     await startRedis();
     app.use(session(redisSession));
