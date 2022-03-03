@@ -22,7 +22,7 @@ function Login() {
             <StyledForm>
                 <p>You're already logged in.</p>
                 <p>
-                    Go to <Link to={`/u/${user}`}>your profile</Link>
+                    Go to <Link to={`/u/${user.username}`}>your profile</Link>
                 </p>
                 <p>
                     <StyledButton
@@ -37,17 +37,18 @@ function Login() {
             </StyledForm>
         );
     }
+
     return (
         <StyledForm onSubmit={onSubmit}>
             <StyledTitle>Log in</StyledTitle>
             <StyledFields>
-                {/* username field */}
                 <div>
+                    {/* username field */}
                     <StyledLabel htmlFor="username">Username</StyledLabel>
                     <StyledInput type="text" name="username" onChange={onChange} />
                 </div>
-                {/* password field */}
                 <div>
+                    {/* password field */}
                     <StyledLabel htmlFor="password">Password</StyledLabel>
                     <StyledInput type="password" name="password" onChange={onChange} />
                 </div>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import Login from "components/Authentication/Login/Login";
+import Register from "components/Authentication/Register/Register";
 // import NewTicket from "components/Ticker/Tickets/NewTicket/NewTicket";
 import { theme } from "helpers/theme/theme";
 import { useAuth } from "hooks/auth/useAuth";
@@ -51,6 +52,7 @@ const App = () => {
                                 element={
                                     <Suspense fallback={<></>}>
                                         <Login />
+                                        <Register />
                                         {/* <Test />
                                         <NewTicket />
                                         <NewTickets /> */}

@@ -9,9 +9,9 @@
 import styled, { css } from "styled-components";
 
 export const StyledForm = styled.form`
+    width: max-content;
     padding: 2em 4em;
     margin: 2em;
-    width: max-content;
     margin: 2em auto;
 
     border: 1px solid var(--main);
