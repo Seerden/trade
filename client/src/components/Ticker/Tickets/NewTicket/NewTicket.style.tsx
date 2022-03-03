@@ -1,3 +1,4 @@
+import { StyledSection } from "style/block-style";
 import styled, { css } from "styled-components";
 import { TradeAction } from "types/trade.types";
 
@@ -5,8 +6,8 @@ export const StyledNewTicket = styled.form`
     display: flex;
     width: max-content;
     flex-direction: column;
-    border: ${(p) => p.theme.size.tiny} solid ${(p) => p.theme.colors.grey.regular};
-    padding: ${(p) => p.theme.padding.large} ${(p) => p.theme.padding.large};
+    
+    ${StyledSection}
 `;
 
 export const StyledLabel = styled.label`
