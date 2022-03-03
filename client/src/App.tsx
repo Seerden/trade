@@ -1,5 +1,5 @@
 import axios from "axios";
-import NewTicket from "components/Ticker/Tickets/NewTicket/NewTicket";
+import Login from "components/Authentication/Login/Login";
 // import NewTicket from "components/Ticker/Tickets/NewTicket/NewTicket";
 import { theme } from "helpers/theme/theme";
 import { lazy, Suspense, useEffect, useState } from "react";
@@ -42,9 +42,10 @@ const App = () => {
                                 path="/"
                                 element={
                                     <Suspense fallback={<></>}>
-                                        <Test />
+                                        <Login />
+                                        {/* <Test />
                                         <NewTicket />
-                                        <NewTickets />
+                                        <NewTickets /> */}
                                         {/* <CandleChart /> */}
                                     </Suspense>
                                 }
