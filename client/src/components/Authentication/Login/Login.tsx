@@ -18,7 +18,7 @@ function Login() {
     if (isLoggedIn) {
         return (
             // using styled form just so that style is consistent between the
-            // two render cases, but this should really be just another element type
+            // two render cases, but this should really be something else, not a form
             <StyledForm>
                 <p>You're already logged in.</p>
                 <p>

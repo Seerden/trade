@@ -8,6 +8,15 @@ import {
     StyledTitle
 } from "../Login/Login.style";
 
+/**
+ Checklist:
+ - [ ] functionality
+    create useRegister hook
+    create API routes
+- [ ] styling
+    synchronize with Login styling
+*/
+
 export default function Register() {
     return (
         <StyledForm>
