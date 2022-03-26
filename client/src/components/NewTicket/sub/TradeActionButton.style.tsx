@@ -16,4 +16,6 @@ export const StyledButton = styled.button<{ side: "buy" | "sell"; active?: boole
 	background-color: transparent;
 
 	color: ${p => sideToColor[p.side]};
+
+	transition: all 55ms linear;
 `;
