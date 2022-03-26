@@ -6,6 +6,7 @@ import passport from "passport";
 import { strategy } from "./api/helpers/auth/passport/config";
 import { getUser } from "./api/helpers/auth/user";
 import authRouter from "./api/routers/auth-router";
+import { tradeRouter } from "./api/routers/trade-router";
 import { redisSession, startRedis } from "./store/redis-client";
 
 config();
@@ -68,6 +69,7 @@ async function main() {
     }
 
     app.use("/auth", authRouter);
+    app.use("/t", tradeRouter);
 
     app.get("/", (req, res) => {
         res.json({ message: "/ GET successful" });

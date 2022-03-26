@@ -1,4 +1,4 @@
-import { Ticket, TradeAction, TradeType } from "types/trade.types";
+import { Ticket, TradeAction, TradeType } from "types/ticket.types";
 
 /**
  * Sort a trade's tickets by timestamp in ascending order

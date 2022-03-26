@@ -26,4 +26,5 @@ export interface SellTicket extends TicketBase {
     action: `${TradeAction.SELL}`;
 }
 
+// @todo: this should be Tickets...
 export type Ticket = Array<BuyTicket | SellTicket>;
