@@ -25,12 +25,6 @@ import TradeActionButton from "./sub/TradeActionButton";
 
 const sides = "buy sell".split(" ");
 
-function renderActionButtons() {
-	return sides.map((side: "buy" | "sell") => (
-		<TradeActionButton key={side} side={side} />
-	));
-}
-
 type NewTicket = {
 	// @todo: use type
 	side: "buy" | "sell";
