@@ -8,17 +8,20 @@ export const StyledInput = styled(SharedStyledInput)<{ $size?: string }>`
 
 	// in this specific case, the following is just for the 'time' field,
 	// whose content needs slightly more space than 5rem
+	min-width: 5.5rem;
 	width: 5.5rem;
 
 	${p =>
 		p.$size === "small" &&
 		css`
+			min-width: 5rem;
 			width: 5rem;
 		`}
 
 	${p =>
 		p.$size === "large" &&
 		css`
+			min-width: 10rem;
 			width: 10rem;
 		`}
 
