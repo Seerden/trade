@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes } from "react";
-import { StyledButton } from "./TradeActionButton.style";
+import { StyledButton } from "./sub.style";
 
 interface Props extends Partial<ButtonHTMLAttributes<HTMLButtonElement>> {
 	// @todo: use TradeAction type or something
