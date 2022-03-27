@@ -1,6 +1,7 @@
 import axios from "axios";
 import Login from "components/Authentication/Login/Login";
 import Register from "components/Authentication/Register/Register";
+import Navigation from "components/Navigation/Navigation";
 import { theme } from "helpers/theme/theme";
 import { useAuth } from "hooks/auth/useAuth";
 import { lazy, Suspense, useEffect } from "react";
@@ -24,6 +25,7 @@ const App = () => {
 			<BrowserRouter>
 				<ThemeProvider theme={theme}>
 					<Wrapper>
+						<Navigation />
 						<Routes>
 							<Route
 								path="/tickets/new"
@@ -34,6 +36,8 @@ const App = () => {
 								}
 							/>
 
+							<Route path="login" element={<Login />} />
+							<Route path="register" element={<Register />} />
 							<Route
 								path="/"
 								element={
