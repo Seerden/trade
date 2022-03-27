@@ -6,14 +6,14 @@ import TradeActionButton from "./sub/TradeActionButton";
 
 const sides = "buy sell".split(" ");
 
-type NewTicket = {
-	// @todo: use type
+export type RawNewTicket = {
+	// TODO: use type
 	side: "buy" | "sell";
 	ticker: string;
-	quantity: number;
+	quantity: string;
 	date: string;
 	time: string;
-	price: number;
+	price: string;
 };
 
 const StyledRow = styled.div`
@@ -30,7 +30,7 @@ export default function NewTicket() {
 		side: "buy",
 		date: today,
 		time: "09:30"
-	} as Partial<NewTicket>);
+	} as Partial<RawNewTicket>);
 
 	const actionButtons = useMemo(
 		() =>
@@ -54,7 +54,7 @@ export default function NewTicket() {
 	/**
 	 * Set ticket.side to `side`
 	 */
-	const setSide = (side: NewTicket["side"]) => {
+	const setSide = (side: RawNewTicket["side"]) => {
 		setTicket(cur => ({ ...cur, side: side }));
 	};
 
@@ -64,7 +64,7 @@ export default function NewTicket() {
 	};
 
 	const priceStep = useMemo(() => {
-		const price = ticket?.price;
+		const price = +ticket?.price;
 
 		if (price >= 1000) {
 			return 1;
@@ -76,7 +76,7 @@ export default function NewTicket() {
 	}, [ticket?.price]);
 
 	const quantityStep = useMemo(() => {
-		const quantity = ticket?.quantity;
+		const quantity = +ticket?.quantity;
 
 		if (quantity >= 1e6) {
 			return 1e4;
