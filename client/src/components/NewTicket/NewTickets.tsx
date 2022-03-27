@@ -173,7 +173,7 @@ export default function NewTickets() {
 }
 
 function Header() {
-	const columns = "action ticker quantity price date time".split(" ");
+	const columns = "action ticker price quantity date time".split(" ");
 
 	return (
 		<StyledHeader>
