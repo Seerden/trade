@@ -7,7 +7,7 @@ import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { Wrapper } from "./App.style";
-const NewTickets = lazy(() => import("components/NewTicket/NewTickets"));
+const NewTickets = lazy(() => import("components/NewTicket/NewTickets/NewTickets"));
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
