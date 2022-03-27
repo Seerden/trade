@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+import Header from "./sub/Header";
 import Input from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
 /**
@@ -43,7 +44,9 @@ type NewTicket = {
 export default function NewTickets() {
 	const today = dayjs(new Date()).format("YYYY-MM-DD");
 	const [ticket, setTicket] = useState({
-		side: "buy"
+		side: "buy",
+		date: today,
+		time: "09:30"
 	} as Partial<NewTicket>);
 
 	// @todo: dev - log changes
@@ -171,32 +174,6 @@ export default function NewTickets() {
 		</>
 	);
 }
-
-function Header() {
-	const columns = "action ticker price quantity date time".split(" ");
-
-	return (
-		<StyledHeader>
-			{columns.map((col, index) => (
-				<div key={index}>{col}</div>
-			))}
-		</StyledHeader>
-	);
-}
-
-const StyledHeader = styled.div`
-	display: grid;
-	grid-template-columns: repeat(4, 5rem) 10rem 5.5rem;
-	gap: 0;
-
-	div {
-		text-align: center;
-		font-size: 0.82rem;
-		border-bottom: 2px solid #eee;
-		padding-bottom: 0.25rem;
-		margin-bottom: 0.3rem;
-	}
-`;
 
 const StyledRow = styled.div`
 	display: flex;
