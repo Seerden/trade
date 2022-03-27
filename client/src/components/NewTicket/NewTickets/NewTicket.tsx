@@ -102,11 +102,18 @@ export default function NewTicket() {
 			{actionButtons}
 
 			{/* ticker field */}
-			<Input $size="small" name="ticker" placeholder="ticker" onChange={setField} />
+			<Input
+				$size="small"
+				title="Ticker"
+				name="ticker"
+				placeholder="ticker"
+				onChange={setField}
+			/>
 
 			{/* price field */}
 			<Input
 				$size="small"
+				title="Price per share"
 				name="price"
 				type="number"
 				min={0}
@@ -118,6 +125,7 @@ export default function NewTicket() {
 			{/* quantity field */}
 			<Input
 				$size="small"
+				title="Share quantity"
 				name="quantity"
 				type="number"
 				min={0}
@@ -129,6 +137,7 @@ export default function NewTicket() {
 			{/* date field */}
 			<Input
 				$size="large"
+				title="Date"
 				name="date"
 				type="date"
 				onChange={setField}
@@ -136,7 +145,13 @@ export default function NewTicket() {
 			/>
 
 			{/* time field */}
-			<Input name="time" type="time" onChange={setField} defaultValue="09:30" />
+			<Input
+				title="Time of day (market time)"
+				name="time"
+				type="time"
+				onChange={setField}
+				defaultValue="09:30"
+			/>
 		</StyledRow>
 	);
 }
