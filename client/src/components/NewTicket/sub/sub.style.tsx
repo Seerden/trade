@@ -49,7 +49,7 @@ export const StyledButton = styled.button<{ side: "buy" | "sell"; active?: boole
 
 	color: ${p => sideToColor[p.side]};
 
-	transition: all 55ms linear;
+	transition: all 35ms fade-out;
 
 	height: 2rem;
 	display: inline-flex;
