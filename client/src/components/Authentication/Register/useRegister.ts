@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useAuth } from "hooks/auth/useAuth";
-import { useCallback, useMemo, useState } from "react";
+import { FormEvent, useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 
 type NewUser = {
@@ -30,22 +30,27 @@ export function useRegister() {
 
 	const isValidNewUser = useMemo(() => validate(newUser), [newUser]);
 
-	const onSubmit = useCallback(async () => {
-		if (isValidNewUser) {
-			try {
-				const { data } = await axios.post("auth/register", { newUser });
-				const { username } = data.newUser;
-				login(username);
-				navigate(`/u/${username}`);
-			} catch (e) {
-				if (axios.isAxiosError(e)) {
-					return setMessage(e.message);
+	const onSubmit = useCallback(
+		async (e: FormEvent<HTMLFormElement>) => {
+			e.preventDefault();
+
+			if (isValidNewUser) {
+				try {
+					const { data } = await axios.post("auth/register", { newUser });
+					const { username } = data.newUser;
+					login(username);
+					navigate(`/u/${username}`);
+				} catch (e) {
+					if (axios.isAxiosError(e)) {
+						return setMessage(e.message);
+					}
+					// TODO: log to Sentry or something
+					console.error(e);
 				}
-				// TODO: log to Sentry or something
-				console.error(e);
 			}
-		}
-	}, [newUser, isValidNewUser]);
+		},
+		[newUser, isValidNewUser]
+	);
 
 	// onChange handler for username, password and repeatPassword inputs
 	function onChange(e: React.ChangeEvent<HTMLInputElement>) {

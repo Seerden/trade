@@ -8,37 +8,41 @@ import {
 	StyledLabel,
 	StyledTitle
 } from "../Login/Login.style";
+import { useRegister } from "./useRegister";
 
 /**
  Checklist:
- - [ ] functionality
-    create useRegister hook
-    create API routes
-- [ ] styling
-    synchronize with Login styling
+ - [x] functionality
+    [x] create useRegister hook
+    [x] create API routes
+- [~] styling
+    [~] synchronize with Login styling
+      - TODO: width doesn't match exactly; consider fixing element widths
 */
 
 export default function Register() {
+	const { onChange, onSubmit } = useRegister();
+
 	return (
-		<StyledForm>
+		<StyledForm onSubmit={onSubmit}>
 			<StyledTitle>Register</StyledTitle>
 			<StyledFields>
 				<div>
 					{/* username field */}
 					<StyledLabel htmlFor={"username"}>Username</StyledLabel>
-					<StyledInput type="text" name="username" />
+					<StyledInput type="text" name="username" onChange={onChange} />
 				</div>
 
 				<div>
 					{/* password field */}
 					<StyledLabel htmlFor={"password"}>Password</StyledLabel>
-					<StyledInput type="password" name="password" />
+					<StyledInput type="password" name="password" onChange={onChange} />
 				</div>
 
 				<div>
 					{/* repeat password field */}
 					<StyledLabel htmlFor={"repeatPassword"}>Repeat password</StyledLabel>
-					<StyledInput type="password" name="repeatPassword" />
+					<StyledInput type="password" name="repeatPassword" onChange={onChange} />
 				</div>
 				<StyledButtons>
 					<StyledButton type="submit" value="Register" />

@@ -4,36 +4,40 @@ import { useRecoilState } from "recoil";
 import { User, userState } from "./state/user.atom";
 
 export function useAuth() {
-    const [user, setUser] = useRecoilState(userState);
+	const [user, setUser] = useRecoilState(userState);
 
-    // @todo: this could also be a Recoil selector
-    const isLoggedIn = useMemo(() => {
-        return user.username.length > 0;
-    }, [user]);
+	// @todo: this could also be a Recoil selector
+	const isLoggedIn = useMemo(() => {
+		return user.username.length > 0;
+	}, [user]);
 
-    function login(user: User): void {
-        // set user atom
-        setUser(user);
+	function login(user: User): void {
+		if (!user) {
+			return;
+		}
 
-        // set user in local storage
-        localStorageUser.set(user);
-    }
+		// set user atom
+		setUser(user);
 
-    // @todo: could also use resetRecoilState
-    function logout(): void {
-        // reset user atom
-        setUser({
-            username: ""
-        });
+		// set user in local storage
+		localStorageUser.set(user);
+	}
 
-        // remove user from local storage
-        localStorageUser.delete();
-    }
+	// @todo: could also use resetRecoilState
+	function logout(): void {
+		// reset user atom
+		setUser({
+			username: ""
+		});
 
-    return {
-        user,
-        login,
-        logout,
-        isLoggedIn
-    } as const;
+		// remove user from local storage
+		localStorageUser.delete();
+	}
+
+	return {
+		user,
+		login,
+		logout,
+		isLoggedIn
+	} as const;
 }
