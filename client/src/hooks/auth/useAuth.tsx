@@ -12,7 +12,7 @@ export function useAuth() {
 	}, [user]);
 
 	function login(user: User): void {
-		if (!user) {
+		if (!user?.username) {
 			return;
 		}
 
