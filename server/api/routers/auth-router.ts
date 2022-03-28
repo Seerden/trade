@@ -15,7 +15,7 @@ authRouter.post("/register", async (req, res) => {
             message: "Username already exists",
         });
     } else {
-        // @todo
+        // TODO: log user in after inserting `user` row into database
         const [newUser] = await createUser({ username, password });
         res.json({ newUser });
     }
