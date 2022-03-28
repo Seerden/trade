@@ -22,7 +22,7 @@ export async function createUser({ username, password }: NewUser) {
     return await API.query({
         text: `
             insert into users (username, password) values ($1, $2) 
-            returning (username, user_id, created_at)
+            returning username, user_id, created_at
         `,
         values: [username, hashedPassword],
     });
