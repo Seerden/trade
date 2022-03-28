@@ -6,7 +6,7 @@ import { createUser, getUser } from "../helpers/auth/user";
 const authRouter = express.Router({ mergeParams: true });
 
 authRouter.post("/register", async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password } = req.body.newUser;
 
     const [existingUser] = await getUser(username);
 
@@ -16,8 +16,8 @@ authRouter.post("/register", async (req, res) => {
         });
     } else {
         // @todo
-        const [createdUser] = await createUser({ username, password });
-        res.json({ createdUser });
+        const [newUser] = await createUser({ username, password });
+        res.json({ newUser });
     }
 });
 
