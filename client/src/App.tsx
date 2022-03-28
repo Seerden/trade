@@ -1,5 +1,6 @@
 import axios from "axios";
 import Login from "components/Authentication/Login/Login";
+import Private from "components/Authentication/Private";
 import Register from "components/Authentication/Register/Register";
 import Navigation from "components/Navigation/Navigation";
 import { theme } from "helpers/theme/theme";
@@ -31,7 +32,7 @@ const App = () => {
 								path="/tickets/new"
 								element={
 									<Suspense fallback={<></>}>
-										<NewTickets />
+										<Private component={<NewTickets />} />
 									</Suspense>
 								}
 							/>
