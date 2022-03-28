@@ -38,8 +38,12 @@ export function useRegister() {
 				try {
 					const { data } = await axios.post("auth/register", { newUser });
 					const { username } = data.newUser;
-					login(username);
-					navigate(`/u/${username}`);
+					if (username) {
+						login({ username });
+						navigate(`/u/${username}`);
+					} else {
+						setMessage("Server returned an invalid username");
+					}
 				} catch (e) {
 					if (axios.isAxiosError(e)) {
 						return setMessage(e.message);
