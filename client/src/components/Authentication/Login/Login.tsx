@@ -28,6 +28,7 @@ function Login() {
 					<StyledButton
 						type="button"
 						onClick={e => {
+							// TODO: actually logout in the backend as well
 							e.preventDefault();
 							logout();
 						}}
