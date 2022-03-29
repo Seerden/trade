@@ -12,8 +12,8 @@ import {
 import useLogin from "./useLogin";
 
 function Login() {
-	const { onChange, onSubmit } = useLogin();
-	const { isLoggedIn, user, logout } = useAuth();
+	const { onChange, onSubmit, handleLogout } = useLogin();
+	const { isLoggedIn, user } = useAuth();
 
 	if (isLoggedIn) {
 		return (
@@ -30,7 +30,7 @@ function Login() {
 						onClick={e => {
 							// TODO: actually logout in the backend as well
 							e.preventDefault();
-							logout();
+							handleLogout(e);
 						}}
 						value="Log out"
 					/>
