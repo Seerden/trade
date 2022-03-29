@@ -8,7 +8,7 @@ export default function Navigation() {
 	return (
 		<StyledNav>
 			{isLoggedIn ? (
-				<div>{user}</div>
+				<div>{user.username}</div>
 			) : (
 				<div>
 					<Link to="/login">Log in</Link>
