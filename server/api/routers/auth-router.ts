@@ -43,7 +43,7 @@ authRouter.get("/me", (req, res) => {
 authRouter.post("/logout", (req, res) => {
     req.session.destroy(() => {
         req.logOut();
-        res.send({
+        res.json({
             success: true,
             message: "Logged out successfully.",
         });
