@@ -19,6 +19,8 @@ type NewUser = {
 export async function createUser({ username, password }: NewUser) {
     const hashedPassword = await hash(password, 10);
 
+    // TODO: what happens if we try to insert a user with a username that's
+    // already taken?
     return await API.query({
         text: `
             insert into users (username, password) values ($1, $2) 
