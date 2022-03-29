@@ -1,5 +1,4 @@
-import dayjs from "dayjs";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import styled from "styled-components";
 import Input from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
@@ -23,15 +22,14 @@ const StyledRow = styled.div`
 	height: 2.5rem;
 `;
 
-const today = dayjs(new Date()).format("YYYY-MM-DD");
+type Props = {
+	ticketIndex: number;
+	ticket: Partial<RawNewTicket>;
+	setSide: (ticketIndex: number, side: RawNewTicket["side"]) => void;
+	setField: (e: React.ChangeEvent<HTMLInputElement>, ticketIndex: number) => void;
+};
 
-export default function NewTicket() {
-	const [ticket, setTicket] = useState({
-		side: "buy",
-		date: today,
-		time: "09:30"
-	} as Partial<RawNewTicket>);
-
+const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 	const actionButtons = useMemo(
 		() =>
 			sides.map((side: "buy" | "sell") => {
@@ -43,25 +41,13 @@ export default function NewTicket() {
 						side={side}
 						active={active}
 						onClick={() => {
-							setSide(side);
+							setSide(ticketIndex, side);
 						}}
 					/>
 				);
 			}),
 		[ticket]
 	);
-
-	/**
-	 * Set ticket.side to `side`
-	 */
-	const setSide = (side: RawNewTicket["side"]) => {
-		setTicket(cur => ({ ...cur, side: side }));
-	};
-
-	const setField = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		setTicket(cur => ({ ...cur, [name]: value }));
-	};
 
 	const priceStep = useMemo(() => {
 		const price = +ticket?.price;
@@ -107,7 +93,9 @@ export default function NewTicket() {
 				title="Ticker"
 				name="ticker"
 				placeholder="ticker"
-				onChange={setField}
+				// TODO: don't repeat e => setField(e, ticketIndex) every time, write
+				// a curried function instead
+				onChange={e => setField(e, ticketIndex)}
 			/>
 
 			{/* price field */}
@@ -119,7 +107,7 @@ export default function NewTicket() {
 				min={0}
 				step={priceStep}
 				placeholder="price"
-				onChange={setField}
+				onChange={e => setField(e, ticketIndex)}
 			/>
 
 			{/* quantity field */}
@@ -131,7 +119,7 @@ export default function NewTicket() {
 				min={0}
 				step={quantityStep}
 				placeholder="quantity"
-				onChange={setField}
+				onChange={e => setField(e, ticketIndex)}
 			/>
 
 			{/* date field */}
@@ -140,8 +128,8 @@ export default function NewTicket() {
 				title="Date"
 				name="date"
 				type="date"
-				onChange={setField}
-				defaultValue={today}
+				onChange={e => setField(e, ticketIndex)}
+				defaultValue={ticket.date}
 			/>
 
 			{/* time field */}
@@ -149,9 +137,11 @@ export default function NewTicket() {
 				title="Time of day (market time)"
 				name="time"
 				type="time"
-				onChange={setField}
+				onChange={e => setField(e, ticketIndex)}
 				defaultValue="09:30"
 			/>
 		</StyledRow>
 	);
-}
+};
+
+export default NewTicket;

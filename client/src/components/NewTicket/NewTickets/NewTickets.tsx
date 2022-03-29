@@ -1,5 +1,7 @@
+import { useMemo } from "react";
 import NewTicket from "./NewTicket";
 import Header from "./sub/Header";
+import { useNewTickets } from "./useNewTickets";
 /**
    table of new tickets, acts like one large form, but should feel like a google
    sheet
@@ -23,15 +25,25 @@ import Header from "./sub/Header";
 
 */
 
-// for now, pretend we're just creating one ticket, and then expand to multiple
-// tickets once the single ticket is functional
 export default function NewTickets() {
-	const tickets = Object.keys([...Array(3)]).map(index => <NewTicket key={index} />);
+	const { tickets, setSide, setField } = useNewTickets();
+
+	const ticketElements = useMemo(() => {
+		return tickets.map((ticket, ticketIndex) => {
+			const options = {
+				ticketIndex,
+				ticket,
+				setSide,
+				setField
+			};
+			return <NewTicket key={ticketIndex} {...options} />;
+		});
+	}, [tickets]);
 
 	return (
 		<>
 			<Header />
-			{tickets}
+			{ticketElements}
 		</>
 	);
 }
