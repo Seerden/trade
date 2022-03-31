@@ -4,16 +4,25 @@ import { NewTicket } from "../../../types/ticket.types";
 import { getTradeIds } from "../trades/get";
 import { getUserId } from "../users/get";
 
-const fields = "ticker timestamp action quantity price".split(" ") as Array<
+const newTicketFields = "ticker timestamp action quantity price".split(" ") as Array<
 	keyof NewTicket
+>;
+
+interface TicketForDatabase extends NewTicket {
+	userId: number;
+	tradeId: number;
+}
+
+const ticketForDatabaseFields = [...newTicketFields, "userId", "tradeId"] as Array<
+	keyof TicketForDatabase
 >;
 
 /**
  * TODO: currently, addIdPropsToTicket and ticketObjectToArray are unused,
  * we first need to
- * - add a new type that extends NewTicket with userId and tradeId props (are
+ * - [x] add a new type that extends NewTicket with userId and tradeId props (are
  *   they numbers, or strings?)
- * - change the `fields` variable (see above) to include userId and tradeId props
+ * - [x] change the `fields` variable (see above) to include userId and tradeId props
  * - add trade_id property to the database insert
  *  - actually, do we want to do this? think so
  *
@@ -50,7 +59,7 @@ function addIdPropsToTicket(ticket: NewTicket, userId: number, tradeId: number) 
 function ticketObjectToArray(ticket: NewTicket) {
 	const array = [];
 
-	for (const field of fields) {
+	for (const field of newTicketFields) {
 		if (field in ticket) {
 			array.push(ticket[field]);
 		}
@@ -74,7 +83,7 @@ export async function insertTickets(username: string, tickets: Array<NewTicket>)
 	const userId = await getUserId(username);
 	const tradeIds = await getTradeIds(tickets);
 	const ticketsAsArrays = tickets.map((ticket, index) =>
-		fields.reduce(
+		newTicketFields.reduce(
 			(acc: Array<NewTicket[keyof NewTicket]>, field: NewTicket[keyof NewTicket]) => {
 				// @ts-ignore - reducing into a array with variable types is.. hacky
 				acc.push(ticket[field]);
