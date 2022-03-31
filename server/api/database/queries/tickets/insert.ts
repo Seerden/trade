@@ -4,8 +4,6 @@ import { NewTicket } from "../../../types/ticket.types";
 import { getTradeIds } from "../trades/get";
 import { getUserId } from "../users/get";
 
-// WHERE THE FUCK AM I KEEPING THESE TYPES?
-
 /**
  * Insert a list of new tickets into the database
  */
