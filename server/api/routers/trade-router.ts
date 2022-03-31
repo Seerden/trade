@@ -30,8 +30,11 @@ tradeRouter.get("/tickets/:ticker?/:from?/:to?", async (req, res) => {
 });
 
 tradeRouter.post("/tickets", async (req, res) => {
-    // there should be an array of tickets in req.body
-    // insert them into the database
+    const { newTickets } = req.body;
+
+    if (newTickets?.length) {
+        // insert tickets into database
+    }
 });
 
 // ----
