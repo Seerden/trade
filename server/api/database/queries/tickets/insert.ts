@@ -82,28 +82,22 @@ export async function insertTickets(username: string, tickets: Array<NewTicket>)
 
 	const userId = await getUserId(username);
 	const tradeIds = await getTradeIds(tickets);
-	const ticketsAsArrays = tickets.map((ticket, index) =>
-		newTicketFields.reduce(
-			(acc: Array<NewTicket[keyof NewTicket]>, field: NewTicket[keyof NewTicket]) => {
-				// @ts-ignore - reducing into a array with variable types is.. hacky
-				acc.push(ticket[field]);
-				return acc;
-			},
-			// userId isn't part of the newTickets array passed from the
-			// frontend, so add it to `acc` manually
-			[userId, tradeIds[index]]
-		)
-	);
+
+	const ticketsAsArrays = tickets.map((ticket, index) => {
+		const ticketWithIds = addIdPropsToTicket(ticket, userId, tradeIds[index]);
+		return ticketObjectToArray(ticketWithIds);
+	});
 
 	API.query({
 		text: format(`
             insert into tickets (
-                user_id, -- @todo: instead of typing out the fields, re-use the 'fields' variable from above
                 ticker, 
                 timestamp, 
                 action, 
                 quantity, 
-                price
+                price,
+                user_id,
+                trade_id
             ) values %L
         `),
 		values: ticketsAsArrays,
