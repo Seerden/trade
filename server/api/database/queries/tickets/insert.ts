@@ -56,10 +56,10 @@ function addIdPropsToTicket(ticket: NewTicket, userId: number, tradeId: number) 
  *    price
  * ]
  */
-function ticketObjectToArray(ticket: NewTicket) {
+function ticketObjectToArray(ticket: TicketForDatabase) {
 	const array = [];
 
-	for (const field of newTicketFields) {
+	for (const field of ticketForDatabaseFields) {
 		if (field in ticket) {
 			array.push(ticket[field]);
 		}
