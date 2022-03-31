@@ -1,3 +1,4 @@
+import { StyledButton } from "components/Authentication/Login/Login.style";
 import { useMemo } from "react";
 import NewTicket from "./NewTicket";
 import Header from "./sub/Header";
@@ -6,7 +7,6 @@ import { useNewTickets } from "./useNewTickets";
    table of new tickets, acts like one large form, but should feel like a google
    sheet
    
-
    fields:
       - action
          - buy/sell buttons
@@ -26,7 +26,7 @@ import { useNewTickets } from "./useNewTickets";
 */
 
 export default function NewTickets() {
-	const { tickets, setSide, setField } = useNewTickets();
+	const { tickets, setSide, setField, addTicketRows } = useNewTickets();
 
 	const ticketElements = useMemo(() => {
 		return tickets.map((ticket, ticketIndex) => {
@@ -44,6 +44,12 @@ export default function NewTickets() {
 		<>
 			<Header />
 			{ticketElements}
+			<StyledButton
+				style={{ position: "sticky", bottom: 0 }}
+				type="button"
+				onClick={() => addTicketRows(3)}
+				value="Add 3 rows"
+			/>
 		</>
 	);
 }

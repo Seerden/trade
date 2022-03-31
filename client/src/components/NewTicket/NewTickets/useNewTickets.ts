@@ -16,6 +16,11 @@ export function useNewTickets() {
 		new Array(ticketCount).fill(defaultNewTicket)
 	);
 
+	function addTicketRows(count: number) {
+		setTicketCount(c => c + count);
+		setTickets(tickets => [...tickets, ...new Array(count).fill(defaultNewTicket)]);
+	}
+
 	// TODO: if we add a proper name='side' (and input type='button' if it's not like
 	// that yet) to tradeActionButtons, then we can use setField instead of
 	// needing a separate setSide function. alternatively, could also combine
@@ -47,6 +52,7 @@ export function useNewTickets() {
 	return {
 		tickets,
 		setSide,
-		setField
+		setField,
+		addTicketRows
 	} as const;
 }
