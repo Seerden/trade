@@ -90,16 +90,16 @@ export async function insertTickets(username: string, tickets: Array<NewTicket>)
 
 	API.query({
 		text: format(`
-            insert into tickets (
-                ticker, 
-                timestamp, 
-                action, 
-                quantity, 
-                price,
-                user_id,
-                trade_id
-            ) values %L
-        `),
+         insert into tickets (
+            ticker, 
+            timestamp, 
+            action, 
+            quantity, 
+            price,
+            user_id,
+            trade_id
+         ) values %L
+      `),
 		values: ticketsAsArrays,
 	});
 }
