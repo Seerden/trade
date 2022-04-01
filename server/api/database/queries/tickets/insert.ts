@@ -1,7 +1,7 @@
 import format from "pg-format";
 import { BackendApiObject as API } from "../../../../database/pools/query-objects";
 import { NewTicket } from "../../../types/ticket.types";
-import { getTradeIds } from "../trades/get";
+import { getLatestTrade } from "../trades/get";
 import { getUserId } from "../users/get";
 
 const newTicketFields = "ticker timestamp action quantity price".split(" ") as Array<
@@ -81,7 +81,11 @@ export async function insertTickets(username: string, tickets: Array<NewTicket>)
 	 */
 
 	const userId = await getUserId(username);
-	const tradeIds = await getTradeIds(tickets);
+	const tickers = Array.from(new Set(tickets.map((ticket) => ticket.ticker)));
+
+	// TODO: get the tradeId for each ticket we want to insert. This might
+	// require first inserting new `trades` rows.
+	const tradeIds = await getLatestTrade({ userId, tickers });
 
 	const ticketsAsArrays = tickets.map((ticket, index) => {
 		const ticketWithIds = addIdPropsToTicket(ticket, userId, tradeIds[index]);
