@@ -1,9 +1,33 @@
-import { BackendApiObject } from "../../../../database/pools/query-objects";
+import { BackendApiObject as API } from "../../../../database/pools/query-objects";
 
 export async function testQuery() {
-	const response = await BackendApiObject.query({
+	const response = await API.query({
 		text: "select * from users",
 	});
 
 	return response;
+}
+
+async function deleteUsers() {
+	await API.query({
+		text: "delete from users",
+	});
+}
+
+async function deleteTrades() {
+	await API.query({
+		text: "delete from trades",
+	});
+}
+
+async function deleteTickets() {
+	await API.query({
+		text: "delete from tickets",
+	});
+}
+
+export async function deleteEntries() {
+	await deleteUsers();
+	await deleteTrades();
+	await deleteTickets();
 }
