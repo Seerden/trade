@@ -1,9 +1,9 @@
 import { BackendApiObject as API } from "../../../../database/pools/query-objects";
 
 type Options = {
-    userId: number;
-    ticker: string;
-    tradeType: "long" | "short";
+	userId: number;
+	ticker: string;
+	tradeType: "long" | "short";
 };
 
 /*
@@ -17,9 +17,9 @@ type Options = {
 
 */
 
-export function insertTradeRow({ userId, ticker, tradeType }: Options) {
-    API.query({
-        text: "insert into trades(user_id, ticker, trade_type) values($1, $2, $3)",
-        values: [userId, ticker, tradeType],
-    });
+export async function insertTradeRow({ userId, ticker, tradeType }: Options) {
+	return await API.query({
+		text: "insert into trades(user_id, ticker, trade_type) values($1, $2, $3)",
+		values: [userId, ticker, tradeType],
+	});
 }
