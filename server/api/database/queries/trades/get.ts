@@ -27,7 +27,7 @@ export async function getLatestTrade({
 	try {
 		const text = format(
 			`
-            select to_json(sub.*) "trade", to_json(tickets.*) "ticket" from (
+            select jsonb_agg(distinct to_jsonb(sub.*)) as trade, jsonb_agg(to_jsonb(tickets.*)) as tickets from (
                select t.*, rank() over (
                   partition by t.ticker
                   order by t.trade_id desc
@@ -54,7 +54,7 @@ export async function getLatestTrade({
 				trade_type: string;
 				rank_number: string;
 			};
-			ticket: {
+			tickets: {
 				user_id: number;
 				trade_id: number;
 				ticket_id: number;
@@ -63,7 +63,7 @@ export async function getLatestTrade({
 				action: string;
 				quantity: number;
 				price: number;
-			};
+			}[];
 		}[];
 	} catch (e) {
 		console.error(e);
