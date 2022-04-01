@@ -1,21 +1,22 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "target": "ES2020",
-        "moduleResolution": "node",
-        "sourceMap": true,
-        "noImplicitAny": true,
-        "outDir": "dist",
-        "lib": ["ES2021"],
-        "incremental": true,
-        "skipLibCheck": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "types": ["jest", "node"],
-        "paths": {
-        }
-    },
-    "exclude": ["./node_modules", "node_modules"]    
+	"compilerOptions": {
+		"module": "commonjs",
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"target": "ES2020",
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"noImplicitAny": true,
+		"outDir": "dist",
+		"lib": ["ES2021"],
+		"incremental": true,
+		"skipLibCheck": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"types": ["jest", "node"],
+		"paths": {
+			"*": ["./types/*.d.ts"]
+		}
+	},
+	"exclude": ["./node_modules", "node_modules"]
 }

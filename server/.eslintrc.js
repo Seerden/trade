@@ -24,6 +24,7 @@ module.exports = {
 	},
 	plugins: ["@typescript-eslint"],
 	rules: {
+		"@typescript-eslint/no-non-null-assertion": "off",
 		"no-console": "off",
 		"@typescript-eslint/ban-ts-comment": "off",
 		"consistent-return": "off",
