@@ -3,19 +3,11 @@ import {
 	BackendApiObject as API,
 	BackendApiObject,
 } from "../../../../database/pools/query-objects";
-import { NewTicket } from "../../../types/ticket.types";
 
-// DO NOT DO IT LIKE THIS
-export function getTradeIds(tickets: NewTicket[]): Array<number> {
-	// return a list of tradeIds, one for each ticket in `tickets`
-	return [];
-}
-
-type Options = {
-	userId: string;
-};
-// fetch trades
-export function getTradesByUser({ userId }: Options) {
+/**
+ * Fetch all of a single user's trades.
+ */
+export function getTradesByUser({ userId }: { userId: number }) {
 	API.query({
 		text: "select * from trades where user_id = $1",
 		values: [userId],
