@@ -4,14 +4,10 @@ import { getUserId } from "../database/queries/users/get";
 
 /**
  * Router that handles everything related to our users' tickets and trades
- *
  * @see documentation\server\endpoints.md
  */
 export const tradeRouter = express.Router({ mergeParams: true });
 
-// ----
-// TICKETS
-// ----
 tradeRouter.get("/tickets/:ticker?/:from?/:to?", async (req) => {
 	/**
 	 * as described in ...\endpoints.md, this endpoint can be interacted with in
@@ -39,18 +35,13 @@ tradeRouter.post("/tickets", async (req) => {
 	}
 });
 
-// ----
-// TRADES
-// ----
 tradeRouter.get("/trades/", async (req, res) => {
 	// work with query string here to allow for most malleable handling
 	// get a user's trades filtered by query string options
 
 	const { username } = req.user as Record<string, any>;
 
-	const trades = getTradesByUser({
-		userId: 1 || (await getUserId(username)),
-	});
+	const trades = getTradesByUser({ userId: await getUserId(username) });
 	res.json({ trades });
 });
 
