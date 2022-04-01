@@ -35,7 +35,7 @@ async function main() {
 	app.use(logRequests);
 	app.use(
 		cors({
-			// @todo: origin should probably be different in production
+			// TODO: origin should probably be different in production
 			origin: "http://localhost:3000",
 			methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
 			credentials: true,
@@ -54,7 +54,12 @@ async function main() {
 	passport.deserializeUser(async (user: { username: string }, done) => {
 		try {
 			const [foundUser] = await getUser(user.username);
-			if ("username" in foundUser) {
+			// Check if foundUser exists because of the following usecase:
+			//  - user has an active session cookie
+			//  - user gets deleted from the database
+			//  - user tries to make an API call
+			//  In this case, foundUser will be undefined, and trying to do done(null, foundUser) leads to messiness)
+			if (foundUser && "username" in foundUser) {
 				return done(null, foundUser);
 			}
 			return done("User not found");
