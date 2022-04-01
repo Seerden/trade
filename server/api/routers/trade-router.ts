@@ -46,7 +46,11 @@ tradeRouter.get("/trades/", async (req, res) => {
 	// work with query string here to allow for most malleable handling
 	// get a user's trades filtered by query string options
 
-	const trades = getTradesByUser({ userId: 1 || (await getUserId(req.user.username)) });
+	const { username } = req.user as Record<string, any>;
+
+	const trades = getTradesByUser({
+		userId: 1 || (await getUserId(username)),
+	});
 	res.json({ trades });
 });
 

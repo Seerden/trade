@@ -13,10 +13,7 @@
 		"skipLibCheck": true,
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"types": ["jest", "node"],
-		"paths": {
-			"*": ["./types/*.d.ts"]
-		}
+		"types": ["jest", "node"]
 	},
 	"exclude": ["./node_modules", "node_modules"]
 }
