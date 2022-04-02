@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export default function Header() {
-	const columns = "action ticker price quantity date time".split(" ");
+	const columns = "Action Ticker Price Quantity Date Time".split(" ");
 
 	return (
 		<StyledHeader>
