@@ -73,11 +73,10 @@ devRouter.post("/snapshot/:date", async (req, res) => {
 devRouter.get("/latest", async (req, res) => {
 	const response = await getLatestTrade({
 		userId: 1,
-		tickers: ["msft", "aapl"],
+		tickers: ["aa"],
 	});
 
 	res.json({
-		test: "hey",
 		response,
 	});
 });
