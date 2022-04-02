@@ -28,3 +28,11 @@ export interface SellTicket extends TicketBase {
 
 // @todo: this should be Tickets...
 export type Ticket = Array<BuyTicket | SellTicket>;
+
+export type NewTicket = {
+   ticker: string,
+   price: number,
+   quantity: number,
+   timestamp: number,
+   side: 'buy' | 'sell'
+};
