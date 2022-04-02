@@ -24,28 +24,47 @@ const parser: Partial<Record<keyof RawNewTicket, (value: string) => string | num
 export function parseNewTicketInputs(ticket: RawNewTicket): NewTicket {
 	const { ticker, date, price, quantity, side, time } = ticket;
 
+	console.log({ ticket });
+	// TODO: do we want to keep these in UNIX seconds or milliseconds?
 	const timestamp = new Date(toNewYorkTime(`${date} ${time}`)).valueOf();
 
-	return {
-		ticker: parser.ticker(ticker) as string,
-		price: parser.price(price) as number,
-		quantity: parser.quantity(quantity) as number,
-		side,
-		timestamp
-	};
+	try {
+		return {
+			ticker: parser.ticker(ticker) as string,
+			price: parser.price(price) as number,
+			quantity: parser.quantity(quantity) as number,
+			side,
+			timestamp
+		};
+	} catch (error) {
+		return;
+	}
 }
 
 /**
- * Check if a new ticket's values make sense
+ * Validate a parsed new ticket's values.
  */
 export function isValidTicket(ticket: ReturnType<typeof parseNewTicketInputs>) {
+	// TODO: seriously need to extract these fields to a shared export instead of
+	// re-implementing this fields variable all over the place
+	const fields = "ticker price quantity side timestamp".split(" ") as Array<
+		keyof RawNewTicket
+	>;
+
+	// Early return if ticket doesn't have a value for any of the necessary
+	// fields. TODO: this could just be HTML validation
+	if (!ticket || !fields.every(field => ticket[field] !== undefined)) {
+		return;
+	}
+
 	const { price, timestamp, quantity, side, ticker } = ticket;
+
 	return (
-		// TODO: probably want to parse date/time to datetime here, but haven't decided yet
 		price >= 0 &&
-		(side === "buy" || "sell") &&
-		quantity > 0 &&
-		ticker.length &&
+		timestamp &&
+		quantity >= 0 &&
+		ticker &&
+		"buy sell".split(" ").includes(side) &&
 		new Date(timestamp).valueOf() > new Date(0).valueOf()
 	);
 }
