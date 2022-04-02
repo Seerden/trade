@@ -6,7 +6,9 @@ export default function Header() {
 	return (
 		<StyledHeader>
 			{columns.map((col, index) => (
-				<div key={index}>{col}</div>
+				<label htmlFor={col.toLowerCase()} key={index}>
+					{col}
+				</label>
 			))}
 		</StyledHeader>
 	);
@@ -17,7 +19,8 @@ const StyledHeader = styled.div`
 	grid-template-columns: repeat(4, 5rem) 10rem 5.5rem;
 	gap: 0;
 
-	div {
+	label {
+		user-select: none;
 		text-align: center;
 		font-size: 0.82rem;
 		border-bottom: 2px solid #eee;
