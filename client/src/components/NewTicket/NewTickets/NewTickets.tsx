@@ -4,25 +4,18 @@ import NewTicket from "./NewTicket";
 import Header from "./sub/Header";
 import { useNewTickets } from "./useNewTickets";
 /**
-   table of new tickets, acts like one large form, but should feel like a google
-   sheet
+   Form to create new tickets. Acts like one large form, but UX should feel like a Google
+   Sheet. Implementation, as it stands, is more like just a form though.
    
-   fields:
-      - action
-         - buy/sell buttons
-      - ticker
-         - text input
-      - quantity
-         - number input (integers)
-      - datetime;
-         - date
-            - date input
-         - market time
-            - time input
-      - price
-         - number input, 2-4 decimals
-
-
+   Form fields:
+      - action:      buy/sell buttons
+      - ticker:      text input
+      - quantity:    number input (integers or fractionals)
+      - datetime:    date:
+                        date input
+                     market time:
+                        time input
+      - price:       number input, 2-4 decimals, depending on current price value
 */
 
 export default function NewTickets() {
