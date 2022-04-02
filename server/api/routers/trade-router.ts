@@ -31,7 +31,8 @@ tradeRouter.post("/tickets", async (req) => {
 	const { newTickets } = req.body;
 
 	if (newTickets?.length) {
-		// insert tickets into database
+		// TODO: implement functionality
+		console.log({ newTickets });
 	}
 });
 
