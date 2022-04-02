@@ -21,6 +21,10 @@ import { useNewTickets } from "./useNewTickets";
 export default function NewTickets() {
 	const { tickets, setSide, setField, addTicketRows } = useNewTickets();
 
+	function onSubmit() {
+		return;
+	}
+
 	const ticketElements = useMemo(() => {
 		return tickets.map((ticket, ticketIndex) => {
 			const options = {
@@ -34,7 +38,7 @@ export default function NewTickets() {
 	}, [tickets]);
 
 	return (
-		<form>
+		<form onSubmit={onSubmit}>
 			<Header />
 			{ticketElements}
 			<StyledButton
@@ -43,6 +47,8 @@ export default function NewTickets() {
 				onClick={() => addTicketRows(3)}
 				value="Add 3 rows"
 			/>
+
+			<StyledButton type="submit" value="Save tickets" />
 		</form>
 	);
 }
