@@ -34,7 +34,7 @@ export default function NewTickets() {
 	}, [tickets]);
 
 	return (
-		<>
+		<form>
 			<Header />
 			{ticketElements}
 			<StyledButton
@@ -43,6 +43,6 @@ export default function NewTickets() {
 				onClick={() => addTicketRows(3)}
 				value="Add 3 rows"
 			/>
-		</>
+		</form>
 	);
 }
