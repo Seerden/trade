@@ -15,7 +15,7 @@ export type RawNewTicket = {
 	price: string;
 };
 
-const StyledRow = styled.div`
+const StyledNewTicket = styled.fieldset`
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -83,7 +83,7 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 	}, [ticket?.quantity]);
 
 	return (
-		<StyledRow>
+		<StyledNewTicket>
 			{/* action buttons */}
 			{actionButtons}
 
@@ -140,7 +140,7 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 				onChange={e => setField(e, ticketIndex)}
 				defaultValue="09:30"
 			/>
-		</StyledRow>
+		</StyledNewTicket>
 	);
 };
 
