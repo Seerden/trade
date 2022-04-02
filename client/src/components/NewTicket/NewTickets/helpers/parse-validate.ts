@@ -1,7 +1,9 @@
+import { NewTicket } from "types/ticket.types";
 import { RawNewTicket } from "../NewTicket";
+import { toNewYorkTime } from "./date";
 
 function parseNumberInput(decimals: number) {
-	return (value: string) => String((+value).toFixed(decimals));
+	return (value: string) => +String((+value).toFixed(decimals));
 }
 
 const parser: Partial<Record<keyof RawNewTicket, (value: string) => string | number>> = {
@@ -13,18 +15,23 @@ const parser: Partial<Record<keyof RawNewTicket, (value: string) => string | num
 
 /**
  * Take raw input values and parse to desired NewTicket type
+ *
+ * @todo: parse date + time to new timestamp field
+ *    use toNewYorkTime helper function for this,
+ * @todo: once parsed, change return type of this function to NewTicket (unsure
+ * if there already is a correct type definition for this)
  */
-export function parseNewTicketInputs(
-	ticket: RawNewTicket
-): Record<keyof RawNewTicket, any> {
+export function parseNewTicketInputs(ticket: RawNewTicket): NewTicket {
 	const { ticker, date, price, quantity, side, time } = ticket;
+
+	const timestamp = new Date(toNewYorkTime(`${date} ${time}`)).valueOf();
+
 	return {
-		ticker: parser.ticker(ticker),
-		date,
-		price: parser.price(price),
-		quantity: parser.quantity(quantity),
+		ticker: parser.ticker(ticker) as string,
+		price: parser.price(price) as number,
+		quantity: parser.quantity(quantity) as number,
 		side,
-		time
+		timestamp
 	};
 }
 
@@ -32,14 +39,13 @@ export function parseNewTicketInputs(
  * Check if a new ticket's values make sense
  */
 export function isValidTicket(ticket: ReturnType<typeof parseNewTicketInputs>) {
-	const { date, price, quantity, side, ticker, time } = ticket;
+	const { price, timestamp, quantity, side, ticker } = ticket;
 	return (
 		// TODO: probably want to parse date/time to datetime here, but haven't decided yet
-		date.length && // TODO: also check if date isn't in the future
 		price >= 0 &&
 		(side === "buy" || "sell") &&
 		quantity > 0 &&
 		ticker.length &&
-		time.length === 5
+		new Date(timestamp).valueOf() > new Date(0).valueOf()
 	);
 }
