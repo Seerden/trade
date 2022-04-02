@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import styled from "styled-components";
-import Input from "./sub/Input";
+import Input, { RequiredInput } from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
 
 const sides = "buy sell".split(" ");
@@ -49,6 +49,17 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 		[ticket]
 	);
 
+	const InputElement = useMemo(() => {
+		if (
+			"price ticker quantity"
+				.split(" ")
+				.some(field => field in ticket && ticket[field] !== undefined)
+		) {
+			return RequiredInput;
+		}
+		return Input;
+	}, [ticket]);
+
 	const priceStep = useMemo(() => {
 		const price = +ticket?.price;
 
@@ -88,8 +99,7 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 			{actionButtons}
 
 			{/* ticker field */}
-			<Input
-				required
+			<InputElement
 				$size="small"
 				title="Ticker"
 				name="ticker"
@@ -100,8 +110,7 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 			/>
 
 			{/* price field */}
-			<Input
-				required
+			<InputElement
 				$size="small"
 				title="Price per share"
 				name="price"
@@ -113,8 +122,7 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 			/>
 
 			{/* quantity field */}
-			<Input
-				required
+			<InputElement
 				$size="small"
 				title="Share quantity"
 				name="quantity"
@@ -126,8 +134,7 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 			/>
 
 			{/* date field */}
-			<Input
-				required
+			<InputElement
 				$size="large"
 				title="Date"
 				name="date"
@@ -137,8 +144,7 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 			/>
 
 			{/* time field */}
-			<Input
-				required
+			<InputElement
 				title="Time of day (market time)"
 				name="time"
 				type="time"
