@@ -19,11 +19,7 @@ import { useNewTickets } from "./useNewTickets";
 */
 
 export default function NewTickets() {
-	const { tickets, setSide, setField, addTicketRows } = useNewTickets();
-
-	function onSubmit() {
-		return;
-	}
+	const { tickets, setSide, setField, addTicketRows, onSubmit } = useNewTickets();
 
 	const ticketElements = useMemo(() => {
 		return tickets.map((ticket, ticketIndex) => {

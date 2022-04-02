@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { RawNewTicket } from "./NewTicket";
 
 const today = dayjs(new Date()).format("YYYY-MM-DD");
@@ -49,10 +49,20 @@ export function useNewTickets() {
 		});
 	};
 
+	const onSubmit = useCallback(() => {
+		// parse tickets
+		// validate tickets
+		// set message if needed
+		// make API call if at least one valid ticket (better yet, if no
+		// validation issues so user knows what's up)
+		return;
+	}, []);
+
 	return {
 		tickets,
 		setSide,
 		setField,
-		addTicketRows
+		addTicketRows,
+		onSubmit
 	} as const;
 }
