@@ -47,23 +47,25 @@ export async function getLatestTrade({
 		const response = await BackendApiObject.query({ text });
 
 		return response as {
-			trade: {
+			trade: null | {
 				user_id: number;
 				trade_id: number;
 				ticker: string;
 				trade_type: string;
 				rank_number: string;
 			};
-			tickets: {
-				user_id: number;
-				trade_id: number;
-				ticket_id: number;
-				ticker: string;
-				timestamp: number;
-				action: string;
-				quantity: number;
-				price: number;
-			}[];
+			tickets:
+				| null
+				| {
+						user_id: number;
+						trade_id: number;
+						ticket_id: number;
+						ticker: string;
+						timestamp: number;
+						action: string;
+						quantity: number;
+						price: number;
+				  }[];
 		}[];
 	} catch (e) {
 		console.error(e);
