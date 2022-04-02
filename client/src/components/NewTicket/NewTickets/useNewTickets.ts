@@ -1,5 +1,7 @@
+import axios from "axios";
 import dayjs from "dayjs";
 import { useCallback, useState } from "react";
+import { isValidTicket, parseNewTicketInputs } from "./helpers/parse-validate";
 import { RawNewTicket } from "./NewTicket";
 
 const today = dayjs(new Date()).format("YYYY-MM-DD");
@@ -49,14 +51,33 @@ export function useNewTickets() {
 		});
 	};
 
-	const onSubmit = useCallback(() => {
-		// parse tickets
-		// validate tickets
-		// set message if needed
-		// make API call if at least one valid ticket (better yet, if no
-		// validation issues so user knows what's up)
-		return;
-	}, []);
+	const onSubmit = useCallback(
+		async (e: any) => {
+			e.preventDefault();
+			// parse tickets
+			const parsedTickets = tickets.map(parseNewTicketInputs);
+			console.log({ parsedTickets });
+
+			// validate tickets
+			// do something like parsedTickets.map(validateTicket), and make sure
+			// validateTicket (currently isValidTicket) returns some type of
+			// message to be set for a piece of message state, like {index,
+			// message}
+			const validTickets = parsedTickets.filter(ticket => isValidTicket(ticket)); // TODO: this is temporary while I work on implementing the above comment
+			console.log({ validTickets });
+			// set message if needed
+
+			// make API call if at least one valid ticket (better yet, if no
+			// validation issues so user knows what's up)
+			try {
+				await axios.post("t/tickets", { newTickets: validTickets });
+			} catch (error) {
+				console.error(error);
+			}
+			return;
+		},
+		[tickets]
+	);
 
 	return {
 		tickets,
