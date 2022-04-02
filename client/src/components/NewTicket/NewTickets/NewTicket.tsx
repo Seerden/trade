@@ -89,6 +89,7 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 
 			{/* ticker field */}
 			<Input
+				required
 				$size="small"
 				title="Ticker"
 				name="ticker"
@@ -100,6 +101,7 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 
 			{/* price field */}
 			<Input
+				required
 				$size="small"
 				title="Price per share"
 				name="price"
@@ -112,6 +114,7 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 
 			{/* quantity field */}
 			<Input
+				required
 				$size="small"
 				title="Share quantity"
 				name="quantity"
@@ -124,6 +127,7 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 
 			{/* date field */}
 			<Input
+				required
 				$size="large"
 				title="Date"
 				name="date"
@@ -134,6 +138,7 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 
 			{/* time field */}
 			<Input
+				required
 				title="Time of day (market time)"
 				name="time"
 				type="time"
