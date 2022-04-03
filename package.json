@@ -1,13 +1,13 @@
 {
-  "name": "trade",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "dev": "concurrently \"npm:serve --prefix ./client\" \"npm:start --prefix ./server\"",
-    "container-dev": "cd ./_containers && docker-compose --file ./docker-compose.dev.yml up --force-recreate --remove-orphans --build server database api-database store client"
-  },
-  "keywords": [],
-  "author": "github/seerden",
-  "license": "ISC"
+    "name": "trade",
+    "version": "0.0.1",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "local_dev": "concurrently \"npm:serve --prefix ./client\" \"npm:start --prefix ./server\"",
+        "dev": "cd ./_containers && docker-compose --file ./docker-compose.dev.yml up --force-recreate --remove-orphans --build server database api-database store client"
+    },
+    "keywords": [],
+    "author": "github/seerden",
+    "license": "ISC"
 }
