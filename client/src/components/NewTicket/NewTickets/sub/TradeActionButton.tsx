@@ -9,7 +9,7 @@ interface Props extends Partial<ButtonHTMLAttributes<HTMLButtonElement>> {
 
 export default function TradeActionButton({ side, active, ...buttonProps }: Props) {
 	return (
-		<StyledButton side={side} active={active} {...buttonProps}>
+		<StyledButton type="button" side={side} active={active} {...buttonProps}>
 			{side}
 		</StyledButton>
 	);
