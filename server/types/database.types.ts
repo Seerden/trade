@@ -2,11 +2,18 @@
 type PriceType = string | number;
 
 export type PriceActionRow = {
-    ticker: string;
-    timestamp: number;
-    volume: number;
-    open: PriceType;
-    high: PriceType;
-    low: PriceType;
-    close: PriceType;
+	ticker: string;
+	timestamp: number;
+	volume: number;
+	open: PriceType;
+	high: PriceType;
+	low: PriceType;
+	close: PriceType;
+};
+
+export type User = {
+	username: string;
+	user_id: number;
+	created_at: string;
+	password: string;
 };
