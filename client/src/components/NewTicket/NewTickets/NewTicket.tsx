@@ -25,6 +25,8 @@ const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
 	flex-direction: row;
 	align-items: center;
 	height: 2.5rem;
+	gap: 0.45rem;
+	font-size: 0.88rem;
 
 	transition: filter 100ms linear, opacity 100ms linear;
 `;
@@ -100,7 +102,7 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 	return (
 		<StyledNewTicket empty={!hasFilledInFields}>
 			{/* action buttons */}
-			{actionButtons}
+			<span>{actionButtons}</span>
 
 			{/* ticker field */}
 			<Input
