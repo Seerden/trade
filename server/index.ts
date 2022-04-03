@@ -1,26 +1,16 @@
 import cors from "cors";
 import { config } from "dotenv";
-import express, { Request, Response } from "express";
+import express from "express";
 import session from "express-session";
 import passport from "passport";
 import { strategy } from "./api/helpers/auth/passport/config";
 import { getUser } from "./api/helpers/auth/user";
+import { logRequests } from "./api/helpers/middleware/log-requests";
 import authRouter from "./api/routers/auth-router";
 import { tradeRouter } from "./api/routers/trade-router";
 import { redisSession, startRedis } from "./store/redis-client";
 
 config();
-
-function logRequests(req: Request, res: Response, next: (...args: any) => any) {
-	const { method, url, body, query } = req;
-	console.log({
-		method,
-		url,
-		body,
-		query,
-	});
-	next();
-}
 
 async function main() {
 	const app = express();
