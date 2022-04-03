@@ -32,7 +32,7 @@ const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
 	gap: 0.45rem;
 	font-size: 0.88rem;
 
-	transition: filter 100ms linear, opacity 100ms linear;
+	transition: filter 75ms linear, opacity 90ms linear;
 `;
 
 type Props = {

@@ -18,10 +18,27 @@ const StyledNewTickets = styled.form`
 const StyledTitle = styled.h1`
 	display: block;
 	width: max-content;
+	position: relative;
+	z-index: 1;
 	font-size: 1.4rem;
 	font-weight: 600;
 	user-select: none;
 	margin-bottom: 0.5rem;
+
+	&::after {
+		content: "";
+		display: block;
+		min-height: 15px;
+		margin-top: -10px;
+		margin-left: -15px;
+		box-shadow: -3px 3px 0 0 #eee;
+		width: 200%;
+		position: static;
+		z-index: 0;
+		top: 1rem;
+		left: 1rem;
+		background-color: #fefefe;
+	}
 `;
 
 const StyledSubtitle = styled.h3`
@@ -106,7 +123,7 @@ const StyledButton = styled.input<{ round?: boolean }>`
 					border-radius: 50%;
 					justify-content: center;
 					text-align: center;
-					display: table-cell;
+					display: inline-block;
 					vertical-align: middle;
 			  `
 			: css`
