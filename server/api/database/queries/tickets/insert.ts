@@ -75,10 +75,14 @@ function haveSameSign(a: number, b: number) {
 	return a * b > 0;
 }
 
+type Args = {
+	username: string;
+	tickets: NewTicket[];
+};
 /**
  * Insert a list of new tickets into the database
  */
-export async function insertTickets(username: string, tickets: Array<NewTicket>) {
+export async function insertTickets({ username, tickets }: Args) {
 	const userId = await getUserId(username);
 
 	if (!userId) {

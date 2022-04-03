@@ -94,9 +94,10 @@ devRouter.get("/all/tickets", async (req, res) => {
 });
 
 devRouter.post("/tickets", async (req, res) => {
-	const response = await insertTickets("test", [
-		{ action: "buy", price: 1, quantity: 1, ticker: "msft", timestamp: 1 },
-	]);
+	const response = await insertTickets({
+		username: "test",
+		tickets: [{ action: "buy", price: 1, quantity: 1, ticker: "msft", timestamp: 1 }],
+	});
 
 	res.json({ response });
 });
