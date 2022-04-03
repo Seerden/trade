@@ -8,7 +8,6 @@ import { RawNewTicket } from "./NewTicket";
 const today = dayjs(new Date()).format("YYYY-MM-DD");
 
 const defaultNewTicket: Partial<RawNewTicket> = {
-	action: "buy",
 	date: today,
 	time: "09:30"
 };
