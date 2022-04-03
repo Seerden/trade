@@ -80,6 +80,11 @@ function haveSameSign(a: number, b: number) {
  */
 export async function insertTickets(username: string, tickets: Array<NewTicket>) {
 	const userId = await getUserId(username);
+
+	if (!userId) {
+		return;
+	}
+
 	const tickers = Array.from(new Set(tickets.map((ticket) => ticket.ticker)));
 
 	// Assign the correct trade_id to each to-be-inserted ticket,
