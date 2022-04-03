@@ -22,7 +22,7 @@ const parser: Partial<Record<keyof RawNewTicket, (value: string) => string | num
  * if there already is a correct type definition for this)
  */
 export function parseNewTicketInputs(ticket: RawNewTicket): NewTicket {
-	const { ticker, date, price, quantity, side, time } = ticket;
+	const { ticker, date, price, quantity, action, time } = ticket;
 
 	console.log({ ticket });
 	// TODO: do we want to keep these in UNIX seconds or milliseconds?
@@ -33,7 +33,7 @@ export function parseNewTicketInputs(ticket: RawNewTicket): NewTicket {
 			ticker: parser.ticker(ticker) as string,
 			price: parser.price(price) as number,
 			quantity: parser.quantity(quantity) as number,
-			side,
+			action,
 			timestamp
 		};
 	} catch (error) {
@@ -47,7 +47,7 @@ export function parseNewTicketInputs(ticket: RawNewTicket): NewTicket {
 export function isValidTicket(ticket: ReturnType<typeof parseNewTicketInputs>) {
 	// TODO: seriously need to extract these fields to a shared export instead of
 	// re-implementing this fields variable all over the place
-	const fields = "ticker price quantity side timestamp".split(" ") as Array<
+	const fields = "ticker price quantity action timestamp".split(" ") as Array<
 		keyof RawNewTicket
 	>;
 
@@ -57,14 +57,14 @@ export function isValidTicket(ticket: ReturnType<typeof parseNewTicketInputs>) {
 		return;
 	}
 
-	const { price, timestamp, quantity, side, ticker } = ticket;
+	const { price, timestamp, quantity, action, ticker } = ticket;
 
 	return (
 		price >= 0 &&
 		timestamp &&
 		quantity >= 0 &&
 		ticker &&
-		"buy sell".split(" ").includes(side) &&
+		"buy sell".split(" ").includes(action) &&
 		new Date(timestamp).valueOf() > new Date(0).valueOf()
 	);
 }

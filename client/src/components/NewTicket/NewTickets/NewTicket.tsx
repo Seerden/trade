@@ -3,11 +3,10 @@ import styled from "styled-components";
 import Input from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
 
-const sides = "buy sell".split(" ");
+const actions = "buy sell".split(" ");
 
 export type RawNewTicket = {
-	// TODO: use type
-	side: "buy" | "sell";
+	action: "buy" | "sell";
 	ticker: string;
 	quantity: string;
 	date: string;
@@ -25,23 +24,23 @@ const StyledNewTicket = styled.fieldset`
 type Props = {
 	ticketIndex: number;
 	ticket: Partial<RawNewTicket>;
-	setSide: (ticketIndex: number, side: RawNewTicket["side"]) => void;
+	setAction: (ticketIndex: number, side: RawNewTicket["action"]) => void;
 	setField: (e: React.ChangeEvent<HTMLInputElement>, ticketIndex: number) => void;
 };
 
-const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
+const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 	const actionButtons = useMemo(
 		() =>
-			sides.map((side: "buy" | "sell") => {
-				const active = ticket?.side === side;
+			actions.map((action: "buy" | "sell") => {
+				const active = ticket?.action === action;
 
 				return (
 					<TradeActionButton
-						key={side}
-						side={side}
+						key={action}
+						action={action}
 						active={active}
 						onClick={() => {
-							setSide(ticketIndex, side);
+							setAction(ticketIndex, action);
 						}}
 					/>
 				);
@@ -52,7 +51,9 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 	const isRequiredField = useMemo(() => {
 		return "price ticker quantity"
 			.split(" ")
-			.some(field => field in ticket && ticket[field] !== undefined);
+			.some(
+				field => field in ticket && ticket[field] !== undefined && ticket[field]?.length
+			);
 	}, [ticket]);
 
 	const priceStep = useMemo(() => {

@@ -30,7 +30,7 @@ export const StyledInput = styled(SharedStyledInput)<{ $size?: string }>`
 	}
 `;
 
-const sideToColor = {
+const actionToColor = {
 	buy: "seagreen",
 	sell: "orange"
 };
@@ -38,7 +38,7 @@ const sideToColor = {
 // <!-- TradeActionButton -->
 
 // @todo: use TradeAction type for buy/sell
-export const StyledButton = styled.button<{ side: "buy" | "sell"; active?: boolean }>`
+export const StyledButton = styled.button<{ action: "buy" | "sell"; active?: boolean }>`
 	// @todo: use theme values
 	width: 2.5rem;
 	padding: 0.5rem 1rem;
@@ -46,11 +46,11 @@ export const StyledButton = styled.button<{ side: "buy" | "sell"; active?: boole
 	font-size: var(--text-medium);
 
 	border: 2px solid transparent;
-	border-color: ${p => p.active && sideToColor[p.side]};
+	border-color: ${p => p.active && actionToColor[p.action]};
 
 	background-color: transparent;
 
-	color: ${p => sideToColor[p.side]};
+	color: ${p => actionToColor[p.action]};
 
 	transition: all 35ms fade-out;
 

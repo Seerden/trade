@@ -34,5 +34,5 @@ export type NewTicket = {
    price: number,
    quantity: number,
    timestamp: number,
-   side: 'buy' | 'sell'
+   action: 'buy' | 'sell'
 };

@@ -1,5 +1,6 @@
 import axios from "axios";
 import dayjs from "dayjs";
+import { useAuth } from "hooks/auth/useAuth";
 import { useCallback, useState } from "react";
 import { isValidTicket, parseNewTicketInputs } from "./helpers/parse-validate";
 import { RawNewTicket } from "./NewTicket";
@@ -7,12 +8,13 @@ import { RawNewTicket } from "./NewTicket";
 const today = dayjs(new Date()).format("YYYY-MM-DD");
 
 const defaultNewTicket: Partial<RawNewTicket> = {
-	side: "buy",
+	action: "buy",
 	date: today,
 	time: "09:30"
 };
 
 export function useNewTickets() {
+	const { user } = useAuth();
 	const [ticketCount, setTicketCount] = useState<number>(3);
 	const [tickets, setTickets] = useState<Partial<RawNewTicket>[]>(
 		new Array(ticketCount).fill(defaultNewTicket)
@@ -27,7 +29,7 @@ export function useNewTickets() {
 	// that yet) to tradeActionButtons, then we can use setField instead of
 	// needing a separate setSide function. alternatively, could also combine
 	// these two functions into a reducer
-	const setSide = (ticketIndex: number, side: RawNewTicket["side"]) => {
+	const setAction = (ticketIndex: number, side: RawNewTicket["action"]) => {
 		setTickets(tickets => {
 			const ticket = { ...tickets[ticketIndex], side };
 			return [
@@ -70,7 +72,10 @@ export function useNewTickets() {
 			// make API call if at least one valid ticket (better yet, if no
 			// validation issues so user knows what's up)
 			try {
-				await axios.post("t/tickets", { newTickets: validTickets });
+				const { username } = user;
+				if (!username || !validTickets?.length) return;
+
+				await axios.post("t/tickets", { newTickets: validTickets, username });
 			} catch (error) {
 				console.error(error);
 			}
@@ -81,7 +86,7 @@ export function useNewTickets() {
 
 	return {
 		tickets,
-		setSide,
+		setAction,
 		setField,
 		addTicketRows,
 		onSubmit

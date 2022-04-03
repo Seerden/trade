@@ -3,14 +3,14 @@ import { StyledButton } from "./sub.style";
 
 interface Props extends Partial<ButtonHTMLAttributes<HTMLButtonElement>> {
 	// @todo: use TradeAction type or something
-	side: "buy" | "sell";
+	action: "buy" | "sell";
 	active?: boolean;
 }
 
-export default function TradeActionButton({ side, active, ...buttonProps }: Props) {
+export default function TradeActionButton({ action, active, ...buttonProps }: Props) {
 	return (
-		<StyledButton type="button" side={side} active={active} {...buttonProps}>
-			{side}
+		<StyledButton type="button" action={action} active={active} {...buttonProps}>
+			{action}
 		</StyledButton>
 	);
 }
