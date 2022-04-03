@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import styled from "styled-components";
-import Input, { RequiredInput } from "./sub/Input";
+import Input from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
 
 const sides = "buy sell".split(" ");
@@ -49,15 +49,10 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 		[ticket]
 	);
 
-	const InputElement = useMemo(() => {
-		if (
-			"price ticker quantity"
-				.split(" ")
-				.some(field => field in ticket && ticket[field] !== undefined)
-		) {
-			return RequiredInput;
-		}
-		return Input;
+	const isRequiredField = useMemo(() => {
+		return "price ticker quantity"
+			.split(" ")
+			.some(field => field in ticket && ticket[field] !== undefined);
 	}, [ticket]);
 
 	const priceStep = useMemo(() => {
@@ -99,7 +94,8 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 			{actionButtons}
 
 			{/* ticker field */}
-			<InputElement
+			<Input
+				required={isRequiredField}
 				$size="small"
 				title="Ticker"
 				name="ticker"
@@ -110,7 +106,8 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 			/>
 
 			{/* price field */}
-			<InputElement
+			<Input
+				required={isRequiredField}
 				$size="small"
 				title="Price per share"
 				name="price"
@@ -118,11 +115,15 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 				min={0}
 				step={priceStep}
 				placeholder="price"
-				onChange={e => setField(e, ticketIndex)}
+				onChange={e => {
+					console.log("test");
+					setField(e, ticketIndex);
+				}}
 			/>
 
 			{/* quantity field */}
-			<InputElement
+			<Input
+				required={isRequiredField}
 				$size="small"
 				title="Share quantity"
 				name="quantity"
@@ -134,7 +135,8 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 			/>
 
 			{/* date field */}
-			<InputElement
+			<Input
+				required={isRequiredField}
 				$size="large"
 				title="Date"
 				name="date"
@@ -144,7 +146,8 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 			/>
 
 			{/* time field */}
-			<InputElement
+			<Input
+				required={isRequiredField}
 				title="Time of day (market time)"
 				name="time"
 				type="time"
