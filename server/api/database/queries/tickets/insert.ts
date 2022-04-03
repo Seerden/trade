@@ -181,5 +181,5 @@ export async function insertTickets({ username, tickets }: Args) {
 		),
 	});
 
-	return response;
+	return response as Ticket[];
 }
