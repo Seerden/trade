@@ -28,6 +28,14 @@ export const StyledInput = styled(SharedStyledInput)<{ $size?: string }>`
 	&::placeholder {
 		font-size: 0.82rem;
 	}
+
+	&:required {
+		&:placeholder-shown {
+			border-bottom: 2px solid orange;
+		}
+	}
+
+	transition: border 100ms ease-out;
 `;
 
 const actionToColor = {

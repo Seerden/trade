@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Input from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
 
@@ -14,11 +14,19 @@ export type RawNewTicket = {
 	price: string;
 };
 
-const StyledNewTicket = styled.fieldset`
+const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
+	${p =>
+		p.empty &&
+		css`
+			opacity: 0.45;
+			filter: grayscale(1);
+		`}
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	height: 2.5rem;
+
+	transition: filter 100ms linear, opacity 100ms linear;
 `;
 
 type Props = {
@@ -48,7 +56,7 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 		[ticket]
 	);
 
-	const isRequiredField = useMemo(() => {
+	const hasFilledInFields = useMemo(() => {
 		return "price ticker quantity"
 			.split(" ")
 			.some(
@@ -90,13 +98,13 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 	}, [ticket?.quantity]);
 
 	return (
-		<StyledNewTicket>
+		<StyledNewTicket empty={!hasFilledInFields}>
 			{/* action buttons */}
 			{actionButtons}
 
 			{/* ticker field */}
 			<Input
-				required={isRequiredField}
+				required={hasFilledInFields}
 				$size="small"
 				title="Ticker"
 				name="ticker"
@@ -108,7 +116,7 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 
 			{/* price field */}
 			<Input
-				required={isRequiredField}
+				required={hasFilledInFields}
 				$size="small"
 				title="Price per share"
 				name="price"
@@ -124,7 +132,7 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 
 			{/* quantity field */}
 			<Input
-				required={isRequiredField}
+				required={hasFilledInFields}
 				$size="small"
 				title="Share quantity"
 				name="quantity"
@@ -137,7 +145,7 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 
 			{/* date field */}
 			<Input
-				required={isRequiredField}
+				required={hasFilledInFields}
 				$size="large"
 				title="Date"
 				name="date"
@@ -148,7 +156,7 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 
 			{/* time field */}
 			<Input
-				required={isRequiredField}
+				required={hasFilledInFields}
 				title="Time of day (market time)"
 				name="time"
 				type="time"
