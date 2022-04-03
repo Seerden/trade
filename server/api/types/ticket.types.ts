@@ -11,11 +11,11 @@
 */
 
 export type NewTicket = {
-    ticker: string;
-    price: number;
-    quantity: number;
-    timestamp: number;
-    action: "buy" | "sell";
+	ticker: string;
+	price: number;
+	quantity: number;
+	timestamp: number;
+	action: "buy" | "sell";
 };
 
 /*
@@ -32,18 +32,17 @@ export type NewTicket = {
             2. create mapping objects for each database table
 */
 export type Ticket = {
-    user_id: number;
-    trade_id: number;
-    ticket_id: number;
-    ticker: string;
-    /** unix timestamp (in seconds? milliseconds? unsure) */
-    timestamp: number;
-    /** should alwyas be 'buy' | 'sell'  */
-    action: string;
-    quantity: number;
-    /**
-     * transaction price
-     * @note this might actually be a string, unsure how numeric fields get passed from the database
-     */
-    price: number; //
+	user_id: number;
+	trade_id: number;
+	ticket_id: number;
+	ticker: string;
+	/** unix timestamp (in seconds? milliseconds? unsure) */
+	timestamp: number;
+	action: "buy" | "sell";
+	quantity: number;
+	/**
+	 * transaction price
+	 * @note this might actually be a string, unsure how numeric fields get passed from the database
+	 */
+	price: number; //
 };
