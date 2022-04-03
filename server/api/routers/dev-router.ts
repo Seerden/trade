@@ -3,6 +3,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
+import { BackendApiObject } from "../../database/pools/query-objects";
 import { fetchPriceActionForTicker } from "../../price-action/database/queries/fetch-price-action";
 import {
 	// eslint-disable-next-line camelcase
@@ -73,10 +74,32 @@ devRouter.post("/snapshot/:date", async (req, res) => {
 devRouter.get("/latest", async (req, res) => {
 	const response = await getLatestTrade({
 		userId: 1,
-		tickers: ["aa"],
+		tickers: ["msft"],
 	});
 
 	res.json({
 		response,
 	});
+});
+
+/**
+ * Select all trades.
+ */
+devRouter.get("/all/trades", async (req, res) => {
+	const response = await BackendApiObject.query({
+		text: "select * from trades",
+	});
+
+	res.json({ response });
+});
+
+/**
+ * Select all tickets.
+ */
+devRouter.get("/all/tickets", async (req, res) => {
+	const response = await BackendApiObject.query({
+		text: "select * from tickets",
+	});
+
+	res.json({ response });
 });
