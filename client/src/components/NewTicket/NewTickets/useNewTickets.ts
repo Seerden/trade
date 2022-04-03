@@ -25,13 +25,13 @@ export function useNewTickets() {
 		setTickets(tickets => [...tickets, ...new Array(count).fill(defaultNewTicket)]);
 	}
 
-	// TODO: if we add a proper name='side' (and input type='button' if it's not like
+	// TODO: if we add a proper name='action' (and input type='button' if it's not like
 	// that yet) to tradeActionButtons, then we can use setField instead of
-	// needing a separate setSide function. alternatively, could also combine
+	// needing a separate setAction function. alternatively, could also combine
 	// these two functions into a reducer
-	const setAction = (ticketIndex: number, side: RawNewTicket["action"]) => {
+	const setAction = (ticketIndex: number, action: RawNewTicket["action"]) => {
 		setTickets(tickets => {
-			const ticket = { ...tickets[ticketIndex], side };
+			const ticket = { ...tickets[ticketIndex], action };
 			return [
 				...tickets.slice(0, ticketIndex),
 				ticket,
