@@ -1,4 +1,5 @@
 import express from "express";
+import { insertTickets } from "../database/queries/tickets/insert";
 import { getTradesByUser } from "../database/queries/trades/get";
 import { getUserId } from "../database/queries/users/get";
 
@@ -27,12 +28,19 @@ tradeRouter.get("/tickets/:ticker?/:from?/:to?", async (req) => {
 	}
 });
 
-tradeRouter.post("/tickets", async (req) => {
-	const { newTickets } = req.body;
+tradeRouter.post("/tickets", async (req, res) => {
+	const { newTickets, username } = req.body;
 
-	if (newTickets?.length) {
-		// TODO: implement functionality
-		console.log({ newTickets });
+	if (newTickets?.length && username) {
+		const response = await insertTickets({
+			username,
+			tickets: newTickets,
+		});
+		res.json({ response });
+	} else {
+		res.json({
+			message: "Request body does not contain `newTickets` array or `username` string",
+		});
 	}
 });
 
@@ -40,7 +48,8 @@ tradeRouter.get("/trades/", async (req, res) => {
 	// work with query string here to allow for most malleable handling
 	// get a user's trades filtered by query string options
 
-	const { username } = req.user as Record<string, any>;
+	// @ts-ignore
+	const { username } = req.user;
 
 	const trades = getTradesByUser({ userId: await getUserId(username) });
 	res.json({ trades });
