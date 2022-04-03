@@ -49,7 +49,7 @@ async function main() {
 	app.use(passport.initialize());
 	app.use(passport.session());
 
-	passport.serializeUser((user: any, done) => done(null, user));
+	passport.serializeUser((user, done) => done(null, user));
 
 	passport.deserializeUser(async (user: { username: string }, done) => {
 		try {
