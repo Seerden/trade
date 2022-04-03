@@ -13,7 +13,6 @@ import {
 } from "../../price-action/database/_dev/polygon/max-1m-query";
 import { fetchDailyOHLC } from "../../price-action/lib/polygon/requests/snapshot/snapshot-fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/snapshot-insert";
-import { insertTickets } from "../database/queries/tickets/insert";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -88,15 +87,6 @@ devRouter.get("/all/trades", async (req, res) => {
 devRouter.get("/all/tickets", async (req, res) => {
 	const response = await BackendApiObject.query({
 		text: "select * from tickets",
-	});
-
-	res.json({ response });
-});
-
-devRouter.post("/tickets", async (req, res) => {
-	const response = await insertTickets({
-		username: "test",
-		tickets: [{ action: "buy", price: 1, quantity: 1, ticker: "msft", timestamp: 1 }],
 	});
 
 	res.json({ response });
