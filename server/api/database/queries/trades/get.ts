@@ -15,9 +15,9 @@ export function getTradesByUser({ userId }: { userId: number }) {
 }
 
 /**
- * Get a user's latest trade for each of the provided `tickers`.
+ * Get a user's latest trade, including all associated tickets for each of the provided `tickers`.
  */
-export async function getLatestTrade({
+export async function getLatestTradeByTickerWithTickets({
 	userId,
 	tickers,
 }: {
@@ -70,4 +70,24 @@ export async function getLatestTrade({
 	} catch (e) {
 		console.error(e);
 	}
+}
+
+/**
+ * Get a user's trades for the given `ticker`, return the most recent trade.
+ */
+export async function getLatestTradeByTicker(ticker: string) {
+	const response = await BackendApiObject.query({
+		text: `
+      select * from trades t where t.trade_id in (
+         select trade_id
+         from tickets
+         where ticker = $1
+         order by timestamp desc
+         limit 1
+      ) 
+      `,
+		values: [ticker],
+	});
+
+	return response;
 }
