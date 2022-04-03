@@ -1,12 +1,14 @@
 import express from "express";
 import { getTradesByUser } from "../database/queries/trades/get";
 import { getUserId } from "../database/queries/users/get";
+import { isAllowed } from "../helpers/middleware/is-allowed";
 
 /**
  * Router that handles everything related to our users' tickets and trades
  * @see documentation\server\endpoints.md
  */
 export const tradeRouter = express.Router({ mergeParams: true });
+tradeRouter.use(isAllowed);
 
 tradeRouter.get("/tickets/:ticker?/:from?/:to?", async (req) => {
 	/**
