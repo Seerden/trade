@@ -6,7 +6,7 @@ import { BackendApiObject as API } from "../../../database/pools/query-objects";
  */
 export async function getUser(username: string) {
 	return await API.query({
-		text: "select username, created_at, user_id from users where username = $1",
+		text: "select username, created_at, password, user_id from users where username = $1",
 		values: [username],
 	});
 }
