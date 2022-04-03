@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { BsX } from "react-icons/bs";
 import styled, { css } from "styled-components";
 import Input from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
@@ -18,8 +19,11 @@ const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
 	${p =>
 		p.empty &&
 		css`
-			opacity: 0.45;
-			filter: grayscale(1);
+			transform: translateZ(0);
+			&:not(:hover) {
+				opacity: 0.45;
+				filter: grayscale(1);
+			}
 		`}
 	display: flex;
 	flex-direction: row;
@@ -59,7 +63,7 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 	);
 
 	const hasFilledInFields = useMemo(() => {
-		return "price ticker quantity"
+		return "price ticker quantity action"
 			.split(" ")
 			.some(
 				field => field in ticket && ticket[field] !== undefined && ticket[field]?.length
@@ -165,8 +169,36 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 				onChange={e => setField(e, ticketIndex)}
 				defaultValue="09:30"
 			/>
+
+			<StyledButton>
+				<BsX type="button" />
+			</StyledButton>
 		</StyledNewTicket>
 	);
 };
 
 export default NewTicket;
+
+const StyledButton = styled.button`
+	display: inline-flex;
+
+	align-items: center;
+	justify-content: center;
+	background-color: transparent;
+
+	width: 25px;
+	min-height: 25px;
+	height: 25px;
+	line-height: 100%;
+
+	border-radius: 50%;
+
+	transition: color 35ms ease-in, transform 50ms ease-out;
+
+	&:hover,
+	&:active {
+		color: red;
+		font-weight: 500;
+		transform: scale(1.4);
+	}
+`;
