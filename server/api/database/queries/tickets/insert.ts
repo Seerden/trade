@@ -91,7 +91,7 @@ export async function insertTickets(username: string, tickets: Array<NewTicket>)
 
 	// Get position size of each open trade
 	for (const ticker of tickers) {
-		const latestTrade = latestTrades.find((t) => t.trade.ticker === ticker);
+		const latestTrade = latestTrades?.find((t) => t.trade?.ticker === ticker);
 
 		const ticketsForTicker = tickets.filter((t) => t.ticker === ticker);
 
@@ -163,9 +163,11 @@ export async function insertTickets(username: string, tickets: Array<NewTicket>)
 
 	const response = await BackendApiObject.query({
 		text: format(
-			`insert into tickets (
-         ticker timestamp action quantity price, user_id, trade_id
-      ) values (%L) returning *`,
+			`
+            insert into tickets (
+               ticker, timestamp, action, quantity, price, user_id, trade_id
+            ) values %L returning *
+         `,
 			ticketsAsArrays
 		),
 	});
