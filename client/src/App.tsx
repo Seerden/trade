@@ -18,18 +18,28 @@ axios.defaults.withCredentials = true;
 
 const App = () => {
 	const { user, login, logout } = useAuth();
+
+	// Get current user session from backend. If user doesn't match with what
+	// client believes it should be, log in or out, depending on response.
 	useEffect(() => {
 		(async function() {
-			// get auth/me
-			const { data } = await axios.get<any, { data?: { username?: string } }>("/auth/me");
-			// if user matches, don't do anything
-			// if no user returned, logout()
-			if (!data?.username) {
+			try {
+				const { data } = await axios.get("/auth/me");
+
+				// If user matches, don't do anything
+				// If no user returned, logout()
+				if (!data?.username) {
+					logout();
+				}
+				// If user in session doesn't match user on client, log in with user
+				// from session.
+				if (data?.username !== user.username) {
+					login({ username: data.username });
+				}
+			} catch (error) {
+				// Either user isn't logged in (response 401), or something else
+				// went wrong. Either way, we should log out.
 				logout();
-			}
-			// if different user returned, login with that user
-			if (data?.username !== user.username) {
-				login({ username: data.username });
 			}
 		})();
 	}, []);
