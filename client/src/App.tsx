@@ -4,8 +4,8 @@ import Private from "components/Authentication/Private";
 import Register from "components/Authentication/Register/Register";
 import Navigation from "components/Navigation/Navigation";
 import { theme } from "helpers/theme/theme";
-import { useAuth } from "hooks/auth/useAuth";
-import { lazy, Suspense, useEffect } from "react";
+import useReconcileSession from "hooks/auth/useReconcileSession";
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { Wrapper } from "./App.style";
@@ -17,32 +17,7 @@ axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
 
 const App = () => {
-	const { user, login, logout } = useAuth();
-
-	// Get current user session from backend. If user doesn't match with what
-	// client believes it should be, log in or out, depending on response.
-	useEffect(() => {
-		(async function() {
-			try {
-				const { data } = await axios.get("/auth/me");
-
-				// If user matches, don't do anything
-				// If no user returned, logout()
-				if (!data?.username) {
-					logout();
-				}
-				// If user in session doesn't match user on client, log in with user
-				// from session.
-				if (data?.username !== user.username) {
-					login({ username: data.username });
-				}
-			} catch (error) {
-				// Either user isn't logged in (response 401), or something else
-				// went wrong. Either way, we should log out.
-				logout();
-			}
-		})();
-	}, []);
+	useReconcileSession();
 
 	return (
 		<div className="App">
