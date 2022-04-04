@@ -37,7 +37,7 @@ authRouter.get("/me", (req, res) => {
 		const { username } = req.user as any;
 		res.json({ username });
 	} else {
-		res.status(401).send("Not authenticated");
+		res.status(401).json({ message: "Not authenticated" });
 	}
 });
 
