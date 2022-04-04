@@ -6,8 +6,9 @@ export default function useReconcileSession() {
 	const { user, login, logout } = useAuth();
 	const axiosInstance = useAxios();
 
-	// Get current user session from backend. If user doesn't match with what
-	// client believes it should be, log in or out, depending on response.
+	// Get current user session from backend. If user from client isn't equal to
+	// user from backend, then log in with user from backend, or log out,
+	// depending on the backend response.
 	useEffect(() => {
 		(async function() {
 			try {
@@ -18,14 +19,13 @@ export default function useReconcileSession() {
 				if (!data?.username) {
 					logout();
 				}
-				// If user in session doesn't match user on client, log in with user
-				// from session.
+				// If session user != client user, log in with session user.
 				if (data?.username !== user.username || !user?.username) {
 					login({ username: data.username });
 				}
 			} catch (error) {
-				// Either user isn't logged in (response 401), or something else
-				// went wrong. Either way, we should log out.
+				// No user in session (response 401), or something else went wrong.
+				// Either way, log out.
 				logout();
 			}
 		})();
