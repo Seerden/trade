@@ -83,11 +83,16 @@ export function useNewTickets() {
 		[tickets]
 	);
 
+	function deleteTicket(index: number) {
+		setTickets(tickets => [...tickets.slice(0, index), ...tickets.slice(index + 1)]);
+	}
+
 	return {
 		tickets,
 		setAction,
 		setField,
 		addTicketRows,
-		onSubmit
+		onSubmit,
+		deleteTicket
 	} as const;
 }

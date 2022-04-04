@@ -72,7 +72,14 @@ const StyledTickets = styled.section`
       - price:       number input, 2-4 decimals, depending on current price value
 */
 export default function NewTickets() {
-	const { tickets, setAction, setField, addTicketRows, onSubmit } = useNewTickets();
+	const {
+		tickets,
+		setAction,
+		setField,
+		addTicketRows,
+		onSubmit,
+		deleteTicket
+	} = useNewTickets();
 
 	const ticketElements = useMemo(() => {
 		return tickets.map((ticket, ticketIndex) => {
@@ -80,9 +87,10 @@ export default function NewTickets() {
 				ticketIndex,
 				ticket,
 				setAction,
-				setField
+				setField,
+				deleteTicket
 			};
-			return <NewTicket key={ticketIndex} {...options} />;
+			return <NewTicket key={`${ticketIndex}+${tickets?.length}`} {...options} />;
 		});
 	}, [tickets]);
 

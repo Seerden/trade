@@ -3,6 +3,7 @@ import { BsX } from "react-icons/bs";
 import styled, { css } from "styled-components";
 import Input from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
+import { useNewTickets } from "./useNewTickets";
 
 const actions = "buy sell".split(" ");
 
@@ -40,9 +41,10 @@ type Props = {
 	ticket: Partial<RawNewTicket>;
 	setAction: (ticketIndex: number, side: RawNewTicket["action"]) => void;
 	setField: (e: React.ChangeEvent<HTMLInputElement>, ticketIndex: number) => void;
+	deleteTicket: ReturnType<typeof useNewTickets>["deleteTicket"];
 };
 
-const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
+const NewTicket = ({ ticketIndex, ticket, setAction, setField, deleteTicket }: Props) => {
 	const actionButtons = useMemo(
 		() =>
 			actions.map((action: "buy" | "sell") => {
@@ -131,7 +133,6 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 				step={priceStep}
 				placeholder="price"
 				onChange={e => {
-					console.log("test");
 					setField(e, ticketIndex);
 				}}
 			/>
@@ -170,7 +171,12 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 				defaultValue="09:30"
 			/>
 
-			<StyledButton>
+			<StyledButton
+				type="button"
+				onClick={() => {
+					deleteTicket(ticketIndex);
+				}}
+			>
 				<BsX type="button" />
 			</StyledButton>
 		</StyledNewTicket>
