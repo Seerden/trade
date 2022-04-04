@@ -8,7 +8,8 @@ export default function useAxios() {
 		// (0.0.0.0:5000??? http://server:5000??? maybe even just the domain, like trade.seerden.dev/)
 		baseURL: "http://localhost:5000",
 		withCredentials: true,
-		params: { username: user?.username }
+		// Add username query parameter to every request
+		...(user?.username && { params: { username: user?.username } })
 	});
 
 	return axiosInstance;
