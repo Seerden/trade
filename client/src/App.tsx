@@ -4,7 +4,7 @@ import Private from "components/Authentication/Private";
 import Register from "components/Authentication/Register/Register";
 import Navigation from "components/Navigation/Navigation";
 import { theme } from "helpers/theme/theme";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { Wrapper } from "./App.style";
@@ -16,6 +16,15 @@ axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
 
 const App = () => {
+	useEffect(() => {
+		(async function() {
+			// get auth/me
+			// if user matches, don't do anything
+			// if no user returned, logout()
+			// if different user returned, login with that user
+		})();
+	}, []);
+
 	return (
 		<div className="App">
 			<BrowserRouter>
