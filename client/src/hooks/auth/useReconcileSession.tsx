@@ -1,16 +1,17 @@
-import axios from "axios";
+import useAxios from "helpers/api/axios-instance";
 import { useEffect } from "react";
 import { useAuth } from "./useAuth";
 
 export default function useReconcileSession() {
 	const { user, login, logout } = useAuth();
+	const axiosInstance = useAxios();
 
 	// Get current user session from backend. If user doesn't match with what
 	// client believes it should be, log in or out, depending on response.
 	useEffect(() => {
 		(async function() {
 			try {
-				const { data } = await axios.get<{ username?: string }>("/auth/me");
+				const { data } = await axiosInstance.get<{ username?: string }>("/auth/me");
 
 				// If user matches, don't do anything
 				// If no user returned, logout()
