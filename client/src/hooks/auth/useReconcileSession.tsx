@@ -19,7 +19,7 @@ export default function useReconcileSession() {
 				}
 				// If user in session doesn't match user on client, log in with user
 				// from session.
-				if (data?.username !== user.username) {
+				if (data?.username !== user.username || !user?.username) {
 					login({ username: data.username });
 				}
 			} catch (error) {
