@@ -1,4 +1,4 @@
-import axios from "axios";
+import useAxios from "helpers/api/axios-instance";
 import { useAuth } from "hooks/auth/useAuth";
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -24,6 +24,7 @@ function useLogin() {
 	const [user, setUser] = useState<User>(emptyUser);
 	const { login, user: currentUser, logout } = useAuth();
 	const navigate = useNavigate();
+	const axiosInstance = useAxios();
 
 	function updateUser(
 		e: React.ChangeEvent<HTMLInputElement> /* @todo: change event type? */
@@ -47,9 +48,12 @@ function useLogin() {
 		try {
 			/* @note have to destructure `user` so that passport.authenticate() on the backend works properly. */
 			// @see  https://github.com/Seerden/trade/issues/12
-			const { data } = await axios.post<any, { data: UserResponse }>("/auth/login", {
-				...user
-			});
+			const { data } = await axiosInstance.post<any, { data: UserResponse }>(
+				"/auth/login",
+				{
+					...user
+				}
+			);
 			const { username, created_at } = data;
 			/**
 			 * @todo:
@@ -70,7 +74,7 @@ function useLogin() {
 		e.preventDefault();
 
 		try {
-			const { data } = await axios.post("/auth/logout");
+			const { data } = await axiosInstance.post("/auth/logout");
 			if (data.success === true) {
 				logout();
 				navigate("/");
