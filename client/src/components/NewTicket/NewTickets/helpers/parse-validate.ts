@@ -8,9 +8,9 @@ function parseNumberInput(decimals: number) {
 
 const parser: Partial<Record<keyof RawNewTicket, (value: string) => string | number>> = {
 	// `action` doesn't have to be parsed, and date/time are parsed separately
-	ticker: value => value.toUpperCase(),
+	ticker: (value) => value.toUpperCase(),
 	price: parseNumberInput(4),
-	quantity: parseNumberInput(1)
+	quantity: parseNumberInput(1),
 };
 
 /**
@@ -24,7 +24,6 @@ const parser: Partial<Record<keyof RawNewTicket, (value: string) => string | num
 export function parseNewTicketInputs(ticket: RawNewTicket): NewTicket {
 	const { ticker, date, price, quantity, action, time } = ticket;
 
-	console.log({ ticket });
 	// TODO: do we want to keep these in UNIX seconds or milliseconds?
 	const timestamp = new Date(toNewYorkTime(`${date} ${time}`)).valueOf();
 
@@ -34,7 +33,7 @@ export function parseNewTicketInputs(ticket: RawNewTicket): NewTicket {
 			price: parser.price(price) as number,
 			quantity: parser.quantity(quantity) as number,
 			action,
-			timestamp
+			timestamp,
 		};
 	} catch (error) {
 		return;
@@ -53,7 +52,7 @@ export function isValidTicket(ticket: ReturnType<typeof parseNewTicketInputs>) {
 
 	// Early return if ticket doesn't have a value for any of the necessary
 	// fields. TODO: this could just be HTML validation
-	if (!ticket || !fields.every(field => ticket[field] !== undefined)) {
+	if (!ticket || !fields.every((field) => ticket[field] !== undefined)) {
 		return;
 	}
 
