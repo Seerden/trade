@@ -1,7 +1,8 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import styled, { css } from "styled-components";
 import NewTicket from "./NewTicket";
 import Header from "./sub/Header";
+import TicketsPreview from "./TicketsPreview";
 import { useNewTickets } from "./useNewTickets";
 
 const StyledNewTickets = styled.form`
@@ -55,7 +56,12 @@ const StyledTickets = styled.section`
       - price:       number input, 2-4 decimals, depending on current price value
 */
 export default function NewTickets() {
-	const { tickets, setAction, setField, addTicketRows, onSubmit } = useNewTickets();
+	const { tickets, setAction, setField, addTicketRows, onSubmit, validTickets } =
+		useNewTickets();
+
+	// TODO: ticket preview step - state should be moved to useNewTickets once
+	// done
+	const [showPreview, setShowPreview] = useState<boolean>(false);
 
 	const ticketElements = useMemo(() => {
 		return tickets.map((ticket, ticketIndex) => {
@@ -63,25 +69,49 @@ export default function NewTickets() {
 				ticketIndex,
 				ticket,
 				setAction,
-				setField
+				setField,
 			};
 			return <NewTicket key={ticketIndex} {...options} />;
 		});
 	}, [tickets]);
 
+	/**
+	 * @todo: instead of displaying either TicketsPreview or StyledNewTickets,
+	 * display TicketsPreview as a modal on top of StyledNewTickets
+	 * @todo: do not write functionality inside onSubmit. Instead, the submit
+	 * should be part of the TicketsPreview, and the 'save tickets' button should
+	 * have type='button' instead of 'submit' in the case that we want to pull up
+	 * the TicketPreview
+	 */
 	return (
 		<>
-			<StyledNewTickets onSubmit={onSubmit}>
-				<StyledTitle>Add new trade tickets</StyledTitle>
-				<StyledSubtitle>
-					Each ticket describes one buy or sell transaction.
-				</StyledSubtitle>
-				<StyledTickets>
-					<Buttons addTicketRows={addTicketRows} />
-					<Header />
-					{ticketElements}
-				</StyledTickets>
-			</StyledNewTickets>
+			{showPreview ? (
+				<TicketsPreview tickets={validTickets} />
+			) : (
+				<StyledNewTickets
+					onSubmit={(e) => {
+						// TODO: temporary, should be piece of user preference state
+						const shouldShowPreview = true;
+
+						if (!shouldShowPreview) {
+							onSubmit(e);
+							return;
+						}
+
+						setShowPreview(true);
+					}}
+				>
+					<StyledTitle>Add new trade tickets</StyledTitle>
+					<StyledSubtitle>
+						Each ticket describes one buy or sell transaction.
+					</StyledSubtitle>
+					<StyledTickets>
+						<Buttons addTicketRows={addTicketRows} />
+						<Header />
+						{ticketElements}
+					</StyledTickets>
+				</StyledNewTickets>
+			)}
 		</>
 	);
 }
@@ -98,7 +128,7 @@ const StyledButtons = styled.span`
 `;
 
 const StyledButton = styled.input<{ round?: boolean }>`
-	${p =>
+	${(p) =>
 		p.round
 			? css`
 					width: 25px;
@@ -117,7 +147,7 @@ const StyledButton = styled.input<{ round?: boolean }>`
 	background-color: transparent;
 	font-size: 0.72rem;
 
-	border: 2px solid ${p => p.theme.colors.grey.light};
+	border: 2px solid ${(p) => p.theme.colors.grey.light};
 
 	transition: all 75ms ease-out;
 	&:hover {
