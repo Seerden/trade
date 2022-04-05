@@ -8,7 +8,6 @@ import { RawNewTicket } from "./NewTicket";
 const today = dayjs(new Date()).format("YYYY-MM-DD");
 
 const defaultNewTicket: Partial<RawNewTicket> = {
-	action: "buy",
 	date: today,
 	time: "09:30",
 };
@@ -84,6 +83,10 @@ export function useNewTickets() {
 		[validTickets]
 	);
 
+	function deleteTicket(index: number) {
+		setTickets((tickets) => [...tickets.slice(0, index), ...tickets.slice(index + 1)]);
+	}
+
 	return {
 		tickets,
 		validTickets,
@@ -91,5 +94,6 @@ export function useNewTickets() {
 		setField,
 		addTicketRows,
 		onSubmit,
+		deleteTicket,
 	} as const;
 }

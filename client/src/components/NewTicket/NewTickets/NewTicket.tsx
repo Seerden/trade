@@ -1,7 +1,9 @@
 import { useMemo } from "react";
-import styled, { css } from "styled-components";
+import { BsX } from "react-icons/bs";
+import { StyledButton, StyledNewTicket } from "./NewTicket.style";
 import Input from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
+import { useNewTickets } from "./useNewTickets";
 
 const actions = "buy sell".split(" ");
 
@@ -14,31 +16,15 @@ export type RawNewTicket = {
 	price: string;
 };
 
-const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
-	${p =>
-		p.empty &&
-		css`
-			opacity: 0.45;
-			filter: grayscale(1);
-		`}
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	height: 2.5rem;
-	gap: 0.45rem;
-	font-size: 0.88rem;
-
-	transition: filter 100ms linear, opacity 100ms linear;
-`;
-
 type Props = {
 	ticketIndex: number;
 	ticket: Partial<RawNewTicket>;
 	setAction: (ticketIndex: number, side: RawNewTicket["action"]) => void;
 	setField: (e: React.ChangeEvent<HTMLInputElement>, ticketIndex: number) => void;
+	deleteTicket: ReturnType<typeof useNewTickets>["deleteTicket"];
 };
 
-const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
+const NewTicket = ({ ticketIndex, ticket, setAction, setField, deleteTicket }: Props) => {
 	const actionButtons = useMemo(
 		() =>
 			actions.map((action: "buy" | "sell") => {
@@ -59,7 +45,7 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 	);
 
 	const hasFilledInFields = useMemo(() => {
-		return "price ticker quantity"
+		return "price ticker quantity action"
 			.split(" ")
 			.some(
 				field => field in ticket && ticket[field] !== undefined && ticket[field]?.length
@@ -127,7 +113,6 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 				step={priceStep}
 				placeholder="price"
 				onChange={e => {
-					console.log("test");
 					setField(e, ticketIndex);
 				}}
 			/>
@@ -165,6 +150,15 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField }: Props) => {
 				onChange={e => setField(e, ticketIndex)}
 				defaultValue="09:30"
 			/>
+
+			<StyledButton
+				type="button"
+				onClick={() => {
+					deleteTicket(ticketIndex);
+				}}
+			>
+				<BsX type="button" />
+			</StyledButton>
 		</StyledNewTicket>
 	);
 };
