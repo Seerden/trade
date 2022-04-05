@@ -1,7 +1,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import { useAuth } from "hooks/auth/useAuth";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { isValidTicket, parseNewTicketInputs } from "./helpers/parse-validate";
 import { RawNewTicket } from "./NewTicket";
 
@@ -19,6 +19,16 @@ export function useNewTickets() {
 	const [tickets, setTickets] = useState<Partial<RawNewTicket>[]>(
 		new Array(ticketCount).fill(defaultNewTicket)
 	);
+
+	const validTickets = useMemo(() => {
+		// Parse and validate tickets
+		// TODO: if we want to individually validate tickets and return various
+		// messages depending on the result of the validation, we might want to
+		// handle this differently, e.g. by changing isValidTicket to
+		// validateTicket, which updates for example a piece of 'message' state
+		// that is then used by the NewTickets component to display validation messages.
+		return tickets.map(parseNewTicketInputs).filter((ticket) => isValidTicket(ticket));
+	}, [tickets]);
 
 	function addTicketRows(count: number) {
 		setTicketCount((c) => c + count);
@@ -56,15 +66,6 @@ export function useNewTickets() {
 	const onSubmit = useCallback(
 		async (e: any) => {
 			e.preventDefault();
-			// Parse and validate tickets
-			// TODO: if we want to individually validate tickets and return various
-			// messages depending on the result of the validation, we might want to
-			// handle this differently, e.g. by changing isValidTicket to
-			// validateTicket, which updates for example a piece of 'message' state
-			// that is then used by the NewTickets component to display validation messages.
-			const validTickets = tickets
-				.map(parseNewTicketInputs)
-				.filter((ticket) => isValidTicket(ticket));
 
 			// If there is at least one valid ticket, send all valid tickets to the
 			// backend. Ideally, we would first force the user to handle any
@@ -80,11 +81,12 @@ export function useNewTickets() {
 			}
 			return;
 		},
-		[tickets]
+		[validTickets]
 	);
 
 	return {
 		tickets,
+		validTickets,
 		setAction,
 		setField,
 		addTicketRows,
