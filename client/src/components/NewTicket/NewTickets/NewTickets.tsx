@@ -57,11 +57,13 @@ export default function NewTickets() {
 
 	/**
 	 * @todo: instead of displaying either TicketsPreview or StyledNewTickets,
-	 * display TicketsPreview as a modal on top of StyledNewTickets
+	 * display TicketsPreview as a modal on top of StyledNewTickets.
+	 *
 	 * @todo: do not write functionality inside onSubmit. Instead, the submit
 	 * should be part of the TicketsPreview, and the 'save tickets' button should
 	 * have type='button' instead of 'submit' in the case that we want to pull up
-	 * the TicketPreview
+	 * the TicketPreview. Making this change also fixes bug "form submission canceled, form not
+	 * connected" bug.
 	 */
 	return (
 		<>
@@ -71,7 +73,7 @@ export default function NewTickets() {
 				<StyledNewTickets
 					onSubmit={(e) => {
 						// TODO: temporary, should be piece of user preference state
-						const shouldShowPreview = true;
+						const shouldShowPreview = !!validTickets?.length;
 
 						if (!shouldShowPreview) {
 							onSubmit(e);
