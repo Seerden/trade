@@ -10,7 +10,7 @@ const today = dayjs(new Date()).format("YYYY-MM-DD");
 const defaultNewTicket: Partial<RawNewTicket> = {
 	action: "buy",
 	date: today,
-	time: "09:30"
+	time: "09:30",
 };
 
 export function useNewTickets() {
@@ -21,8 +21,8 @@ export function useNewTickets() {
 	);
 
 	function addTicketRows(count: number) {
-		setTicketCount(c => c + count);
-		setTickets(tickets => [...tickets, ...new Array(count).fill(defaultNewTicket)]);
+		setTicketCount((c) => c + count);
+		setTickets((tickets) => [...tickets, ...new Array(count).fill(defaultNewTicket)]);
 	}
 
 	// TODO: if we add a proper name='action' (and input type='button' if it's not like
@@ -30,12 +30,12 @@ export function useNewTickets() {
 	// needing a separate setAction function. alternatively, could also combine
 	// these two functions into a reducer
 	const setAction = (ticketIndex: number, action: RawNewTicket["action"]) => {
-		setTickets(tickets => {
+		setTickets((tickets) => {
 			const ticket = { ...tickets[ticketIndex], action };
 			return [
 				...tickets.slice(0, ticketIndex),
 				ticket,
-				...tickets.slice(ticketIndex + 1)
+				...tickets.slice(ticketIndex + 1),
 			];
 		});
 	};
@@ -43,12 +43,12 @@ export function useNewTickets() {
 	const setField = (e: React.ChangeEvent<HTMLInputElement>, ticketIndex: number) => {
 		const { name, value } = e.target;
 
-		setTickets(tickets => {
+		setTickets((tickets) => {
 			const ticket = { ...tickets[ticketIndex], [name]: value };
 			return [
 				...tickets.slice(0, ticketIndex),
 				ticket,
-				...tickets.slice(ticketIndex + 1)
+				...tickets.slice(ticketIndex + 1),
 			];
 		});
 	};
@@ -56,21 +56,20 @@ export function useNewTickets() {
 	const onSubmit = useCallback(
 		async (e: any) => {
 			e.preventDefault();
-			// parse tickets
-			const parsedTickets = tickets.map(parseNewTicketInputs);
-			console.log({ parsedTickets });
+			// Parse and validate tickets
+			// TODO: if we want to individually validate tickets and return various
+			// messages depending on the result of the validation, we might want to
+			// handle this differently, e.g. by changing isValidTicket to
+			// validateTicket, which updates for example a piece of 'message' state
+			// that is then used by the NewTickets component to display validation messages.
+			const validTickets = tickets
+				.map(parseNewTicketInputs)
+				.filter((ticket) => isValidTicket(ticket));
 
-			// validate tickets
-			// do something like parsedTickets.map(validateTicket), and make sure
-			// validateTicket (currently isValidTicket) returns some type of
-			// message to be set for a piece of message state, like {index,
-			// message}
-			const validTickets = parsedTickets.filter(ticket => isValidTicket(ticket)); // TODO: this is temporary while I work on implementing the above comment
-			console.log({ validTickets });
-			// set message if needed
+			// If there is at least one valid ticket, send all valid tickets to the
+			// backend. Ideally, we would first force the user to handle any
+			// invalid tickets, though.
 
-			// make API call if at least one valid ticket (better yet, if no
-			// validation issues so user knows what's up)
 			try {
 				const { username } = user;
 				if (!username || !validTickets?.length) return;
@@ -89,6 +88,6 @@ export function useNewTickets() {
 		setAction,
 		setField,
 		addTicketRows,
-		onSubmit
+		onSubmit,
 	} as const;
 }
