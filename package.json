@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "local_dev": "concurrently \"npm:serve --prefix ./client\" \"npm:start --prefix ./server\"",
-        "dev": "cd ./_containers && docker-compose --file ./docker-compose.dev.yml up --force-recreate --remove-orphans --build server database api-database store client"
+        "dev": "cd ./_containers && docker-compose --file ./docker-compose.dev.yml up --force-recreate --remove-orphans --build server database api-database store client",
+        "db": "docker exec -it containers_api-database_1 psql api-database -U postgres"
     },
     "keywords": [],
     "author": "github/seerden",
