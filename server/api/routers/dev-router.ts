@@ -105,7 +105,7 @@ devRouter.get("/trades-with-tickets", async (req, res) => {
          1, 1, 'msft', 10, 'sell', 100, 320.20);
    */
 
-	const trades = await getTradesWithTickets("seerden");
+	const trades = await getTradesWithTickets("seerden", ["msft", "aapl"]);
 	// const response = await getUserId("seerden");
 
 	const tradesWithMetadata = trades.map((trade) => ({

@@ -79,7 +79,7 @@ export async function getLatestTrade({
 	}
 }
 
-export async function getTradesWithTickets(username: string) {
+export async function getTradesWithTickets(username: string, tickers?: string[]) {
 	const userId = await getUserId(username);
 	console.log(userId);
 	if (!userId) return;
@@ -92,9 +92,11 @@ export async function getTradesWithTickets(username: string) {
          inner join tickets ti
          on ti.trade_id = tr.trade_id
          and tr.user_id = %L
+         ${tickers?.length ? "and tr.ticker in (%L)" : ""}
          group by tr.trade_id
       `,
-		userId
+		userId,
+		tickers
 	);
 
 	// TODO: if no trades are returned, do we get []?
