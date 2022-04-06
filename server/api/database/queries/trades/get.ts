@@ -8,7 +8,7 @@ import { getUserId } from "../users/get";
 // TODO: I'm not 100% sure this is the correct response type for getLatestTrade
 // (it's correct for getTradesWithTickets though). Test with multiple tickers.
 // Might have to `group by trade.trade_id` in getLatestTrade to get the desired shape.
-type TradesWithTickets = Array<{
+export type TradeWithTickets = {
 	trade: null | {
 		user_id: number;
 		trade_id: number;
@@ -24,11 +24,12 @@ type TradesWithTickets = Array<{
 				ticket_id: number;
 				ticker: string;
 				timestamp: number;
-				action: string;
+				action: "buy" | "sell";
 				quantity: number;
 				price: number;
 		  }[];
-}>;
+};
+export type TradesWithTickets = TradeWithTickets[];
 
 /**
  * Fetch all of a single user's trades.
