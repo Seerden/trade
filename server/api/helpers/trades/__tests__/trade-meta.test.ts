@@ -89,7 +89,7 @@ describe("getTimestampRange", () => {
 		const result = getTimestampRange(closedTradeTickets);
 		expect(result).toEqual({
 			firstTimestamp: 10,
-			latestTimestamp: 20,
+			lastTimestamp: 20,
 		});
 	});
 });

@@ -88,15 +88,16 @@ export function getTimestampRange(tickets: Tickets, ticker?: string) {
 	const descendingTimestamps = tickets.map((t) => t.timestamp).sort((a, b) => b - a);
 
 	const firstTimestamp = descendingTimestamps.at(-1);
-	let latestTimestamp: number;
+	let lastTimestamp: number;
+
 	// Trade is still active
 	if (openQuantity === 0) {
 		// eslint-disable-next-line prefer-destructuring
-		latestTimestamp = descendingTimestamps[0];
+		lastTimestamp = descendingTimestamps[0];
 	}
 
 	return {
 		firstTimestamp,
-		latestTimestamp,
+		lastTimestamp,
 	};
 }
