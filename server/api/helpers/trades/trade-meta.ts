@@ -70,7 +70,8 @@ export function getOpenQuantity(tickets: Tickets, ticker?: string) {
 
 /**
  * Get the timestamp(s) of the first (and in the case of a closed trade, last)
- * ticket in a list of `tickets`.
+ * ticket in a list of `tickets`. If a trade isn't closed yet, lastTimestamp
+ * will be falsy.
  *
  * @todo: in this implementation, we just subtract the first `timestamp` from
  * the last one. Whether this returns a value in UNIX milliseconds, or in
@@ -78,7 +79,13 @@ export function getOpenQuantity(tickets: Tickets, ticker?: string) {
  *
  * @param ticker: if specified, filter the list of tickets by `ticket.ticker === ticker`
  */
-export function getTimestampRange(tickets: Tickets, ticker?: string) {
+export function getTimestampRange(
+	tickets: Tickets,
+	ticker?: string
+): {
+	firstTimestamp: number;
+	lastTimestamp: Maybe<number>;
+} {
 	if (ticker) {
 		tickets = tickets.filter((t) => t.ticker === ticker);
 	}
@@ -88,7 +95,7 @@ export function getTimestampRange(tickets: Tickets, ticker?: string) {
 	const descendingTimestamps = tickets.map((t) => t.timestamp).sort((a, b) => b - a);
 
 	const firstTimestamp = descendingTimestamps.at(-1);
-	let lastTimestamp: number;
+	let lastTimestamp: Maybe<number> = null;
 
 	// Trade is still active
 	if (openQuantity === 0) {
