@@ -86,16 +86,18 @@ devRouter.get("/trades-with-tickets", async (req, res) => {
       Snippet: run this in postgres before testing /trades-with-tickets to ensure a user exists
       and at least one ticket + one trade exist.
       
+      delete from tickets;
+      delete from trades;
+
       delete from users;
       alter sequence users_user_id_seq restart with 1;
       insert into users (username, password) values ('seerden', 'test');
    
       ALTER SEQUENCE trades_trade_id_seq RESTART WITH 1;
-   
+      
       insert into trades (user_id, ticker, trade_type) values (
          1, 'msft', 'short'
       );
-   
       insert into tickets (
          user_id, trade_id, ticker, timestamp, action, quantity, price
       ) values (

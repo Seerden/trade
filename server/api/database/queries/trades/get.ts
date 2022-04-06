@@ -86,7 +86,7 @@ export async function getTradesWithTickets(username: string) {
 	// Build query
 	const text = format(
 		`
-         select jsonb_agg(distinct tr.*) as trade, jsonb_agg(ti.*) as tickets
+         select jsonb_agg(distinct tr.*) as trade, jsonb_agg(ti.* order by timestamp asc) as tickets
          from trades tr
          inner join tickets ti
          on ti.trade_id = tr.trade_id
