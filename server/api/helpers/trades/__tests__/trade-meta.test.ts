@@ -1,4 +1,4 @@
-import { getOpenQuantity, getTimestampRange, Tickets } from "../trade-meta";
+import { getAverage, getOpenQuantity, getTimestampRange, Tickets } from "../trade-meta";
 
 const snippet = {
 	price: 100,
@@ -90,6 +90,60 @@ describe("getTimestampRange", () => {
 		expect(result).toEqual({
 			firstTimestamp: 10,
 			latestTimestamp: 20,
+		});
+	});
+});
+
+describe("getAverage", () => {
+	const tickets: Tickets = [
+		{
+			...snippet,
+			action: "buy",
+			quantity: 50,
+			price: 1,
+			ticket_id: 1,
+			timestamp: 1,
+		},
+		{
+			...snippet,
+			action: "buy",
+			quantity: 50,
+			price: 2,
+			ticket_id: 2,
+			timestamp: 2,
+		},
+	];
+
+	test("returns proper average if only buy tickets present", () => {
+		let result = getAverage(tickets);
+
+		expect(result).toEqual({
+			buy: 1.5,
+			sell: null,
+		});
+
+		result = getAverage(tickets);
+
+		expect(result).toEqual({
+			buy: 1.5,
+			sell: null,
+		});
+	});
+
+	test("returns proper average if both buy and sell tickets present", () => {
+		tickets.push({
+			...snippet,
+			price: 1,
+			action: "sell",
+			ticket_id: 3,
+			quantity: 50,
+			timestamp: 3,
+		});
+
+		const result = getAverage(tickets);
+		expect(result).toEqual({
+			buy: 1.5,
+			sell: 1,
 		});
 	});
 });
