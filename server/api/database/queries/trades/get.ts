@@ -92,7 +92,7 @@ export async function getTradesWithTickets(username: string, tickers?: string[])
          inner join tickets ti
          on ti.trade_id = tr.trade_id
          and tr.user_id = %L
-         ${tickers?.length ? "and tr.ticker in (%L)" : ""}
+         ${Array.isArray(tickers) && tickers?.length ? "and tr.ticker in (%L)" : ""}
          group by tr.trade_id
       `,
 		userId,
