@@ -32,7 +32,7 @@ services:
         ports:
             - "5000:5000"
 
-    api-database:
+    api_database:
         image: postgres:alpine
         environment:
             - POSTGRES_PASSWORD=$PG_API_PASS
