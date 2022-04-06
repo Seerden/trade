@@ -8,6 +8,7 @@ module.exports = {
 		"import/resolver": {
 			node: {
 				extensions: [".js", ".jsx", ".ts", ".tsx"],
+				moduleDirectory: ["node_modules", "./"],
 			},
 		},
 	},
@@ -16,6 +17,7 @@ module.exports = {
 		"prettier",
 		"plugin:@typescript-eslint/eslint-recommended",
 		"plugin:@typescript-eslint/recommended",
+		"plugin:import/typescript",
 	],
 	parser: "@typescript-eslint/parser",
 	parserOptions: {
