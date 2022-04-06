@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 
 export function isAllowed(req: Request, res: Response, next: (args?: any) => any) {
+	if (process.env.NODE_ENV === "development") {
+		return next();
+	}
+
 	// @ts-ignore
 	if (!req.user?.username || !req.body?.username) {
 		res.json({
