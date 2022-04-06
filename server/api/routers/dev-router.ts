@@ -13,6 +13,7 @@ import {
 import { fetchDailyOHLC } from "../../price-action/lib/polygon/requests/snapshot/snapshot-fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/snapshot-insert";
 import { getLatestTrade, getTradesWithTickets } from "../database/queries/trades/get";
+import { getTradeDetails } from "../helpers/trades/trade-meta";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -107,5 +108,10 @@ devRouter.get("/trades-with-tickets", async (req, res) => {
 	const trades = await getTradesWithTickets("seerden");
 	// const response = await getUserId("seerden");
 
-	res.json({ trades });
+	const tradesWithMetadata = trades.map((trade) => ({
+		...trade,
+		...getTradeDetails(trade),
+	}));
+
+	res.json({ tradesWithMetadata });
 });

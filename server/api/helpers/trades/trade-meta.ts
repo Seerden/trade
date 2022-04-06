@@ -1,17 +1,6 @@
 import { TradeWithTickets } from "../../database/queries/trades/get";
 
 /**
- * Get metadata for a trade
- * - realized profit/loss
- * - trade duration
- * - avg. buy and sell price
- * - position size: open and closed
- */
-export function getTradeDetails(tradeWithTickets: TradeWithTickets) {
-	const { trade, tickets } = tradeWithTickets;
-}
-
-/**
  * Get the average price of all buy or sell tickets from an array of tickets.
  * Returns an unrounded number.
  */
@@ -106,5 +95,21 @@ export function getTimestampRange(
 	return {
 		firstTimestamp,
 		lastTimestamp,
+	};
+}
+
+/**
+ * Get metadata for a trade
+ * - realized profit/loss
+ * - trade duration
+ * - avg. buy and sell price
+ * - position size: open and closed
+ */
+export function getTradeDetails(tradeWithTickets: TradeWithTickets) {
+	const { tickets } = tradeWithTickets;
+
+	return {
+		average: getAverage(tickets),
+		timeInterval: getTimestampRange(tickets),
 	};
 }
