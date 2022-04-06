@@ -15,15 +15,18 @@ export function getTradeDetails(tradeWithTickets: TradeWithTickets) {
  * Get the average price of all buy or sell tickets from an array of tickets.
  * Returns an unrounded number.
  */
-export function getAverage(
-	tickets: TradeWithTickets["tickets"],
-	sides: Array<"buy" | "sell">
-) {
-	const response: { [K in "buy" | "sell"]?: number } = {};
+export function getAverage(tickets: TradeWithTickets["tickets"]) {
+	const response: { [K in "buy" | "sell"]?: null | number } = {
+		buy: null,
+		sell: null,
+	};
 
-	for (const side of new Set(sides)) {
+	for (const side of ["buy", "sell"] as const) {
 		const ticketsPerSide = tickets.filter((t) => t.action === side);
-		if (!ticketsPerSide?.length) return;
+		if (!ticketsPerSide?.length) {
+			response[side] = null;
+			continue;
+		}
 
 		let shareCount = 0;
 		let totalCost = 0;
@@ -36,6 +39,8 @@ export function getAverage(
 
 		response[side] = totalCost / shareCount;
 	}
+
+	return response;
 }
 
 export type Tickets = TradeWithTickets["tickets"];
