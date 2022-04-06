@@ -3,6 +3,32 @@ import {
 	BackendApiObject as API,
 	BackendApiObject,
 } from "../../../../database/pools/query-objects";
+import { getUserId } from "../users/get";
+
+// TODO: I'm not 100% sure this is the correct response type for getLatestTrade
+// (it's correct for getTradesWithTickets though). Test with multiple tickers.
+// Might have to `group by trade.trade_id` in getLatestTrade to get the desired shape.
+type TradesWithTickets = Array<{
+	trade: null | {
+		user_id: number;
+		trade_id: number;
+		ticker: string;
+		trade_type: string;
+		rank_number: string;
+	};
+	tickets:
+		| null
+		| {
+				user_id: number;
+				trade_id: number;
+				ticket_id: number;
+				ticker: string;
+				timestamp: number;
+				action: string;
+				quantity: number;
+				price: number;
+		  }[];
+}>;
 
 /**
  * Fetch all of a single user's trades.
@@ -46,28 +72,32 @@ export async function getLatestTrade({
 
 		const response = await BackendApiObject.query({ text });
 
-		return response as {
-			trade: null | {
-				user_id: number;
-				trade_id: number;
-				ticker: string;
-				trade_type: string;
-				rank_number: string;
-			};
-			tickets:
-				| null
-				| {
-						user_id: number;
-						trade_id: number;
-						ticket_id: number;
-						ticker: string;
-						timestamp: number;
-						action: string;
-						quantity: number;
-						price: number;
-				  }[];
-		}[];
+		return response as TradesWithTickets;
 	} catch (e) {
 		console.error(e);
 	}
+}
+
+export async function getTradesWithTickets(username: string) {
+	const userId = await getUserId(username);
+	console.log(userId);
+	if (!userId) return;
+
+	// Build query
+	const text = format(
+		`
+         select jsonb_agg(distinct tr.*) as trade, jsonb_agg(ti.*) as tickets
+         from trades tr
+         inner join tickets ti
+         on ti.trade_id = tr.trade_id
+         and tr.user_id = %L
+         group by tr.trade_id
+      `,
+		userId
+	);
+
+	// TODO: if no trades are returned, do we get []?
+	const response: [] | TradesWithTickets = await BackendApiObject.query({ text });
+
+	return response;
 }
