@@ -14,8 +14,7 @@
 		"skipLibCheck": true,
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"types": ["jest"],
-		"typeRoots": ["./types"]
+		"types": ["jest"]
 	},
 	"ts-node": { "files": true },
 	"exclude": ["./node_modules", "node_modules"]
