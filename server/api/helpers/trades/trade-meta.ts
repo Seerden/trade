@@ -113,3 +113,48 @@ export function getTradeDetails(tradeWithTickets: TradeWithTickets) {
 		timeInterval: getTimestampRange(tickets),
 	};
 }
+
+/**
+ * Extract the realized P&L from a trade.
+ */
+export function getRealizedProfit(tickets: Tickets) {
+	const { buy: avgBuy, sell: avgSell } = getAverage(tickets);
+
+	// TODO: we should really distinguish between a trade that is fully realized,
+	// and one that is closed out with a P&L of exactly $0, but let's worry about
+	// that later.
+	if (!avgBuy || !avgSell) return 0;
+
+	// Tickets should be sorted by timestamp already, but re-sort just in case
+	const sortedTickets = tickets.sort((a, b) => a.timestamp - b.timestamp);
+
+	const type = sortedTickets[0].action === "buy" ? "long" : "short";
+	const closingAction = type === "long" ? "sell" : "buy";
+	let openQuantity = 0;
+	let avgCost = 0;
+	let realized = 0;
+
+	for (const { action, quantity, price } of tickets) {
+		// avgCost only changes when adding to a position
+		if (action !== closingAction) {
+			avgCost = (avgCost * openQuantity + price * quantity) / (openQuantity + quantity);
+		} else {
+			// realized only changes when (partially) closing a position
+
+			/* 
+         If long:    sell @ 2 when avgCost = 1 ==> realized += (2-1)*qty
+			If short:   buy @ 2 when avgCost = 1 ==> realized += -(2-1)*qty
+
+         Hence we need a `sign` variable that equates to -1 when covering
+         while in a short position, and +1 when selling while in  a long position
+         */
+			const sign = closingAction === "buy" ? -1 : 1;
+			realized += sign * (price - avgCost) * quantity;
+		}
+
+		// openQuantity always changes after a ticket
+		openQuantity += (action === closingAction ? -1 : 1) * quantity;
+	}
+
+	return realized;
+}
