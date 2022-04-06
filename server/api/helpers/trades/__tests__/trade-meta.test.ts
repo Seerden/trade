@@ -82,6 +82,7 @@ describe("getTimestampRange", () => {
 		const result = getTimestampRange(shortTickets);
 		expect(result).toEqual({
 			firstTimestamp: 10,
+			lastTimestamp: null,
 		});
 	});
 
