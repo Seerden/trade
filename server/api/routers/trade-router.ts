@@ -1,5 +1,5 @@
 import express from "express";
-import { getTradesByUser } from "../database/queries/trades/get";
+import { getTradesByUser, getTradesWithTickets } from "../database/queries/trades/get";
 import { getUserId } from "../database/queries/users/get";
 import { isAllowed } from "../helpers/middleware/is-allowed";
 
@@ -47,6 +47,17 @@ tradeRouter.get("/trades/", async (req, res) => {
 	res.json({ trades });
 });
 
-tradeRouter.get("/trades/all", async () => {
-	// get all of a user's trades
+tradeRouter.get("/trades/all", async (req, res) => {
+	const { username, tickers } = req.query;
+
+	if (tickers && !Array.isArray(tickers)) {
+		res.status(400).json({ message: "Query param 'tickers' has invalid shape" });
+	}
+
+	try {
+		const trades = await getTradesWithTickets(username as string, tickers as string[]);
+		res.json({ trades });
+	} catch (error) {
+		console.error(error);
+	}
 });
