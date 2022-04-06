@@ -7,8 +7,10 @@ import { BackendApiObject as API } from "../../../../database/pools/query-object
  */
 
 export async function getUserId(username: string) {
-	return await API.query({
-		text: "select user_id from users where username = $1",
+	const [response] = await API.query({
+		text: "select (u.user_id) from users u where username = $1",
 		values: [username],
 	});
+
+	return response?.user_id;
 }

@@ -80,7 +80,7 @@ export async function insertTickets(username: string, tickets: Array<NewTicket>)
 	 *  to      Array<[user_id, ticker, timestamp, action, ...]>
 	 */
 
-	const userId = await getUserId(username);
+	const [userId] = await getUserId(username);
 	const tickers = Array.from(new Set(tickets.map((ticket) => ticket.ticker)));
 
 	// TODO: get the tradeId for each ticket we want to insert. This might
