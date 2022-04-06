@@ -6,6 +6,7 @@
 	"scripts": {
 		"start": "node ./dist/index.js",
 		"dev": "ts-node-dev --poll --respawn ./index.ts",
+		"ci-test": "jest",
 		"test": "jest --watch --silent=false",
 		"build": "tsc"
 	},
