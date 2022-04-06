@@ -12,7 +12,7 @@ import {
 } from "../../price-action/database/_dev/polygon/max-1m-query";
 import { fetchDailyOHLC } from "../../price-action/lib/polygon/requests/snapshot/snapshot-fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/snapshot-insert";
-import { getLatestTrade } from "../database/queries/trades/get";
+import { getLatestTrade, getTradesWithTickets } from "../database/queries/trades/get";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -79,4 +79,31 @@ devRouter.get("/latest", async (req, res) => {
 	res.json({
 		response,
 	});
+});
+
+devRouter.get("/trades-with-tickets", async (req, res) => {
+	/*
+      Snippet: run this in postgres before testing /trades-with-tickets to ensure a user exists
+      and at least one ticket + one trade exist.
+      
+      delete from users;
+      alter sequence users_user_id_seq restart with 1;
+      insert into users (username, password) values ('seerden', 'test');
+   
+      ALTER SEQUENCE trades_trade_id_seq RESTART WITH 1;
+   
+      insert into trades (user_id, ticker, trade_type) values (
+         1, 'msft', 'short'
+      );
+   
+      insert into tickets (
+         user_id, trade_id, ticker, timestamp, action, quantity, price
+      ) values (
+         1, 1, 'msft', 10, 'sell', 100, 320.20);
+   */
+
+	const trades = await getTradesWithTickets("seerden");
+	// const response = await getUserId("seerden");
+
+	res.json({ trades });
 });
