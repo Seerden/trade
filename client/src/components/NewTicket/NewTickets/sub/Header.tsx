@@ -3,7 +3,7 @@ import styled from "styled-components";
 export default function Header() {
 	const columns = "Action Ticker Price Quantity Date Time".split(" ");
 	const columnMap = {
-		Time: "Market Time"
+		Time: "Market Time",
 	};
 
 	return (
@@ -19,7 +19,11 @@ export default function Header() {
 
 const StyledHeader = styled.div`
 	display: grid;
-	grid-template-columns: repeat(4, 5rem) 10rem 5.5rem;
+	// TODO: these column widths and gap size follow those from the NewTicket
+	// component (specifically, the StyledInput in there). Should combine those
+	// styles with these here so that they're always in sync. Would also make it
+	// easier to manage a responsive version of this component.
+	grid-template-columns: repeat(4, 5rem) 10rem 6.5rem;
 	gap: 0.45rem;
 
 	label {
