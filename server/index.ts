@@ -1,6 +1,6 @@
 import cors from "cors";
 import { config } from "dotenv";
-import express from "express";
+import express, { Request, Response } from "express";
 import session from "express-session";
 import passport from "passport";
 import { strategy } from "./api/helpers/auth/passport/config";
@@ -52,9 +52,10 @@ async function main() {
 			if (foundUser && "username" in foundUser) {
 				return done(null, foundUser);
 			}
+
 			return done("User not found");
 		} catch (e) {
-			done(e);
+			done(e, false);
 		}
 	});
 
@@ -72,6 +73,37 @@ async function main() {
 
 	app.listen(process.env.PORT || 5000, () => {
 		console.log(`Server started on ${new Date()}`);
+	});
+
+	/**
+	 * Catch-all piece of middleware that handles errors during route handling.
+	 *
+	 * Use-case: Suppose a user has an authenticated session, and that the user is deleted from the
+	 * database outside of the regular flow (regular flow would include a
+	 * req.logout()), e.g. directly in the database, for whatever reason.
+	 * If the user then tries to make a request, passport.deserialize()
+	 * encounters an issue. We can only really fix this by forcibly logging the
+	 * user out.
+	 *
+	 * @todo: Do we ever want to call next() in this case? Most endpoints will
+	 * require an authenticated user, and handlers won't know in advance if (a) there
+	 * simply isn't a valid user, or (b) if we encountered an error internally.
+	 * Perhaps it's best to just call logout(), send a response like {error:
+	 * "Encountered an error. Perhaps the user no longer exists"},
+	 * and let the client handle what to do next (e.g. retry a few times, force
+	 * the user to log in again, etc).
+	 */
+	app.use((err: Error, req: Request, res: Response, next?: (args?: any) => unknown) => {
+		if (err) {
+			req.session = null;
+			req.logout();
+
+			// if (next) {
+			// 	next();
+			// } else {
+			res.json({ error: err });
+			// }
+		}
 	});
 }
 
