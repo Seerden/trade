@@ -99,7 +99,6 @@ export async function getTradesWithTickets(username: string, tickers?: string[])
 		tickers
 	);
 
-	// TODO: if no trades are returned, do we get []?
 	const response: [] | TradesWithTickets = await BackendApiObject.query({ text });
 
 	return response;
