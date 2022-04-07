@@ -81,7 +81,6 @@ export async function getLatestTrade({
 
 export async function getTradesWithTickets(username: string, tickers?: string[]) {
 	const userId = await getUserId(username);
-	console.log(userId);
 	if (!userId) return;
 
 	// Build query
