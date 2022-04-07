@@ -47,7 +47,7 @@ tradeRouter.get("/trades/", async (req, res) => {
 	res.json({ trades });
 });
 
-tradeRouter.get("/trades/all", async (req, res) => {
+tradeRouter.get("/trades/tickets", async (req, res) => {
 	const { username, tickers } = req.query;
 
 	if (tickers && !Array.isArray(tickers)) {
