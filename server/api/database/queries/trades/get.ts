@@ -5,9 +5,6 @@ import {
 } from "../../../../database/pools/query-objects";
 import { getUserId } from "../users/get";
 
-// TODO: I'm not 100% sure this is the correct response type for getLatestTrade
-// (it's correct for getTradesWithTickets though). Test with multiple tickers.
-// Might have to `group by trade.trade_id` in getLatestTrade to get the desired shape.
 export type TradeWithTickets = {
 	trade: null | {
 		user_id: number;
@@ -66,6 +63,7 @@ export async function getLatestTrade({
             inner join tickets
             on tickets.trade_id = sub.trade_id
             and sub.rank_number = 1
+            group by sub.trade_id
          `,
 			tickers,
 			userId
