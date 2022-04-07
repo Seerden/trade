@@ -6,6 +6,7 @@
     "scripts": {
         "local_dev": "concurrently \"npm:serve --prefix ./client\" \"npm:start --prefix ./server\"",
         "dev": "cd ./_containers && docker-compose --file ./docker-compose.dev.yml up --force-recreate --remove-orphans --build server database api_database store client",
+        "dev-down": "cd ./_containers && docker-compose --file ./docker-compose.dev.yml down --volumes",
         "db": "docker exec -it containers_api_database_1 psql api_database -U postgres"
     },
     "keywords": [],
