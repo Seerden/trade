@@ -1,16 +1,26 @@
 import { ButtonHTMLAttributes } from "react";
-import { StyledButton } from "./sub.style";
+import { StyledTradeActionButton } from "./sub.style";
 
 interface Props extends Partial<ButtonHTMLAttributes<HTMLButtonElement>> {
 	// @todo: use TradeAction type or something
 	action: "buy" | "sell";
+	index: number;
 	active?: boolean;
 }
 
-export default function TradeActionButton({ action, active, ...buttonProps }: Props) {
+export default function TradeActionButton({
+	action,
+	active,
+	index,
+	...buttonProps
+}: Props) {
+	const name = `action-${index}`;
 	return (
-		<StyledButton type="button" action={action} active={active} {...buttonProps}>
-			{action}
-		</StyledButton>
+		<StyledTradeActionButton action={action} active={active}>
+			<label>
+				<span>{action}</span>
+				<input type="radio" name={name} value={action} {...buttonProps} />
+			</label>
+		</StyledTradeActionButton>
 	);
 }

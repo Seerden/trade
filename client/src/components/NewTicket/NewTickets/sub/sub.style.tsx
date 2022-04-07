@@ -8,21 +8,23 @@ export const StyledInput = styled(SharedStyledInput)<{ $size?: string }>`
 
 	// in this specific case, the following is just for the 'time' field,
 	// whose content needs slightly more space than 5rem
-	min-width: 5.5rem;
-	width: 5.5rem;
+	--width: 6.5rem;
+	min-width: var(--width);
+	width: var(--width);
 
-	${p =>
+	${(p) =>
 		p.$size === "small" &&
 		css`
 			min-width: 5rem;
 			width: 5rem;
 		`}
 
-	${p =>
+	${(p) =>
 		p.$size === "large" &&
 		css`
-			min-width: 10rem;
-			width: 10rem;
+			--large-input-width: 9rem;
+			min-width: var(--large-input-width);
+			width: var(--large-input-width);
 		`}
 
 	&::placeholder {
@@ -40,30 +42,43 @@ export const StyledInput = styled(SharedStyledInput)<{ $size?: string }>`
 
 const actionToColor = {
 	buy: "seagreen",
-	sell: "orange"
+	sell: "orange",
 };
 
 // <!-- TradeActionButton -->
-
 // @todo: use TradeAction type for buy/sell
-export const StyledButton = styled.button<{ action: "buy" | "sell"; active?: boolean }>`
-	// @todo: use theme values
-	width: 2.5rem;
-	padding: 0.5rem 1rem;
+export const StyledTradeActionButton = styled.span<{
+	action: "buy" | "sell";
+	active?: boolean;
+}>`
+	width: max-content;
+	input {
+		display: inline-block;
+		width: 100%;
+		height: 100%;
+	}
 
-	font-size: var(--text-medium);
+	label {
+		display: inline-block;
 
-	border: 2px solid transparent;
-	border-color: ${p => p.active && actionToColor[p.action]};
+		// @todo: use theme values
+		width: 2.5rem;
+		padding: 0.5rem 1rem;
 
-	background-color: transparent;
+		font-size: var(--text-medium);
 
-	color: ${p => actionToColor[p.action]};
+		border: 2px solid transparent;
+		border-color: ${(p) => p.active && actionToColor[p.action]};
 
-	transition: all 35ms fade-out;
+		background-color: transparent;
 
-	height: 2rem;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
+		color: ${(p) => actionToColor[p.action]};
+
+		transition: all 35ms fade-out;
+
+		height: 2rem;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+	}
 `;
