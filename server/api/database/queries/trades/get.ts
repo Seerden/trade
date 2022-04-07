@@ -3,6 +3,30 @@ import {
 	BackendApiObject as API,
 	BackendApiObject,
 } from "../../../../database/pools/query-objects";
+import { getUserId } from "../users/get";
+
+export type TradeWithTickets = {
+	trade: null | {
+		user_id: number;
+		trade_id: number;
+		ticker: string;
+		trade_type: string;
+		rank_number: string;
+	};
+	tickets:
+		| null
+		| {
+				user_id: number;
+				trade_id: number;
+				ticket_id: number;
+				ticker: string;
+				timestamp: number;
+				action: "buy" | "sell";
+				quantity: number;
+				price: number;
+		  }[];
+};
+export type TradesWithTickets = TradeWithTickets[];
 
 /**
  * Fetch all of a single user's trades.
@@ -39,6 +63,7 @@ export async function getLatestTrade({
             inner join tickets
             on tickets.trade_id = sub.trade_id
             and sub.rank_number = 1
+            group by sub.trade_id
          `,
 			tickers,
 			userId
@@ -46,28 +71,32 @@ export async function getLatestTrade({
 
 		const response = await BackendApiObject.query({ text });
 
-		return response as {
-			trade: null | {
-				user_id: number;
-				trade_id: number;
-				ticker: string;
-				trade_type: string;
-				rank_number: string;
-			};
-			tickets:
-				| null
-				| {
-						user_id: number;
-						trade_id: number;
-						ticket_id: number;
-						ticker: string;
-						timestamp: number;
-						action: string;
-						quantity: number;
-						price: number;
-				  }[];
-		}[];
+		return response as TradesWithTickets;
 	} catch (e) {
 		console.error(e);
 	}
+}
+
+export async function getTradesWithTickets(username: string, tickers?: string[]) {
+	const userId = await getUserId(username);
+	if (!userId) return;
+
+	// Build query
+	const text = format(
+		`
+         select jsonb_agg(distinct tr.*) as trade, jsonb_agg(ti.* order by timestamp asc) as tickets
+         from trades tr
+         inner join tickets ti
+         on ti.trade_id = tr.trade_id
+         and tr.user_id = %L
+         ${Array.isArray(tickers) && tickers?.length ? "and tr.ticker in (%L)" : ""}
+         group by tr.trade_id
+      `,
+		userId,
+		tickers
+	);
+
+	const response: [] | TradesWithTickets = await BackendApiObject.query({ text });
+
+	return response;
 }

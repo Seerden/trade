@@ -1,9 +1,10 @@
 {
 	"compilerOptions": {
+		"baseUrl": ".",
 		"module": "commonjs",
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
-		"target": "ES2020",
+		"target": "ES2021",
 		"moduleResolution": "node",
 		"sourceMap": true,
 		"noImplicitAny": true,
@@ -15,5 +16,6 @@
 		"experimentalDecorators": true,
 		"types": ["jest", "node"]
 	},
+	"ts-node": { "files": true },
 	"exclude": ["./node_modules", "node_modules"]
 }
