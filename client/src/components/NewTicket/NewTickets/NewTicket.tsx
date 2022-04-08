@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { BsX } from "react-icons/bs";
 import { StyledButton, StyledNewTicket } from "./NewTicket.style";
 import Input from "./sub/Input";
@@ -32,13 +32,13 @@ const NewTicket = ({
 	ticket,
 	setAction,
 	setField,
-	deleteTicket,
+	deleteTicket
 }: Props) => {
 	const hasFilledInFields = useMemo(() => {
 		return "price ticker quantity action"
 			.split(" ")
 			.some(
-				(field) =>
+				field =>
 					field in ticket &&
 					ticket[field] !== undefined &&
 					ticket[field]?.length
@@ -78,6 +78,22 @@ const NewTicket = ({
 		return 1e-4;
 	}, [ticket?.price]);
 
+	/**
+	 * If hasFilledInFields, return `placeholder`, else return null.
+	 * To be used to only display placeholders for certain inputs if hasFilledInFields.
+	 *
+	 * @todo: refine condition hasFilledInFields to something slightly different:
+	 * - also want to display placeholder if user is focused or hovering the
+	 *   ticket, or if they have selected a tradeAction, or changed the `date` or
+	 *   `time` field.
+	 */
+	const getPlaceholder = useCallback(
+		(placeholder: string) => {
+			return hasFilledInFields ? placeholder : null;
+		},
+		[hasFilledInFields]
+	);
+
 	const quantityStep = useMemo(() => {
 		const quantity = +ticket?.quantity;
 
@@ -110,10 +126,10 @@ const NewTicket = ({
 				$size="small"
 				title="Ticker"
 				name="ticker"
-				placeholder="ticker"
-				// TODO: don't repeat e => setField(e, ticketIndex) every time,
-				// write a curried function instead
-				onChange={(e) => setField(e, ticketIndex)}
+				placeholder={getPlaceholder("ticker")}
+				// TODO: don't repeat e => setField(e, ticketIndex) every time, write
+				// a curried function instead
+				onChange={e => setField(e, ticketIndex)}
 			/>
 
 			{/* price field */}
@@ -125,8 +141,8 @@ const NewTicket = ({
 				type="number"
 				min={0}
 				step={priceStep}
-				placeholder="price"
-				onChange={(e) => {
+				placeholder={getPlaceholder("price")}
+				onChange={e => {
 					setField(e, ticketIndex);
 				}}
 			/>
@@ -140,8 +156,8 @@ const NewTicket = ({
 				type="number"
 				min={0}
 				step={quantityStep}
-				placeholder="quantity"
-				onChange={(e) => setField(e, ticketIndex)}
+				placeholder={getPlaceholder("quantity")}
+				onChange={e => setField(e, ticketIndex)}
 			/>
 
 			{/* date field */}
@@ -151,7 +167,7 @@ const NewTicket = ({
 				title="Date"
 				name="date"
 				type="date"
-				onChange={(e) => setField(e, ticketIndex)}
+				onChange={e => setField(e, ticketIndex)}
 				defaultValue={ticket.date}
 			/>
 
@@ -161,7 +177,7 @@ const NewTicket = ({
 				title="Time of day (market time)"
 				name="time"
 				type="time"
-				onChange={(e) => setField(e, ticketIndex)}
+				onChange={e => setField(e, ticketIndex)}
 				defaultValue="09:30"
 			/>
 
