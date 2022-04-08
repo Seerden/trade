@@ -23,7 +23,7 @@ const StyledHeader = styled.div`
 	// component (specifically, the StyledInput in there). Should combine those
 	// styles with these here so that they're always in sync. Would also make it
 	// easier to manage a responsive version of this component.
-	grid-template-columns: repeat(4, 5rem) 10rem 6.5rem;
+	grid-template-columns: repeat(4, 5rem) 9rem 6.5rem;
 	gap: 0.45rem;
 
 	label {
