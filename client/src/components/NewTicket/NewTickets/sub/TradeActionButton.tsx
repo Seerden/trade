@@ -6,20 +6,28 @@ interface Props extends Partial<ButtonHTMLAttributes<HTMLButtonElement>> {
 	action: "buy" | "sell";
 	index: number;
 	active?: boolean;
+	required: boolean;
 }
 
 export default function TradeActionButton({
 	action,
 	active,
 	index,
+	required,
 	...buttonProps
 }: Props) {
 	const name = `action-${index}`;
 	return (
-		<StyledTradeActionButton action={action} active={active}>
+		<StyledTradeActionButton action={action} active={active} required={required}>
 			<label>
 				<span>{action}</span>
-				<input type="radio" name={name} value={action} {...buttonProps} />
+				<input
+					required={required}
+					type="radio"
+					name={name}
+					value={action}
+					{...buttonProps}
+				/>
 			</label>
 		</StyledTradeActionButton>
 	);

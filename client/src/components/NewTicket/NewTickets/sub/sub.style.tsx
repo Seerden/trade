@@ -50,10 +50,17 @@ const actionToColor = {
 export const StyledTradeActionButton = styled.span<{
 	action: "buy" | "sell";
 	active?: boolean;
+	required?: boolean;
 }>`
 	width: max-content;
+	position: relative;
+
 	input {
 		display: inline-block;
+		position: absolute;
+		z-index: 0;
+		left: calc(100% - 2rem);
+		opacity: 0;
 		width: 100%;
 		height: 100%;
 	}
@@ -80,5 +87,11 @@ export const StyledTradeActionButton = styled.span<{
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
+
+		${(p) =>
+			p.required &&
+			css`
+				border-bottom: 2px solid orange;
+			`}
 	}
 `;

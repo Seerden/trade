@@ -25,6 +25,14 @@ type Props = {
 };
 
 const NewTicket = ({ ticketIndex, ticket, setAction, setField, deleteTicket }: Props) => {
+	const hasFilledInFields = useMemo(() => {
+		return "price ticker quantity action"
+			.split(" ")
+			.some(
+				(field) => field in ticket && ticket[field] !== undefined && ticket[field]?.length
+			);
+	}, [ticket]);
+
 	const actionButtons = useMemo(
 		() =>
 			actions.map((action: "buy" | "sell") => {
@@ -32,6 +40,7 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField, deleteTicket }: P
 
 				return (
 					<TradeActionButton
+						required={hasFilledInFields && !ticket.action}
 						index={ticketIndex}
 						key={action}
 						action={action}
@@ -44,14 +53,6 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField, deleteTicket }: P
 			}),
 		[ticket]
 	);
-
-	const hasFilledInFields = useMemo(() => {
-		return "price ticker quantity action"
-			.split(" ")
-			.some(
-				(field) => field in ticket && ticket[field] !== undefined && ticket[field]?.length
-			);
-	}, [ticket]);
 
 	const priceStep = useMemo(() => {
 		const price = +ticket?.price;
