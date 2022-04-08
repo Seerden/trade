@@ -118,6 +118,7 @@ const NewTicket = ({
 	return (
 		<StyledNewTicket empty={!hasFilledInFields}>
 			{/* action buttons */}
+			{/* TODO: I don't like that these are just in a span. Has to be a more semantic way to do this. */}
 			<span>{actionButtons}</span>
 
 			{/* ticker field */}
