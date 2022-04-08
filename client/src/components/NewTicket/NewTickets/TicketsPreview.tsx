@@ -2,6 +2,14 @@ import dayjs from "dayjs";
 import styled from "styled-components";
 import { NewTicket } from "types/ticket.types";
 
+const headerText = "The following tickets will be saved if you click 'submit':";
+
+const StyledHeader = styled.h1`
+	// This should be a theme value. In fact, this whole StyledHeader should be a
+	// shared Styled component
+	font-size: 2rem;
+`;
+
 type Props = {
 	tickets: NewTicket[];
 };
@@ -19,11 +27,14 @@ export default function TicketsPreview({ tickets }: Props) {
 	}
 
 	return (
-		<ul>
-			{tickets.map((ticket) => (
-				<PreviewRow ticket={ticket} key={ticket.timestamp} />
-			))}
-		</ul>
+		<>
+			<StyledHeader>{headerText}</StyledHeader>
+			<ul>
+				{tickets.map((ticket) => (
+					<PreviewRow ticket={ticket} key={ticket.timestamp} />
+				))}
+			</ul>
+		</>
 	);
 }
 
