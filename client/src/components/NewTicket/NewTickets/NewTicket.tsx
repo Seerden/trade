@@ -32,13 +32,13 @@ const NewTicket = ({
 	ticket,
 	setAction,
 	setField,
-	deleteTicket
+	deleteTicket,
 }: Props) => {
 	const hasFilledInFields = useMemo(() => {
 		return "price ticker quantity action"
 			.split(" ")
 			.some(
-				field =>
+				(field) =>
 					field in ticket &&
 					ticket[field] !== undefined &&
 					ticket[field]?.length
@@ -129,7 +129,7 @@ const NewTicket = ({
 				placeholder={getPlaceholder("ticker")}
 				// TODO: don't repeat e => setField(e, ticketIndex) every time, write
 				// a curried function instead
-				onChange={e => setField(e, ticketIndex)}
+				onChange={(e) => setField(e, ticketIndex)}
 			/>
 
 			{/* price field */}
@@ -142,7 +142,7 @@ const NewTicket = ({
 				min={0}
 				step={priceStep}
 				placeholder={getPlaceholder("price")}
-				onChange={e => {
+				onChange={(e) => {
 					setField(e, ticketIndex);
 				}}
 			/>
@@ -157,7 +157,7 @@ const NewTicket = ({
 				min={0}
 				step={quantityStep}
 				placeholder={getPlaceholder("quantity")}
-				onChange={e => setField(e, ticketIndex)}
+				onChange={(e) => setField(e, ticketIndex)}
 			/>
 
 			{/* date field */}
@@ -167,7 +167,7 @@ const NewTicket = ({
 				title="Date"
 				name="date"
 				type="date"
-				onChange={e => setField(e, ticketIndex)}
+				onChange={(e) => setField(e, ticketIndex)}
 				defaultValue={ticket.date}
 			/>
 
@@ -177,7 +177,7 @@ const NewTicket = ({
 				title="Time of day (market time)"
 				name="time"
 				type="time"
-				onChange={e => setField(e, ticketIndex)}
+				onChange={(e) => setField(e, ticketIndex)}
 				defaultValue="09:30"
 			/>
 
