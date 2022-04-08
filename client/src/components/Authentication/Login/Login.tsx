@@ -7,7 +7,7 @@ import {
 	StyledForm,
 	StyledInput,
 	StyledLabel,
-	StyledTitle
+	StyledTitle,
 } from "./Login.style";
 import useLogin from "./useLogin";
 
@@ -27,7 +27,7 @@ function Login() {
 				<p>
 					<StyledButton
 						type="button"
-						onClick={e => {
+						onClick={(e) => {
 							// TODO: actually logout in the backend as well
 							e.preventDefault();
 							handleLogout(e);

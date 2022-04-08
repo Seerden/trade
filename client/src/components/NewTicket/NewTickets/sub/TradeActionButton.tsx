@@ -18,7 +18,11 @@ export default function TradeActionButton({
 }: Props) {
 	const name = `action-${index}`;
 	return (
-		<StyledTradeActionButton action={action} active={active} required={required}>
+		<StyledTradeActionButton
+			action={action}
+			active={active}
+			required={required}
+		>
 			<label>
 				<span>{action}</span>
 				<input

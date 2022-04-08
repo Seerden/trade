@@ -20,16 +20,28 @@ type Props = {
 	ticketIndex: number;
 	ticket: Partial<RawNewTicket>;
 	setAction: (ticketIndex: number, side: RawNewTicket["action"]) => void;
-	setField: (e: React.ChangeEvent<HTMLInputElement>, ticketIndex: number) => void;
+	setField: (
+		e: React.ChangeEvent<HTMLInputElement>,
+		ticketIndex: number
+	) => void;
 	deleteTicket: ReturnType<typeof useNewTickets>["deleteTicket"];
 };
 
-const NewTicket = ({ ticketIndex, ticket, setAction, setField, deleteTicket }: Props) => {
+const NewTicket = ({
+	ticketIndex,
+	ticket,
+	setAction,
+	setField,
+	deleteTicket,
+}: Props) => {
 	const hasFilledInFields = useMemo(() => {
 		return "price ticker quantity action"
 			.split(" ")
 			.some(
-				(field) => field in ticket && ticket[field] !== undefined && ticket[field]?.length
+				(field) =>
+					field in ticket &&
+					ticket[field] !== undefined &&
+					ticket[field]?.length
 			);
 	}, [ticket]);
 
@@ -99,8 +111,8 @@ const NewTicket = ({ ticketIndex, ticket, setAction, setField, deleteTicket }: P
 				title="Ticker"
 				name="ticker"
 				placeholder="ticker"
-				// TODO: don't repeat e => setField(e, ticketIndex) every time, write
-				// a curried function instead
+				// TODO: don't repeat e => setField(e, ticketIndex) every time,
+				// write a curried function instead
 				onChange={(e) => setField(e, ticketIndex)}
 			/>
 

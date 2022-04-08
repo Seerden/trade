@@ -8,7 +8,9 @@ import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { Wrapper } from "./App.style";
-const NewTickets = lazy(() => import("components/NewTicket/NewTickets/NewTickets"));
+const NewTickets = lazy(
+	() => import("components/NewTicket/NewTickets/NewTickets")
+);
 
 const App = () => {
 	useReconcileSession();

@@ -26,12 +26,17 @@ export function useNewTickets() {
 		// handle this differently, e.g. by changing isValidTicket to
 		// validateTicket, which updates for example a piece of 'message' state
 		// that is then used by the NewTickets component to display validation messages.
-		return tickets.map(parseNewTicketInputs).filter((ticket) => isValidTicket(ticket));
+		return tickets
+			.map(parseNewTicketInputs)
+			.filter((ticket) => isValidTicket(ticket));
 	}, [tickets]);
 
 	function addTicketRows(count: number) {
 		setTicketCount((c) => c + count);
-		setTickets((tickets) => [...tickets, ...new Array(count).fill(defaultNewTicket)]);
+		setTickets((tickets) => [
+			...tickets,
+			...new Array(count).fill(defaultNewTicket),
+		]);
 	}
 
 	// TODO: if we add a proper name='action' (and input type='button' if it's not like
@@ -49,7 +54,10 @@ export function useNewTickets() {
 		});
 	};
 
-	const setField = (e: React.ChangeEvent<HTMLInputElement>, ticketIndex: number) => {
+	const setField = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		ticketIndex: number
+	) => {
 		const { name, value } = e.target;
 
 		setTickets((tickets) => {
@@ -84,7 +92,10 @@ export function useNewTickets() {
 	);
 
 	function deleteTicket(index: number) {
-		setTickets((tickets) => [...tickets.slice(0, index), ...tickets.slice(index + 1)]);
+		setTickets((tickets) => [
+			...tickets.slice(0, index),
+			...tickets.slice(index + 1),
+		]);
 	}
 
 	return {

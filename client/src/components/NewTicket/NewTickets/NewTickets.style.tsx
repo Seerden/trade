@@ -12,7 +12,7 @@ export const StyledButtonWrapper = styled.span`
 `;
 
 export const StyledButton = styled.input<{ round?: boolean }>`
-	${p =>
+	${(p) =>
 		p.round
 			? css`
 					width: 25px;
@@ -31,7 +31,7 @@ export const StyledButton = styled.input<{ round?: boolean }>`
 	background-color: transparent;
 	font-size: 0.72rem;
 
-	border: 2px solid ${p => p.theme.colors.grey.light};
+	border: 2px solid ${(p) => p.theme.colors.grey.light};
 
 	transition: all 75ms ease-out;
 	&:hover {

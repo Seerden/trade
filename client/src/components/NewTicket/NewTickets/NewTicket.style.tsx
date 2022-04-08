@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 
 export const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
-	${p =>
+	${(p) =>
 		p.empty &&
 		css`
 			transform: translateZ(0);

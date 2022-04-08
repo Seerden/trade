@@ -6,7 +6,9 @@ function parseNumberInput(decimals: number) {
 	return (value: string) => +String((+value).toFixed(decimals));
 }
 
-const parser: Partial<Record<keyof RawNewTicket, (value: string) => string | number>> = {
+const parser: Partial<
+	Record<keyof RawNewTicket, (value: string) => string | number>
+> = {
 	// `action` doesn't have to be parsed, and date/time are parsed separately
 	ticker: (value) => value.toUpperCase(),
 	price: parseNumberInput(4),

@@ -51,7 +51,9 @@ export default function NewTickets() {
 				setField,
 				deleteTicket,
 			};
-			return <NewTicket key={`${ticketIndex}+${tickets?.length}`} {...options} />;
+			return (
+				<NewTicket key={`${ticketIndex}+${tickets?.length}`} {...options} />
+			);
 		});
 	}, [tickets]);
 
@@ -113,7 +115,12 @@ function Buttons({ addTicketRows }: { addTicketRows: (_: number) => void }) {
 						value="+"
 						title="Add 3 rows"
 					/>
-					<StyledButton round type="button" value="x" title="Delete empty tickets" />
+					<StyledButton
+						round
+						type="button"
+						value="x"
+						title="Delete empty tickets"
+					/>
 				</span>
 			</StyledButtonWrapper>
 		</StyledButtons>

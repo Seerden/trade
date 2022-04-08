@@ -6,7 +6,7 @@ import {
 	StyledForm,
 	StyledInput,
 	StyledLabel,
-	StyledTitle
+	StyledTitle,
 } from "../Login/Login.style";
 import { useRegister } from "./useRegister";
 
@@ -42,7 +42,11 @@ export default function Register() {
 				<div>
 					{/* repeat password field */}
 					<StyledLabel htmlFor={"repeatPassword"}>Repeat password</StyledLabel>
-					<StyledInput type="password" name="repeatPassword" onChange={onChange} />
+					<StyledInput
+						type="password"
+						name="repeatPassword"
+						onChange={onChange}
+					/>
 				</div>
 				<StyledButtons>
 					<StyledButton type="submit" value="Register" />
