@@ -14,7 +14,7 @@ const defaultNewTicket: Partial<RawNewTicket> = {
 
 export function useNewTickets() {
 	const { user } = useAuth();
-	const [ticketCount, setTicketCount] = useState<number>(3);
+	const [ticketCount, setTicketCount] = useState<number>(5);
 	const [tickets, setTickets] = useState<Partial<RawNewTicket>[]>(
 		new Array(ticketCount).fill(defaultNewTicket)
 	);
