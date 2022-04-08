@@ -2,10 +2,15 @@
 
 const path = require("path");
 const miniCss = require("mini-css-extract-plugin");
+const DefinePlugin = require("webpack").DefinePlugin;
+const config = require("dotenv").config;
+config({
+	path: "./.env",
+});
 
 // 1. import default from the plugin module
-const createStyledComponentsTransformer = require("typescript-plugin-styled-components")
-	.default;
+const createStyledComponentsTransformer =
+	require("typescript-plugin-styled-components").default;
 
 // 2. create a transformer;
 // the factory additionally accepts an options object which described below
@@ -15,10 +20,10 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, "dist"),
 		filename: "bundle.js",
-		publicPath: "/"
+		publicPath: "/",
 	},
 	watchOptions: {
-		poll: 1000
+		poll: 1000,
 	},
 	devServer: {
 		host: "0.0.0.0",
@@ -29,11 +34,11 @@ module.exports = {
 			"/api": {
 				target: "http://[::1]:5000",
 				pathRewrite: {
-					"^/api": ""
+					"^/api": "",
 				},
-				changeOrigin: true
-			}
-		}
+				changeOrigin: true,
+			},
+		},
 	},
 	module: {
 		rules: [
@@ -43,15 +48,15 @@ module.exports = {
 				loader: "ts-loader",
 				options: {
 					getCustomTransformers: () => ({
-						before: [styledComponentsTransformer]
-					})
-				}
+						before: [styledComponentsTransformer],
+					}),
+				},
 			},
 			{
 				test: /\.scss$/,
-				use: [miniCss.loader, "css-loader", "sass-loader"]
-			}
-		]
+				use: [miniCss.loader, "css-loader", "sass-loader"],
+			},
+		],
 	},
 	resolve: {
 		extensions: [".tsx", ".js", ".js", ".ts"],
@@ -61,8 +66,13 @@ module.exports = {
 			helpers: path.resolve(__dirname, "src", "helpers/"),
 			state: path.resolve(__dirname, "src", "state/"),
 			types: path.resolve(__dirname, "src", "types/"),
-			style: path.resolve(__dirname, "src", "style/")
-		}
+			style: path.resolve(__dirname, "src", "style/"),
+		},
 	},
-	plugins: [new miniCss()]
+	plugins: [
+		new miniCss(),
+		new DefinePlugin({
+			"process.env": JSON.stringify(process.env),
+		}),
+	],
 };
