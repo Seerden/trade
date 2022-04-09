@@ -17,6 +17,9 @@ export const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
 	gap: 0.45rem;
 	font-size: 0.88rem;
 
+	position: relative;
+	min-width: calc(100% + 2.5rem);
+
 	transition: filter 75ms linear, opacity 90ms linear;
 `;
 
@@ -27,7 +30,10 @@ export const StyledButton = styled.button`
 	justify-content: center;
 	background-color: transparent;
 
-	width: 25px;
+	position: absolute;
+	right: 0;
+
+	width: 2.5rem;
 	min-height: 25px;
 	height: 25px;
 	line-height: 100%;
@@ -41,5 +47,17 @@ export const StyledButton = styled.button`
 		color: red;
 		font-weight: 500;
 		transform: scale(1.4);
+	}
+
+	animation: 100ms ease-out slide-in;
+
+	@keyframes slide-in {
+		0% {
+			transform: translateX(-10px);
+		}
+
+		100% {
+			transform: translateX(0px);
+		}
 	}
 `;

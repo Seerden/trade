@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { BsX } from "react-icons/bs";
 import { StyledButton, StyledNewTicket } from "./NewTicket.style";
 import Input from "./sub/Input";
@@ -115,8 +115,23 @@ const NewTicket = ({
 		return 1;
 	}, [ticket?.quantity]);
 
+	const [shouldShowDelete, setShouldShowDelete] = useState<boolean>(false);
+
+	// TODO: combine showDelete and hideDelete into one function
+	const showDelete = useCallback(() => {
+		setShouldShowDelete(true);
+	}, [shouldShowDelete, setShouldShowDelete]);
+
+	const hideDelete = useCallback(() => {
+		setShouldShowDelete(false);
+	}, [shouldShowDelete, setShouldShowDelete]);
+
 	return (
-		<StyledNewTicket empty={!hasFilledInFields}>
+		<StyledNewTicket
+			empty={!hasFilledInFields}
+			onMouseEnter={showDelete}
+			onMouseLeave={hideDelete}
+		>
 			{/* action buttons */}
 			{/* TODO: I don't like that these are just in a span. Has to be a more semantic way to do this. */}
 			<span>{actionButtons}</span>
@@ -182,14 +197,16 @@ const NewTicket = ({
 				defaultValue="09:30"
 			/>
 
-			<StyledButton
-				type="button"
-				onClick={() => {
-					deleteTicket(ticketIndex);
-				}}
-			>
-				<BsX type="button" />
-			</StyledButton>
+			{shouldShowDelete && (
+				<StyledButton
+					type="button"
+					onClick={() => {
+						deleteTicket(ticketIndex);
+					}}
+				>
+					<BsX type="button" overflow={"visible"} />
+				</StyledButton>
+			)}
 		</StyledNewTicket>
 	);
 };
