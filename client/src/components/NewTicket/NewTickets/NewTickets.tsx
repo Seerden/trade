@@ -10,7 +10,7 @@ import {
 	StyledTitle,
 } from "./NewTickets.style";
 import Header from "./sub/Header";
-import TicketsPreview from "./TicketsPreview";
+import TicketSummary from "./TicketSummary";
 import { useNewTickets } from "./useNewTickets";
 
 /**
@@ -70,31 +70,49 @@ export default function NewTickets() {
 	 */
 	return (
 		<>
-			{showPreview ? (
-				<TicketsPreview tickets={validTickets} />
-			) : (
-				<StyledNewTickets onSubmit={onSubmit}>
-					<StyledTitle>Add new trade tickets</StyledTitle>
-					<StyledSubtitle>
-						Each ticket describes one buy or sell transaction.
-					</StyledSubtitle>
-					<StyledTickets>
-						<Buttons addTicketRows={addTicketRows} />
-						<Header />
-						{ticketElements}
-					</StyledTickets>
-				</StyledNewTickets>
+			{showPreview && validTickets?.length > 0 && (
+				<TicketSummary tickets={validTickets} />
 			)}
+
+			<StyledNewTickets onSubmit={onSubmit}>
+				<StyledTitle>Add new trade tickets</StyledTitle>
+				<StyledSubtitle>
+					Each ticket describes one buy or sell transaction.
+				</StyledSubtitle>
+				<StyledTickets>
+					<Buttons
+						addTicketRows={addTicketRows}
+						setShowPreview={setShowPreview}
+					/>
+					<Header />
+					{ticketElements}
+				</StyledTickets>
+			</StyledNewTickets>
 		</>
 	);
 }
 
-function Buttons({ addTicketRows }: { addTicketRows: (_: number) => void }) {
+function Buttons({
+	addTicketRows,
+	setShowPreview,
+}: {
+	addTicketRows: (_: number) => void;
+	setShowPreview: (bool: boolean) => void;
+}) {
 	return (
 		<StyledButtons>
 			<StyledButtonWrapper>
 				<span>
-					<StyledButton type="submit" value="Save tickets" />
+					{/*   should become a button with on-hover effect: start as green 
+                     button with arrow, slide text into it on hover */}
+					<StyledButton
+						type="button"
+						value="Save tickets"
+						onClick={() => {
+							// TODO: only show preview if there is at least one valid ticket
+							setShowPreview(true);
+						}}
+					/>
 				</span>
 				<span>
 					<StyledButton
