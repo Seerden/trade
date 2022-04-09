@@ -1,5 +1,5 @@
-import axios from "axios";
 import dayjs from "dayjs";
+import useAxios from "helpers/api/axios-instance";
 import { useAuth } from "hooks/auth/useAuth";
 import { useCallback, useMemo, useState } from "react";
 import { isValidTicket, parseNewTicketInputs } from "./helpers/parse-validate";
@@ -14,6 +14,7 @@ const defaultNewTicket: Partial<RawNewTicket> = {
 
 export function useNewTickets() {
 	const { user } = useAuth();
+	const axios = useAxios();
 	const [ticketCount, setTicketCount] = useState<number>(5);
 	const [tickets, setTickets] = useState<Partial<RawNewTicket>[]>(
 		new Array(ticketCount).fill(defaultNewTicket)
