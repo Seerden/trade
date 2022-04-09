@@ -13,6 +13,8 @@
 	"author": "Christiaan Seerden",
 	"license": "ISC",
 	"dependencies": {
+		"@sentry/react": "^6.19.6",
+		"@sentry/tracing": "^6.19.6",
 		"axios": "^0.25.0",
 		"dayjs": "^1.10.7",
 		"history": "^5.1.0",
@@ -22,6 +24,7 @@
 		"react-query": "^3.16.0",
 		"react-router": "^6.0.0",
 		"react-router-dom": "^6.0.0",
+		"react-router-v6-instrumentation": "2.0.1",
 		"recoil": "^0.4.1",
 		"styled-components": "^5.3.3"
 	},
@@ -39,6 +42,7 @@
 		"babel-loader": "^8.2.2",
 		"babel-plugin-styled-components": "^2.0.2",
 		"css-loader": "^6.4.0",
+		"dotenv": "^16.0.0",
 		"eslint": "^8.0.1",
 		"eslint-import-resolver-webpack": "^0.13.1",
 		"eslint-plugin-react": "^7.26.1",

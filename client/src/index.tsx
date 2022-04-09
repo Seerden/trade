@@ -3,6 +3,7 @@ require("file-loader?name=[name].[ext]!./index.html");
 import { StrictMode } from "react";
 import ReactDOM from "react-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import App from "./App";
 import "./index.scss";
@@ -19,7 +20,9 @@ ReactDOM.render(
 	<StrictMode>
 		<Root>
 			<QueryClientProvider client={queryClient}>
-				<App />
+				<BrowserRouter>
+					<App />
+				</BrowserRouter>
 			</QueryClientProvider>
 		</Root>
 	</StrictMode>,
