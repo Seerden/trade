@@ -1,6 +1,6 @@
-import dayjs from "dayjs";
 import styled from "styled-components";
 import { NewTicket } from "types/ticket.types";
+import { makeTicketString } from "./helpers/ticket-string";
 import { SavedTicket } from "./SavedTickets";
 
 const headerText = "The following tickets will be saved if you click 'submit':";
@@ -45,14 +45,7 @@ const StyledRow = styled.li`
 `;
 
 export function PreviewRow({ ticket }: { ticket: NewTicket | SavedTicket }) {
-	const { ticker, quantity, timestamp, action, price } = ticket;
+	const ticketString = makeTicketString(ticket);
 
-	const dateString = dayjs(+timestamp).format("MMMM D, YYYY");
-	const timeString = dayjs(+timestamp).format("HH:mm");
-
-	// TODO: if quantity === 1, use 'share' instead of 'shares'
-	// TODO: use date string like 'April 5, 2022', not "05 Apr 2022"
-	const previewString = `${action} ${+quantity} shares of ${ticker} for ${+price} at ${timeString} on ${dateString}`;
-
-	return <StyledRow>{previewString}</StyledRow>;
+	return <StyledRow>{ticketString}</StyledRow>;
 }
