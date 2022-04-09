@@ -7,4 +7,56 @@
  *   saved to the database successfully
  */
 
-export default function TicketSummary() {}
+import styled from "styled-components";
+import type { NewTicket } from "types/ticket.types";
+import { makeTicketString } from "./helpers/ticket-string";
+import { StyledContainer, StyledOverlay } from "./TicketSummary.style";
+import type { SavedTicket } from "./useNewTickets";
+
+type Props = {
+	tickets: NewTicket[] | SavedTicket[];
+};
+
+const StyledTicketSummary = styled.ul`
+	width: max-content;
+`;
+
+function TicketRow({ ticket }: { ticket: NewTicket | SavedTicket }) {
+	const ticketString = makeTicketString(ticket);
+
+	// TODO: will become a StyledTicketRow, because we probably want some styling
+	return <li>{ticketString}</li>;
+}
+
+export default function TicketSummary({ tickets }: Props) {
+	const ticketRowElements = tickets.map((ticket, index) => (
+		<TicketRow ticket={ticket} key={index} />
+	));
+
+	return (
+		<Modal>
+			{/* header */}
+
+			{/* 
+            TODO: do we keep StyledContainer with any styles, or do we 
+            delegate that part to the  TicketSummary content? 
+         */}
+			<StyledTicketSummary>{ticketRowElements}</StyledTicketSummary>
+		</Modal>
+	);
+}
+
+/** This is our first use-case for a modal. As soon as we find another one,
+ * refactor this to use a modal hook/component. */
+function Modal({ children }) {
+	return (
+		<>
+			<StyledOverlay
+				onClick={(e) => {
+					e.stopPropagation();
+				}}
+			/>
+			<StyledContainer>{children}</StyledContainer>
+		</>
+	);
+}
