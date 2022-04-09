@@ -72,19 +72,7 @@ export default function NewTickets() {
 			{showPreview ? (
 				<TicketsPreview tickets={validTickets} />
 			) : (
-				<StyledNewTickets
-					onSubmit={(e) => {
-						// TODO: temporary, should be piece of user preference state
-						const shouldShowPreview = !!validTickets?.length;
-
-						if (!shouldShowPreview) {
-							onSubmit(e);
-							return;
-						}
-
-						setShowPreview(true);
-					}}
-				>
+				<StyledNewTickets onSubmit={onSubmit}>
 					<StyledTitle>Add new trade tickets</StyledTitle>
 					<StyledSubtitle>
 						Each ticket describes one buy or sell transaction.
