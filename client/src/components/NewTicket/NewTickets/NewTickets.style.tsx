@@ -44,7 +44,7 @@ export const StyledButtons = styled.span`
 	margin-bottom: 0.8rem;
 	display: block;
 	position: sticky;
-	z-index: 500;
+	z-index: 2;
 	top: 1rem;
 	flex-direction: row;
 
