@@ -9,6 +9,7 @@ import {
 	StyledTickets,
 	StyledTitle,
 } from "./NewTickets.style";
+import SavedTickets from "./SavedTickets";
 import Header from "./sub/Header";
 import TicketsPreview from "./TicketsPreview";
 import { useNewTickets } from "./useNewTickets";
@@ -36,6 +37,7 @@ export default function NewTickets() {
 		onSubmit,
 		validTickets,
 		deleteTicket,
+		savedTickets,
 	} = useNewTickets();
 
 	// TODO: ticket preview step - state should be moved to useNewTickets once
@@ -56,6 +58,10 @@ export default function NewTickets() {
 			);
 		});
 	}, [tickets]);
+
+	if (savedTickets?.length) {
+		return <SavedTickets tickets={savedTickets} />;
+	}
 
 	/**
 	 * @todo: instead of displaying either TicketsPreview or StyledNewTickets,
