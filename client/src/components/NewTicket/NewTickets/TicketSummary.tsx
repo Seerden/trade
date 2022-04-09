@@ -7,6 +7,7 @@
  *   saved to the database successfully
  */
 
+import { BsX } from "react-icons/bs";
 import styled from "styled-components";
 import type { NewTicket } from "types/ticket.types";
 import { makeTicketString } from "./helpers/ticket-string";
@@ -56,7 +57,32 @@ function Modal({ children }) {
 					e.stopPropagation();
 				}}
 			/>
-			<StyledContainer>{children}</StyledContainer>
+			<StyledContainer>
+				<StyledBtn>
+					{/* TODO: close modal on click */}
+					<BsX fill="white" />
+				</StyledBtn>
+				{children}
+			</StyledContainer>
 		</>
 	);
 }
+
+// TODO: all of this styling is WIP and should at least be refactored to theme values
+const StyledBtn = styled.button`
+	display: inline-flex;
+	position: absolute;
+	top: -10px;
+	right: -10px;
+
+	width: 20px;
+	height: 20px;
+	background-color: orangered;
+
+	border-radius: 50%;
+
+	line-height: 20px;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+`;
