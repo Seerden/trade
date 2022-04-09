@@ -17,3 +17,13 @@ export const StyledContainer = styled.section`
 	background: #efefef;
 	width: max-content;
 `;
+
+// This is the background that serves to add visual focus to the modal.
+export const StyledOverlay = styled.div`
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.68);
+`;

@@ -7,7 +7,7 @@
 
 import styled from "styled-components";
 import { PreviewRow } from "./TicketsPreview";
-import { StyledContainer } from "./TicketSummary.style";
+import { StyledContainer, StyledOverlay } from "./TicketSummary.style";
 
 export type SavedTicket = {
 	user_id: number;
@@ -29,31 +29,14 @@ export default function SavedTickets({ tickets }: { tickets: SavedTicket[] }) {
 	return (
 		<>
 			{/* `position: absolute` overlay here */}
-			<Overlay />
+			<StyledOverlay />
 
 			{/* actual content here */}
-			<Container>
+			<StyledContainer>
 				<StyledSavedTickets>{ticketStrings}</StyledSavedTickets>
-			</Container>
+			</StyledContainer>
 		</>
 	);
-}
-
-function Overlay() {
-	return <StyledOverlay />;
-}
-
-const StyledOverlay = styled.div`
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.68);
-`;
-
-function Container({ children }) {
-	return <StyledContainer>{children}</StyledContainer>;
 }
 
 const StyledSavedTickets = styled.ul`
