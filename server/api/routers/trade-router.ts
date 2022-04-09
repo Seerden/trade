@@ -34,11 +34,11 @@ tradeRouter.post("/tickets", async (req, res) => {
 	const { newTickets, username } = req.body;
 
 	if (newTickets?.length && username) {
-		const response = await insertTickets({
+		const savedTickets = await insertTickets({
 			username,
 			tickets: newTickets,
 		});
-		res.json({ response });
+		res.json({ savedTickets });
 	} else {
 		res.json({
 			message: "Request body does not contain `newTickets` array or `username` string",
