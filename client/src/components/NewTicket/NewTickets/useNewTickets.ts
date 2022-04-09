@@ -4,6 +4,7 @@ import { useAuth } from "hooks/auth/useAuth";
 import { useCallback, useMemo, useState } from "react";
 import { isValidTicket, parseNewTicketInputs } from "./helpers/parse-validate";
 import { RawNewTicket } from "./NewTicket";
+import { SavedTicket } from "./SavedTickets";
 
 const today = dayjs(new Date()).format("YYYY-MM-DD");
 
@@ -19,6 +20,7 @@ export function useNewTickets() {
 	const [tickets, setTickets] = useState<Partial<RawNewTicket>[]>(
 		new Array(ticketCount).fill(defaultNewTicket)
 	);
+	const [savedTickets, setSavedTickets] = useState<SavedTicket[]>(null);
 
 	const validTickets = useMemo(() => {
 		// Parse and validate tickets
@@ -83,7 +85,11 @@ export function useNewTickets() {
 				const { username } = user;
 				if (!username || !validTickets?.length) return;
 
-				await axios.post("t/tickets", { newTickets: validTickets, username });
+				const { data } = await axios.post("t/tickets", {
+					newTickets: validTickets,
+					username,
+				});
+				setSavedTickets(data?.savedTickets ?? null);
 			} catch (error) {
 				console.error(error);
 			}
@@ -107,5 +113,6 @@ export function useNewTickets() {
 		addTicketRows,
 		onSubmit,
 		deleteTicket,
+		savedTickets,
 	} as const;
 }
