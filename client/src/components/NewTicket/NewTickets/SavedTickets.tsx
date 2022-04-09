@@ -7,6 +7,7 @@
 
 import styled from "styled-components";
 import { PreviewRow } from "./TicketsPreview";
+import { StyledContainer } from "./TicketSummary.style";
 
 export type SavedTicket = {
 	user_id: number;
@@ -54,21 +55,6 @@ const StyledOverlay = styled.div`
 function Container({ children }) {
 	return <StyledContainer>{children}</StyledContainer>;
 }
-
-/** TODO: WIP component. This will be a shared component. */
-const StyledContainer = styled.section`
-	margin: 0 auto;
-	margin-top: 25%;
-	padding: 2rem;
-	border: 4px solid #444;
-	box-shadow: 0 0 1rem #111;
-	border-radius: 5px;
-	background: #efefef;
-	width: max-content;
-
-	position: relative;
-	z-index: 10;
-`;
 
 const StyledSavedTickets = styled.ul`
 	width: max-content;
