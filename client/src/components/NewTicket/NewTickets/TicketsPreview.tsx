@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { NewTicket } from "types/ticket.types";
 import { makeTicketString } from "./helpers/ticket-string";
-import { SavedTicket } from "./SavedTickets";
 
 const headerText = "The following tickets will be saved if you click 'submit':";
 
@@ -31,21 +30,10 @@ export default function TicketsPreview({ tickets }: Props) {
 		<>
 			<StyledHeader>{headerText}</StyledHeader>
 			<ul>
-				{tickets.map((ticket) => (
-					<PreviewRow ticket={ticket} key={ticket.timestamp} />
-				))}
+				{tickets.map((ticket) => {
+					return <li key={ticket.timestamp}>{makeTicketString(ticket)}</li>;
+				})}
 			</ul>
 		</>
 	);
-}
-
-const StyledRow = styled.li`
-	font-weight: 400;
-	font-size: 0.72rem;
-`;
-
-export function PreviewRow({ ticket }: { ticket: NewTicket | SavedTicket }) {
-	const ticketString = makeTicketString(ticket);
-
-	return <StyledRow>{ticketString}</StyledRow>;
 }

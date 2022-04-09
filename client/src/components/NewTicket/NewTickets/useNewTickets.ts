@@ -4,7 +4,18 @@ import { useAuth } from "hooks/auth/useAuth";
 import { useCallback, useMemo, useState } from "react";
 import { isValidTicket, parseNewTicketInputs } from "./helpers/parse-validate";
 import { RawNewTicket } from "./NewTicket";
-import { SavedTicket } from "./SavedTickets";
+
+export type SavedTicket = {
+	user_id: number;
+	trade_id: number;
+	ticket_id: number;
+	ticker: string;
+	timestamp: string;
+	// TODO: this is a type like TradeAction, somewhere
+	action: "buy" | "sell";
+	quantity: string;
+	price: string;
+};
 
 const today = dayjs(new Date()).format("YYYY-MM-DD");
 
