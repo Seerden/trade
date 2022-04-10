@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 
+// TODO: all this styling needs to be unified with theme styles
 export const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
 	${(p) =>
 		p.empty &&
@@ -18,6 +19,8 @@ export const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
 	font-size: 0.88rem;
 
 	position: relative;
+	// TODO: the +2.5rem is to prevent layout shift when sliding in the delete
+	// button (delete button width is 2.5rem)
 	min-width: calc(100% + 2.5rem);
 
 	transition: filter 75ms linear, opacity 90ms linear;
