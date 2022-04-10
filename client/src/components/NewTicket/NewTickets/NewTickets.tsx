@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import NewTicket from "./NewTicket";
 import {
 	StyledButton,
@@ -19,18 +19,16 @@ import { useNewTickets } from "./useNewTickets";
 export default function NewTickets() {
 	const {
 		tickets,
+		validTickets,
+		savedTickets,
+		showSummary,
+		setShowSummary,
 		setAction,
 		setField,
 		addTicketRows,
 		onSubmit,
-		validTickets,
 		deleteTicket,
-		savedTickets,
 	} = useNewTickets();
-
-	// TODO: TicketSummary step - state should be moved to useNewTickets once
-	// done
-	const [showSummary, setShowSummary] = useState<boolean>(false);
 
 	const ticketElements = useMemo(() => {
 		return tickets.map((ticket, ticketIndex) => {
@@ -42,7 +40,7 @@ export default function NewTickets() {
 				deleteTicket,
 			};
 			return (
-				<NewTicket key={`${ticketIndex}+${tickets?.length}`} {...options} />
+				<NewTicket key={`${ticketIndex}+${tickets.length}`} {...options} />
 			);
 		});
 	}, [tickets]);
@@ -50,6 +48,9 @@ export default function NewTickets() {
 	return (
 		<>
 			<StyledNewTickets onSubmit={onSubmit}>
+				{/*   
+               Render TicketSummary inside the form, so that any submit buttons 
+               in there trigger this form's onSubmit handler */}
 				{showSummary && validTickets?.length > 0 && (
 					<TicketSummary
 						tickets={validTickets}
@@ -76,24 +77,27 @@ export default function NewTickets() {
 	);
 }
 
-function Buttons({
-	addTicketRows,
-	setShowSummary,
-}: {
+type ButtonProps = {
 	addTicketRows: (_: number) => void;
-	setShowSummary: (bool: boolean) => void;
-}) {
+	setShowSummary: (_: boolean) => void;
+};
+
+function Buttons({ addTicketRows, setShowSummary }: ButtonProps) {
 	return (
 		<StyledButtons>
 			<StyledButtonWrapper>
 				<span>
-					{/*   should become a button with on-hover effect: start as green 
+					{/*   TODO: should become a button with on-hover effect: start as green 
                      button with arrow, slide text into it on hover */}
 					<StyledButton
 						type="button"
 						value="Save tickets"
 						onClick={() => {
-							// TODO: only show preview if there is at least one valid ticket
+							// TODO: only show preview if there is at least one valid
+							// ticket. The best way to do this is probably a function
+							// like maybeShowSummary that only calls setShowSummary if
+							// !!validTickets.length. Then we can pass this function to
+							// this Buttons component without also needing to pass validTickets
 							setShowSummary(true);
 						}}
 					/>

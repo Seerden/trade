@@ -16,20 +16,14 @@ const parser: Partial<Record<
 	quantity: parseNumberInput(1),
 };
 
-/**
- * Take raw input values and parse to desired NewTicket type
- *
- * @todo: parse date + time to new timestamp field
- *    use toNewYorkTime helper function for this,
- * @todo: once parsed, change return type of this function to NewTicket (unsure
- * if there already is a correct type definition for this)
- */
+/** Take raw input values and parse to desired NewTicket type */
 export function parseNewTicketInputs(ticket: RawNewTicket): NewTicket {
 	const { ticker, date, price, quantity, action, time } = ticket;
 
 	// TODO: do we want to keep these in UNIX seconds or milliseconds?
 	const timestamp = new Date(toNewYorkTime(`${date} ${time}`)).valueOf();
 
+	// TODO: why is this a try..catch?
 	try {
 		return {
 			ticker: parser.ticker(ticker) as string,
@@ -43,9 +37,7 @@ export function parseNewTicketInputs(ticket: RawNewTicket): NewTicket {
 	}
 }
 
-/**
- * Validate a parsed new ticket's values.
- */
+/** Validate a parsed new ticket's values. */
 export function isValidTicket(ticket: ReturnType<typeof parseNewTicketInputs>) {
 	// TODO: seriously need to extract these fields to a shared export instead of
 	// re-implementing this fields variable all over the place
