@@ -1,5 +1,9 @@
 import styled, { css } from "styled-components";
 
+/**
+ * TODO: unify with theme values
+ */
+
 export const StyledButtonWrapper = styled.span`
 	display: flex;
 	justify-content: space-between;
