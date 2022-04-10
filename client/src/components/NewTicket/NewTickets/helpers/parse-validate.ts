@@ -1,14 +1,15 @@
 import { NewTicket } from "types/ticket.types";
+import { toNewYorkTime } from "../../../../helpers/date";
 import { RawNewTicket } from "../NewTicket";
-import { toNewYorkTime } from "./date";
 
 function parseNumberInput(decimals: number) {
 	return (value: string) => +String((+value).toFixed(decimals));
 }
 
-const parser: Partial<
-	Record<keyof RawNewTicket, (value: string) => string | number>
-> = {
+const parser: Partial<Record<
+	keyof RawNewTicket,
+	(value: string) => string | number
+>> = {
 	// `action` doesn't have to be parsed, and date/time are parsed separately
 	ticker: (value) => value.toUpperCase(),
 	price: parseNumberInput(4),
