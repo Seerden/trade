@@ -39,9 +39,9 @@ export default function NewTickets() {
 		savedTickets,
 	} = useNewTickets();
 
-	// TODO: ticket preview step - state should be moved to useNewTickets once
+	// TODO: TicketSummary step - state should be moved to useNewTickets once
 	// done
-	const [showPreview, setShowPreview] = useState<boolean>(false);
+	const [showSummary, setShowSummary] = useState<boolean>(false);
 
 	const ticketElements = useMemo(() => {
 		return tickets.map((ticket, ticketIndex) => {
@@ -70,8 +70,13 @@ export default function NewTickets() {
 	 */
 	return (
 		<>
-			{showPreview && validTickets?.length > 0 && (
-				<TicketSummary tickets={validTickets} />
+			{showSummary && validTickets?.length > 0 && (
+				<TicketSummary
+					tickets={validTickets}
+					onClose={() => {
+						setShowSummary(false);
+					}}
+				/>
 			)}
 
 			<StyledNewTickets onSubmit={onSubmit}>
@@ -82,7 +87,7 @@ export default function NewTickets() {
 				<StyledTickets>
 					<Buttons
 						addTicketRows={addTicketRows}
-						setShowPreview={setShowPreview}
+						setShowSummary={setShowSummary}
 					/>
 					<Header />
 					{ticketElements}
@@ -94,10 +99,10 @@ export default function NewTickets() {
 
 function Buttons({
 	addTicketRows,
-	setShowPreview,
+	setShowSummary,
 }: {
 	addTicketRows: (_: number) => void;
-	setShowPreview: (bool: boolean) => void;
+	setShowSummary: (bool: boolean) => void;
 }) {
 	return (
 		<StyledButtons>
@@ -110,7 +115,7 @@ function Buttons({
 						value="Save tickets"
 						onClick={() => {
 							// TODO: only show preview if there is at least one valid ticket
-							setShowPreview(true);
+							setShowSummary(true);
 						}}
 					/>
 				</span>
