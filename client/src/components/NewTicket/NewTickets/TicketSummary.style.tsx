@@ -34,12 +34,16 @@ export const StyledOverlay = styled.div`
 export const StyledModalCloseButton = styled.button`
 	display: inline-flex;
 	position: absolute;
-	top: -10px;
-	right: -10px;
 
-	width: 20px;
-	height: 20px;
+	--size: 30px;
+
+	top: calc(-1 * var(--size) / 2);
+	right: calc(-1 * var(--size) / 2);
+
+	width: var(--size);
+	height: var(--size);
 	background-color: orangered;
+	border: 2px solid orangered;
 
 	border-radius: 50%;
 
@@ -47,4 +51,16 @@ export const StyledModalCloseButton = styled.button`
 	justify-content: center;
 	align-items: center;
 	text-align: center;
+
+	transition: border-radius 75ms ease-in;
+
+	&:hover {
+		background-color: white;
+		color: orangered;
+		border-radius: 20%;
+
+		svg {
+			fill: orangered;
+		}
+	}
 `;
