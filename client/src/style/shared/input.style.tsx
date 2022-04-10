@@ -10,15 +10,15 @@ import styled from "styled-components";
  * relatively well.
  */
 export const SharedBaseInput = styled.input`
-	font-size: var(--text-medium);
-	padding: var(--pad-small);
-	text-indent: calc(2 * var(--pad-small));
+	font-size: ${(p) => p.theme.font.small};
+	padding: ${(p) => p.theme.padding.tiniest};
+	text-indent: ${(p) => p.theme.padding.tiny};
 
-	border: 1px solid var(--secondary);
+	border: 1px solid ${(p) => p.theme.colors.text.secondary};
 	outline: none;
 
 	&:focus,
 	&:hover {
-		outline: 1px solid var(--secondary);
+		outline: 1px solid ${(p) => p.theme.colors.text.secondary};
 	}
 `;
