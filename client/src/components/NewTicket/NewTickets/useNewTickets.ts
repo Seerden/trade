@@ -22,13 +22,8 @@ export function useNewTickets() {
 	);
 	const [savedTickets, setSavedTickets] = useState<SavedTicket[]>(null);
 
+	// Parse and validate tickets.
 	const validTickets = useMemo(() => {
-		// Parse and validate tickets
-		// TODO: if we want to individually validate tickets and return various
-		// messages depending on the result of the validation, we might want to
-		// handle this differently, e.g. by changing isValidTicket to
-		// validateTicket, which updates for example a piece of 'message' state
-		// that is then used by the NewTickets component to display validation messages.
 		return tickets
 			.map(parseNewTicketInputs)
 			.filter((ticket) => isValidTicket(ticket));
@@ -74,12 +69,8 @@ export function useNewTickets() {
 	};
 
 	const onSubmit = useCallback(
-		async (e: any) => {
+		async (e: React.FormEvent<HTMLFormElement>) => {
 			e.preventDefault();
-
-			// If there is at least one valid ticket, send all valid tickets to the
-			// backend. Ideally, we would first force the user to handle any
-			// invalid tickets, though.
 
 			try {
 				const { username } = user;
