@@ -22,5 +22,5 @@ export type User = {
 	user_id: number;
 	username: string;
 	password: string;
-	created_at: string; // is it? or is it a date of some kind?
+	created_at: string;
 };
