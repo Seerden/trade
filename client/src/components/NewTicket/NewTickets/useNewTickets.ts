@@ -23,6 +23,7 @@ export function useNewTickets() {
 		new Array(ticketCount).fill(defaultNewTicket)
 	);
 	const [savedTickets, setSavedTickets] = useState<SavedTicket[]>(null);
+	const [showSummary, setShowSummary] = useState<boolean>(false);
 
 	// Parse and validate tickets.
 	const validTickets = useMemo(() => {
@@ -118,5 +119,7 @@ export function useNewTickets() {
 		onSubmit,
 		deleteTicket,
 		savedTickets,
+		showSummary,
+		setShowSummary,
 	} as const;
 }
