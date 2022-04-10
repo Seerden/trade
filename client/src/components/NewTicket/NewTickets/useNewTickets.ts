@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import useAxios from "helpers/api/axios-instance";
 import { useAuth } from "hooks/auth/useAuth";
 import { useCallback, useMemo, useState } from "react";
+import { TradeAction } from "types/ticket.types";
 import { isValidTicket, parseNewTicketInputs } from "./helpers/parse-validate";
 import { RawNewTicket } from "./NewTicket";
 
@@ -11,8 +12,7 @@ export type SavedTicket = {
 	ticket_id: number;
 	ticker: string;
 	timestamp: string;
-	// TODO: this is a type like TradeAction, somewhere
-	action: "buy" | "sell";
+	action: `${TradeAction}`;
 	quantity: string;
 	price: string;
 };
