@@ -1,13 +1,13 @@
 import { StyledInput as SharedStyledInput } from "components/Authentication/Login/Login.style";
 import styled, { css } from "styled-components";
-
-// <!-- StyledInput -->
+import { TradeAction } from "types/ticket.types";
 
 export const StyledInput = styled(SharedStyledInput)<{ $size?: string }>`
 	height: 2rem;
 
-	// in this specific case, the following is just for the 'time' field,
-	// whose content needs slightly more space than 5rem
+	// This default width is currently only used for the name="time" input
+	// component, it needs slightly more width in locales where AM/PM are
+	// specified instead of using 24-hour times.
 	--width: 6.5rem;
 	min-width: var(--width);
 	width: var(--width);
@@ -45,10 +45,8 @@ const actionToColor = {
 	sell: "orange",
 };
 
-// <!-- TradeActionButton -->
-// @todo: use TradeAction type for buy/sell
 export const StyledTradeActionButton = styled.span<{
-	action: "buy" | "sell";
+	action: `${TradeAction}`;
 	active?: boolean;
 	required?: boolean;
 }>`
@@ -68,7 +66,7 @@ export const StyledTradeActionButton = styled.span<{
 	label {
 		display: inline-block;
 
-		// @todo: use theme values
+		// TODO: use theme values
 		width: 2.5rem;
 		padding: 0.5rem 1rem;
 
