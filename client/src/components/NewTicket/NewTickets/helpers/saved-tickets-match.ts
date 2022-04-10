@@ -8,6 +8,8 @@ export function isSavedTicket(
 	newTicket: NewTicket,
 	savedTickets: SavedTicket[]
 ) {
+	if (!savedTickets?.length) return false;
+
 	/**
 	 * TODO: The following method is an O(m*n) solution because for every newTicket, we
 	 * could end up checking every savecTicket
