@@ -1,3 +1,5 @@
+import { captureMessage } from "@sentry/react";
+import axios from "axios";
 import dayjs from "dayjs";
 import useAxios from "helpers/api/axios-instance";
 import { useAuth } from "hooks/auth/useAuth";
@@ -15,7 +17,7 @@ const defaultNewTicket: Partial<RawNewTicket> = {
 
 export function useNewTickets() {
 	const { user } = useAuth();
-	const axios = useAxios();
+	const axiosInstance = useAxios();
 	const [ticketCount, setTicketCount] = useState<number>(5);
 	const [tickets, setTickets] = useState<Partial<RawNewTicket>[]>(
 		new Array(ticketCount).fill(defaultNewTicket)
@@ -76,13 +78,19 @@ export function useNewTickets() {
 				const { username } = user;
 				if (!username || !validTickets?.length) return;
 
-				const { data } = await axios.post("t/tickets", {
+				const { data } = await axiosInstance.post("t/tickets", {
 					newTickets: validTickets,
 					username,
 				});
 				setSavedTickets(data?.savedTickets ?? null);
 			} catch (error) {
-				console.error(error);
+				captureMessage("Failed to POST new tickets", {
+					extra: {
+						filename: "useNewTickets",
+						error,
+						isAxiosError: axios.isAxiosError(error),
+					},
+				});
 			}
 			return;
 		},
