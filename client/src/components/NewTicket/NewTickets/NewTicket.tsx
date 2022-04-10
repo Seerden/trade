@@ -66,18 +66,6 @@ const NewTicket = ({
 		[ticket]
 	);
 
-	const priceStep = useMemo(() => {
-		const price = +ticket?.price;
-
-		if (price >= 1000) {
-			return 1;
-		}
-		if (price >= 1) {
-			return 0.01;
-		}
-		return 1e-4;
-	}, [ticket?.price]);
-
 	/**
 	 * If hasFilledInFields, return `placeholder`, else return null.
 	 * To be used to only display placeholders for certain inputs if hasFilledInFields.
@@ -93,27 +81,6 @@ const NewTicket = ({
 		},
 		[hasFilledInFields]
 	);
-
-	const quantityStep = useMemo(() => {
-		const quantity = +ticket?.quantity;
-
-		if (quantity >= 1e6) {
-			return 1e4;
-		}
-		if (quantity >= 1e5) {
-			return 1000;
-		}
-		if (quantity >= 1e4) {
-			return 500;
-		}
-		if (quantity >= 1e3) {
-			return 100;
-		}
-		if (quantity >= 100) {
-			return 10;
-		}
-		return 1;
-	}, [ticket?.quantity]);
 
 	const [shouldShowDelete, setShouldShowDelete] = useState<boolean>(false);
 
@@ -156,7 +123,7 @@ const NewTicket = ({
 				name="price"
 				type="number"
 				min={0}
-				step={priceStep}
+				step="any"
 				placeholder={getPlaceholder("price")}
 				onChange={(e) => {
 					setField(e, ticketIndex);
@@ -171,7 +138,7 @@ const NewTicket = ({
 				name="quantity"
 				type="number"
 				min={0}
-				step={quantityStep}
+				step="any"
 				placeholder={getPlaceholder("quantity")}
 				onChange={(e) => setField(e, ticketIndex)}
 			/>
