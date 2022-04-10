@@ -1,8 +1,8 @@
-import { StyledInput as SharedStyledInput } from "components/Authentication/Login/Login.style";
+import { SharedBaseInput } from "style/shared/input.style";
 import styled, { css } from "styled-components";
 import { TradeAction } from "types/tickets";
 
-export const StyledInput = styled(SharedStyledInput)<{ $size?: string }>`
+export const StyledInput = styled(SharedBaseInput)<{ $size?: string }>`
 	height: 2rem;
 
 	// This default width is currently only used for the name="time" input

@@ -6,6 +6,7 @@
  * for a more consistent UI feel
  */
 
+import { SharedBaseInput } from "style/shared/input.style";
 import styled, { css } from "styled-components";
 
 export const StyledForm = styled.form`
@@ -45,19 +46,7 @@ export const StyledButtons = styled.div`
 	gap: var(--pad-medium);
 `;
 
-export const StyledInput = styled.input`
-	font-size: var(--text-medium);
-	padding: var(--pad-small);
-	text-indent: calc(2 * var(--pad-small));
-
-	border: 1px solid var(--secondary);
-	outline: none;
-
-	&:focus,
-	&:hover {
-		outline: 1px solid var(--secondary);
-	}
-`;
+export const StyledInput = styled(SharedBaseInput)``;
 
 export const StyledButton = styled.input<{ isRegisterButton?: boolean }>`
 	padding: var(--pad-medium) 2em;
