@@ -16,6 +16,7 @@ import type { SavedTicket } from "./useNewTickets";
 
 type Props = {
 	tickets: NewTicket[] | SavedTicket[];
+	onClose: () => void;
 };
 
 const StyledTicketSummary = styled.ul`
@@ -29,13 +30,13 @@ function TicketRow({ ticket }: { ticket: NewTicket | SavedTicket }) {
 	return <li>{ticketString}</li>;
 }
 
-export default function TicketSummary({ tickets }: Props) {
+export default function TicketSummary({ tickets, onClose }: Props) {
 	const ticketRowElements = tickets.map((ticket, index) => (
 		<TicketRow ticket={ticket} key={index} />
 	));
 
 	return (
-		<Modal>
+		<Modal onClose={onClose}>
 			{/* header */}
 
 			{/* 
@@ -47,9 +48,14 @@ export default function TicketSummary({ tickets }: Props) {
 	);
 }
 
+type ModalProps = {
+	children: React.ReactNode;
+	onClose: (args?: unknown) => void;
+};
+
 /** This is our first use-case for a modal. As soon as we find another one,
  * refactor this to use a modal hook/component. */
-function Modal({ children }) {
+function Modal({ children, onClose }: ModalProps) {
 	return (
 		<>
 			<StyledOverlay
@@ -58,7 +64,7 @@ function Modal({ children }) {
 				}}
 			/>
 			<StyledContainer>
-				<StyledBtn>
+				<StyledBtn onClick={onClose}>
 					{/* TODO: close modal on click */}
 					<BsX fill="white" />
 				</StyledBtn>
