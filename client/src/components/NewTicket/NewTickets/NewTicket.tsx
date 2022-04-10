@@ -6,7 +6,7 @@ import Input from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
 import { useNewTickets } from "./useNewTickets";
 
-const actions = "buy sell".split(" ");
+const actions = "buy sell".split(" ") as TradeAction[];
 
 export type RawNewTicket = {
 	action: TradeAction;
