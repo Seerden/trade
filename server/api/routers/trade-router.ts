@@ -46,12 +46,12 @@ tradeRouter.post("/tickets", async (req, res) => {
 	}
 });
 
+/** Get a user's trades filtered by query string options */
 tradeRouter.get("/trades/", async (req, res) => {
-	// work with query string here to allow for most malleable handling
-	// get a user's trades filtered by query string options
+	// TODO: down the road, when implementing filtering results, work with query
+	// string here to allow for most malleable handling.
 
-	// @ts-ignore
-	const { username } = req.user;
+	const { username } = req.user as { username?: string };
 
 	const trades = getTradesByUser({ userId: await getUserId(username) });
 	res.json({ trades });
