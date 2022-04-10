@@ -1,4 +1,6 @@
+import { captureMessage } from "@sentry/react";
 import axios from "axios";
+import useAxios from "helpers/api/axios-instance";
 import { useAuth } from "hooks/auth/useAuth";
 import { FormEvent, useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
@@ -17,6 +19,7 @@ function validate(user: NewUser) {
 
 export function useRegister() {
 	const navigate = useNavigate();
+	const axiosInstance = useAxios();
 	const { login } = useAuth();
 	const [newUser, setNewUser] = useState<NewUser>({
 		username: null,
@@ -36,7 +39,10 @@ export function useRegister() {
 
 			if (isValidNewUser) {
 				try {
-					const { data } = await axios.post("auth/register", { newUser });
+					const { data } = await axiosInstance.post("auth/register", {
+						newUser
+					});
+
 					const { username } = data.newUser;
 					if (username) {
 						login({ username });
@@ -46,10 +52,26 @@ export function useRegister() {
 					}
 				} catch (e) {
 					if (axios.isAxiosError(e)) {
+						captureMessage("HTTP error during 'POST auth/register' call", {
+							extra: {
+								filename: "useRegister",
+								error: e,
+								isAxiosError: axios.isAxiosError(e)
+							}
+						});
 						return setMessage(e.message);
 					}
-					// TODO: log to Sentry or something
-					console.error(e);
+					setMessage(JSON.stringify(e));
+
+					captureMessage(
+						"Failed to login register, or failed to log in after registering.",
+						{
+							extra: {
+								file: "useRegister",
+								error: e
+							}
+						}
+					);
 				}
 			}
 		},
