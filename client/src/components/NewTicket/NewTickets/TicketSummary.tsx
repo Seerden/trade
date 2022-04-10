@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 /**
  * This component encompasses two steps of the NewTicket(s) creation process:
  * - user clicks "preview tickets" => preview all tickets so the user can verify
@@ -6,16 +7,18 @@
  *   based on response, highlight the tickets from preview screen that were
  *   saved to the database successfully
  */
-
 import { BsX } from "react-icons/bs";
-import styled from "styled-components";
+import { useNavigate } from "react-router";
 import type { NewTicket } from "types/ticket.types";
+import { isSavedTicket } from "./helpers/saved-tickets-match";
 import { makeTicketString } from "./helpers/ticket-string";
 import {
-	StyledContainer,
-	StyledModalCloseButton,
-	StyledOverlay,
-	StyledSubmitButton,
+   StyledContainer,
+   StyledModalCloseButton,
+   StyledOverlay,
+   StyledSubmitButton,
+   StyledTicketRow,
+   StyledTicketSummary
 } from "./TicketSummary.style";
 import type { SavedTicket } from "./useNewTickets";
 
@@ -25,15 +28,16 @@ type Props = {
 	savedTickets: SavedTicket[];
 };
 
-const StyledTicketSummary = styled.ul`
-	width: max-content;
-`;
-
-function TicketRow({ ticket }: { ticket: NewTicket | SavedTicket }) {
+function TicketRow({
+	ticket,
+	saved,
+}: {
+	ticket: NewTicket | SavedTicket;
+	saved?: boolean;
+}) {
 	const ticketString = makeTicketString(ticket);
 
-	// TODO: will become a StyledTicketRow, because we probably want some styling
-	return <li>{ticketString}</li>;
+	return <StyledTicketRow saved={saved}>{ticketString}</StyledTicketRow>;
 }
 
 export default function TicketSummary({
@@ -41,11 +45,17 @@ export default function TicketSummary({
 	onClose,
 	savedTickets,
 }: Props) {
-	const ticketRowElements = tickets.map(
-		(ticket: NewTicket | SavedTicket, index: number) => (
-			<TicketRow ticket={ticket} key={index} />
-		)
-	);
+   const navigate = useNavigate();
+
+	const ticketRowElements = useMemo(() => {
+		return tickets.map((ticket: NewTicket, index: number) => (
+			<TicketRow
+				ticket={ticket}
+				key={index}
+				saved={savedTickets?.length && isSavedTicket(ticket, savedTickets)}
+			/>
+		));
+	}, [tickets, savedTickets]);
 
 	return (
 		<Modal onClose={onClose}>
@@ -56,7 +66,16 @@ export default function TicketSummary({
             delegate that part to the  TicketSummary content? 
          */}
 			<StyledTicketSummary>{ticketRowElements}</StyledTicketSummary>
-			<StyledSubmitButton type="submit">Save these tickets</StyledSubmitButton>
+
+         {/* If no submit -> response cycle has been completed yet, display the submit button */}
+         {!savedTickets?.length ? (
+
+            <StyledSubmitButton type="submit">Save these tickets</StyledSubmitButton>
+         ) : (
+            <StyledSubmitButton type="reset" onClick={() => navigate(0)}>Add more tickets</StyledSubmitButton>
+         )}
+         {/* Otherwise, display button(s) for navigation, reload, etc. */}
+
 		</Modal>
 	);
 }

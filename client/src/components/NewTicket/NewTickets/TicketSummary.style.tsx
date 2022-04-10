@@ -83,3 +83,23 @@ export const StyledSubmitButton = styled.button`
 		color: green;
 	}
 `;
+
+export const StyledTicketSummary = styled.ul`
+	width: max-content;
+	gap: 0.3rem;
+`;
+
+export const StyledTicketRow = styled.li<{ saved?: boolean }>`
+	border: 2px solid transparent;
+	border-left-width: 4px;
+	border-radius: 3px;
+	padding: 0.4rem 0.7rem;
+	font-size: 0.9rem;
+
+	border-left-color: ${(p) =>
+		typeof p.saved === "boolean"
+			? p.saved
+				? "seagreen"
+				: "orangered"
+			: "transparent"};
+`;
