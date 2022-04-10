@@ -15,12 +15,14 @@ import {
 	StyledContainer,
 	StyledModalCloseButton,
 	StyledOverlay,
+	StyledSubmitButton,
 } from "./TicketSummary.style";
 import type { SavedTicket } from "./useNewTickets";
 
 type Props = {
-	tickets: NewTicket[] | SavedTicket[];
+	tickets: NewTicket[];
 	onClose: () => void;
+	savedTickets: SavedTicket[];
 };
 
 const StyledTicketSummary = styled.ul`
@@ -34,7 +36,11 @@ function TicketRow({ ticket }: { ticket: NewTicket | SavedTicket }) {
 	return <li>{ticketString}</li>;
 }
 
-export default function TicketSummary({ tickets, onClose }: Props) {
+export default function TicketSummary({
+	tickets,
+	onClose,
+	savedTickets,
+}: Props) {
 	const ticketRowElements = tickets.map(
 		(ticket: NewTicket | SavedTicket, index: number) => (
 			<TicketRow ticket={ticket} key={index} />
@@ -50,6 +56,7 @@ export default function TicketSummary({ tickets, onClose }: Props) {
             delegate that part to the  TicketSummary content? 
          */}
 			<StyledTicketSummary>{ticketRowElements}</StyledTicketSummary>
+			<StyledSubmitButton type="submit">Save these tickets</StyledSubmitButton>
 		</Modal>
 	);
 }

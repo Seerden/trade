@@ -70,16 +70,16 @@ export default function NewTickets() {
 	 */
 	return (
 		<>
-			{showSummary && validTickets?.length > 0 && (
-				<TicketSummary
-					tickets={validTickets}
-					onClose={() => {
-						setShowSummary(false);
-					}}
-				/>
-			)}
-
 			<StyledNewTickets onSubmit={onSubmit}>
+				{showSummary && validTickets?.length > 0 && (
+					<TicketSummary
+						tickets={validTickets}
+						savedTickets={savedTickets}
+						onClose={() => {
+							setShowSummary(false);
+						}}
+					/>
+				)}
 				<StyledTitle>Add new trade tickets</StyledTitle>
 				<StyledSubtitle>
 					Each ticket describes one buy or sell transaction.
