@@ -11,7 +11,11 @@ import { BsX } from "react-icons/bs";
 import styled from "styled-components";
 import type { NewTicket } from "types/ticket.types";
 import { makeTicketString } from "./helpers/ticket-string";
-import { StyledContainer, StyledOverlay } from "./TicketSummary.style";
+import {
+	StyledContainer,
+	StyledModalCloseButton,
+	StyledOverlay,
+} from "./TicketSummary.style";
 import type { SavedTicket } from "./useNewTickets";
 
 type Props = {
@@ -31,9 +35,11 @@ function TicketRow({ ticket }: { ticket: NewTicket | SavedTicket }) {
 }
 
 export default function TicketSummary({ tickets, onClose }: Props) {
-	const ticketRowElements = tickets.map((ticket, index) => (
-		<TicketRow ticket={ticket} key={index} />
-	));
+	const ticketRowElements = tickets.map(
+		(ticket: NewTicket | SavedTicket, index: number) => (
+			<TicketRow ticket={ticket} key={index} />
+		)
+	);
 
 	return (
 		<Modal onClose={onClose}>
@@ -64,31 +70,12 @@ function Modal({ children, onClose }: ModalProps) {
 				}}
 			/>
 			<StyledContainer>
-				<StyledBtn onClick={onClose}>
+				<StyledModalCloseButton onClick={onClose}>
 					{/* TODO: close modal on click */}
 					<BsX fill="white" />
-				</StyledBtn>
+				</StyledModalCloseButton>
 				{children}
 			</StyledContainer>
 		</>
 	);
 }
-
-// TODO: all of this styling is WIP and should at least be refactored to theme values
-const StyledBtn = styled.button`
-	display: inline-flex;
-	position: absolute;
-	top: -10px;
-	right: -10px;
-
-	width: 20px;
-	height: 20px;
-	background-color: orangered;
-
-	border-radius: 50%;
-
-	line-height: 20px;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-`;

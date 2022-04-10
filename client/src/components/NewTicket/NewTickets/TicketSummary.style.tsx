@@ -29,3 +29,22 @@ export const StyledOverlay = styled.div`
 	height: 100%;
 	background: rgba(0, 0, 0, 0.68);
 `;
+
+// TODO: all of this styling is WIP and should at least be refactored to theme values
+export const StyledModalCloseButton = styled.button`
+	display: inline-flex;
+	position: absolute;
+	top: -10px;
+	right: -10px;
+
+	width: 20px;
+	height: 20px;
+	background-color: orangered;
+
+	border-radius: 50%;
+
+	line-height: 20px;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+`;
