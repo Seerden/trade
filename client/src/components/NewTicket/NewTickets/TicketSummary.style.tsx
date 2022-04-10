@@ -64,3 +64,22 @@ export const StyledModalCloseButton = styled.button`
 		}
 	}
 `;
+
+// TODO: all of this styling is temporary
+export const StyledSubmitButton = styled.button`
+	margin-top: 1rem;
+	padding: 0.5rem 1.5rem;
+	font-size: 0.82rem;
+	font-weight: 400;
+
+	color: black;
+	border: 2px solid black;
+	border-radius: 3px;
+
+	transition: all 50ms ease-in;
+
+	&:hover {
+		border-color: green;
+		color: green;
+	}
+`;
