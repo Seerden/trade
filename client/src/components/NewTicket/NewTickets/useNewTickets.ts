@@ -98,11 +98,16 @@ export function useNewTickets() {
 		[validTickets]
 	);
 
+	// Delete ticket a index `index`, but only if it's not the last remaining
+	// ticket.
 	function deleteTicket(index: number) {
-		setTickets((tickets) => [
-			...tickets.slice(0, index),
-			...tickets.slice(index + 1),
-		]);
+		setTickets((tickets) => {
+			if (tickets?.length > 1) {
+				return [...tickets.slice(0, index), ...tickets.slice(index + 1)];
+			} else {
+				return tickets;
+			}
+		});
 	}
 
 	return {
