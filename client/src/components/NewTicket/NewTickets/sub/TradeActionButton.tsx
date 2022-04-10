@@ -1,9 +1,9 @@
 import { ButtonHTMLAttributes } from "react";
+import { TradeAction } from "types/tickets";
 import { StyledTradeActionButton } from "./sub.style";
 
 interface Props extends Partial<ButtonHTMLAttributes<HTMLButtonElement>> {
-	// @todo: use TradeAction type or something
-	action: "buy" | "sell";
+	action: `${TradeAction}`;
 	index: number;
 	active?: boolean;
 	required: boolean;
