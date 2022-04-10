@@ -14,19 +14,8 @@ import TicketSummary from "./TicketSummary";
 import { useNewTickets } from "./useNewTickets";
 
 /**
-   Form to create new tickets. Acts like one large form, but UX should feel like a Google
-   Sheet. Implementation, as it stands, is more like just a form though.
-   
-   Form fields:
-      - action:      buy/sell buttons
-      - ticker:      text input
-      - quantity:    number input (integers or fractionals)
-      - datetime:    date:
-                        date input
-                     market time:
-                        time input
-      - price:       number input, 2-4 decimals, depending on current price value
-*/
+ * Form that allows for creation of new trade tickets.
+ */
 export default function NewTickets() {
 	const {
 		tickets,
@@ -58,16 +47,6 @@ export default function NewTickets() {
 		});
 	}, [tickets]);
 
-	/**
-	 * @todo: instead of displaying either TicketsPreview or StyledNewTickets,
-	 * display TicketsPreview as a modal on top of StyledNewTickets.
-	 *
-	 * @todo: do not write functionality inside onSubmit. Instead, the submit
-	 * should be part of the TicketsPreview, and the 'save tickets' button should
-	 * have type='button' instead of 'submit' in the case that we want to pull up
-	 * the TicketPreview. Making this change also fixes bug "form submission canceled, form not
-	 * connected" bug.
-	 */
 	return (
 		<>
 			<StyledNewTickets onSubmit={onSubmit}>
