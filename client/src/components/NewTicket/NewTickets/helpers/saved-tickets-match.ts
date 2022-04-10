@@ -1,5 +1,4 @@
-import { NewTicket } from "types/ticket.types";
-import { SavedTicket } from "../useNewTickets";
+import type { NewTicket, SavedTicket } from "types/tickets";
 
 /**
  * Determine whether `newTicket` was saved by checking if it exists in `savedTickets`

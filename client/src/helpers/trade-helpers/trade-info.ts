@@ -1,4 +1,4 @@
-import type { BuyTicket, SellTicket, Ticket } from "types/ticket.types";
+import type { BuyTicket, SellTicket, Ticket } from "types/tickets";
 
 /**
  * Take an array of tickets in a trade and extract various data, like P&L, quantity,

@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
-import { NewTicket } from "types/ticket.types";
-import { SavedTicket } from "../useNewTickets";
+import type { NewTicket, SavedTicket } from "types/tickets";
 
 export function makeTicketString(ticket: NewTicket | SavedTicket) {
 	const { ticker, quantity, timestamp, action, price } = ticket;

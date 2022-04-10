@@ -9,7 +9,7 @@ import { useMemo } from "react";
  */
 import { BsX } from "react-icons/bs";
 import { useNavigate } from "react-router";
-import type { NewTicket } from "types/ticket.types";
+import type { NewTicket, SavedTicket } from "types/tickets";
 import { isSavedTicket } from "./helpers/saved-tickets-match";
 import { makeTicketString } from "./helpers/ticket-string";
 import {
@@ -20,7 +20,6 @@ import {
    StyledTicketRow,
    StyledTicketSummary
 } from "./TicketSummary.style";
-import type { SavedTicket } from "./useNewTickets";
 
 type Props = {
 	tickets: NewTicket[];

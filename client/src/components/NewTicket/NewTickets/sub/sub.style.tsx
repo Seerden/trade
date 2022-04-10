@@ -1,6 +1,6 @@
 import { StyledInput as SharedStyledInput } from "components/Authentication/Login/Login.style";
 import styled, { css } from "styled-components";
-import { TradeAction } from "types/ticket.types";
+import { TradeAction } from "types/tickets";
 
 export const StyledInput = styled(SharedStyledInput)<{ $size?: string }>`
 	height: 2rem;

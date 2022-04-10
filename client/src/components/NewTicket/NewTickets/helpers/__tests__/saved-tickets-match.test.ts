@@ -1,5 +1,4 @@
-import { NewTicket } from "types/ticket.types";
-import { SavedTicket } from "../../useNewTickets";
+import type { NewTicket, SavedTicket } from "types/tickets";
 import { isSavedTicket } from "../saved-tickets-match";
 
 const newTickets = [

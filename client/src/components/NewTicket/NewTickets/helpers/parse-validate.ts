@@ -1,4 +1,4 @@
-import { NewTicket } from "types/ticket.types";
+import { NewTicket } from "types/tickets";
 import { toNewYorkTime } from "../../../../helpers/date";
 import { RawNewTicket } from "../NewTicket";
 

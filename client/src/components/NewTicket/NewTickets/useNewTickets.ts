@@ -2,20 +2,9 @@ import dayjs from "dayjs";
 import useAxios from "helpers/api/axios-instance";
 import { useAuth } from "hooks/auth/useAuth";
 import { useCallback, useMemo, useState } from "react";
-import { TradeAction } from "types/ticket.types";
+import { SavedTicket } from "types/tickets";
 import { isValidTicket, parseNewTicketInputs } from "./helpers/parse-validate";
 import { RawNewTicket } from "./NewTicket";
-
-export type SavedTicket = {
-	user_id: number;
-	trade_id: number;
-	ticket_id: number;
-	ticker: string;
-	timestamp: string;
-	action: `${TradeAction}`;
-	quantity: string;
-	price: string;
-};
 
 const today = dayjs(new Date()).format("YYYY-MM-DD");
 

@@ -36,3 +36,15 @@ export type NewTicket = {
 	timestamp: number;
 	action: "buy" | "sell";
 };
+
+// POST t/tickets returns { savedTickets: SavedTicket[] }
+export type SavedTicket = {
+	user_id: number;
+	trade_id: number;
+	ticket_id: number;
+	ticker: string;
+	timestamp: string;
+	action: `${TradeAction}`;
+	quantity: string;
+	price: string;
+};
