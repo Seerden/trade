@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { BsX } from "react-icons/bs";
+import { TradeAction } from "types/tickets";
 import { StyledButton, StyledNewTicket } from "./NewTicket.style";
 import Input from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
@@ -8,7 +9,7 @@ import { useNewTickets } from "./useNewTickets";
 const actions = "buy sell".split(" ");
 
 export type RawNewTicket = {
-	action: "buy" | "sell";
+	action: TradeAction;
 	ticker: string;
 	quantity: string;
 	date: string;
@@ -47,7 +48,7 @@ const NewTicket = ({
 
 	const actionButtons = useMemo(
 		() =>
-			actions.map((action: "buy" | "sell") => {
+			actions.map((action: TradeAction) => {
 				const active = ticket?.action === action;
 
 				return (

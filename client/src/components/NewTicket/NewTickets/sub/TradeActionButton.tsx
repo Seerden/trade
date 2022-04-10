@@ -1,9 +1,13 @@
 import { ButtonHTMLAttributes } from "react";
 import { TradeAction } from "types/tickets";
-import { StyledTradeActionButton } from "./sub.style";
+import {
+	StyledTradeActionButton,
+	StyledTradeActionInput,
+	StyledTradeActionLabel,
+} from "./sub.style";
 
 interface Props extends Partial<ButtonHTMLAttributes<HTMLButtonElement>> {
-	action: `${TradeAction}`;
+	action: TradeAction;
 	index: number;
 	active?: boolean;
 	required: boolean;
@@ -18,21 +22,21 @@ export default function TradeActionButton({
 }: Props) {
 	const name = `action-${index}`;
 	return (
-		<StyledTradeActionButton
-			action={action}
-			active={active}
-			required={required}
-		>
-			<label>
+		<StyledTradeActionButton>
+			<StyledTradeActionLabel
+				action={action}
+				active={active}
+				required={required}
+			>
 				<span>{action}</span>
-				<input
+				<StyledTradeActionInput
 					required={required}
 					type="radio"
 					name={name}
 					value={action}
 					{...buttonProps}
 				/>
-			</label>
+			</StyledTradeActionLabel>
 		</StyledTradeActionButton>
 	);
 }

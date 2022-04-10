@@ -45,51 +45,51 @@ const actionToColor = {
 	sell: "orange",
 };
 
-export const StyledTradeActionButton = styled.span<{
-	action: `${TradeAction}`;
+export const StyledTradeActionButton = styled.span`
+	width: max-content;
+	position: relative;
+`;
+
+export const StyledTradeActionInput = styled.input`
+	display: inline-block;
+	position: absolute;
+	z-index: 0;
+	left: calc(100% - 2rem);
+	opacity: 0;
+	width: 100%;
+	height: 100%;
+`;
+
+export const StyledTradeActionLabel = styled.label<{
+	action: TradeAction;
 	active?: boolean;
 	required?: boolean;
 }>`
-	width: max-content;
-	position: relative;
+	display: inline-block;
 
-	input {
-		display: inline-block;
-		position: absolute;
-		z-index: 0;
-		left: calc(100% - 2rem);
-		opacity: 0;
-		width: 100%;
-		height: 100%;
-	}
+	// TODO: use theme values
+	width: 2.5rem;
+	padding: 0.5rem 1rem;
 
-	label {
-		display: inline-block;
+	font-size: var(--text-medium);
 
-		// TODO: use theme values
-		width: 2.5rem;
-		padding: 0.5rem 1rem;
+	border: 2px solid transparent;
+	border-color: ${(p) => p.active && actionToColor[p.action]};
 
-		font-size: var(--text-medium);
+	background-color: transparent;
 
-		border: 2px solid transparent;
-		border-color: ${(p) => p.active && actionToColor[p.action]};
+	color: ${(p) => actionToColor[p.action]};
 
-		background-color: transparent;
+	transition: all 35ms fade-out;
 
-		color: ${(p) => actionToColor[p.action]};
+	height: 2rem;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
 
-		transition: all 35ms fade-out;
-
-		height: 2rem;
-		display: inline-flex;
-		justify-content: center;
-		align-items: center;
-
-		${(p) =>
-			p.required &&
-			css`
-				border-bottom: 2px solid orange;
-			`}
-	}
+	${(p) =>
+		p.required &&
+		css`
+			border-bottom: 2px solid orange;
+		`}
 `;
