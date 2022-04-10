@@ -10,9 +10,11 @@ export default function useReconcileSession() {
 	// user from backend, then log in with user from backend, or log out,
 	// depending on the backend response.
 	useEffect(() => {
-		(async function() {
+		(async function () {
 			try {
-				const { data } = await axiosInstance.get<{ username?: string }>("/auth/me");
+				const { data } = await axiosInstance.get<{ username?: string }>(
+					"/auth/me"
+				);
 
 				// If user matches, don't do anything
 				// If no user returned, logout()

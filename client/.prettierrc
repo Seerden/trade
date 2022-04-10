@@ -1,6 +1,8 @@
 {
-    "tabWidth": 2,
-    "useTabs": true,
-    "printWidth": 90,
-    "htmlWhitespaceSensitivity": "ignore"
+	"tabWidth": 2,
+	"useTabs": true,
+	"printWidth": 80,
+	"htmlWhitespaceSensitivity": "ignore",
+	"trailingComma": "es5",
+	"arrowParens": "always"
 }

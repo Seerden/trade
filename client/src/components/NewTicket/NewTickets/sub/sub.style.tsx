@@ -1,56 +1,84 @@
 import { StyledInput as SharedStyledInput } from "components/Authentication/Login/Login.style";
 import styled, { css } from "styled-components";
-
-// <!-- StyledInput -->
+import { TradeAction } from "types/tickets";
 
 export const StyledInput = styled(SharedStyledInput)<{ $size?: string }>`
 	height: 2rem;
 
-	// in this specific case, the following is just for the 'time' field,
-	// whose content needs slightly more space than 5rem
-	min-width: 5.5rem;
-	width: 5.5rem;
+	// This default width is currently only used for the name="time" input
+	// component, it needs slightly more width in locales where AM/PM are
+	// specified instead of using 24-hour times.
+	--width: 6.5rem;
+	min-width: var(--width);
+	width: var(--width);
 
-	${p =>
+	${(p) =>
 		p.$size === "small" &&
 		css`
 			min-width: 5rem;
 			width: 5rem;
 		`}
 
-	${p =>
+	${(p) =>
 		p.$size === "large" &&
 		css`
-			min-width: 10rem;
-			width: 10rem;
+			--large-input-width: 9rem;
+			min-width: var(--large-input-width);
+			width: var(--large-input-width);
 		`}
 
 	&::placeholder {
 		font-size: 0.82rem;
 	}
+
+	&:required {
+		&:placeholder-shown {
+			border-bottom: 2px solid orange;
+		}
+	}
+
+	transition: border 100ms ease-out;
 `;
 
-const sideToColor = {
+const actionToColor = {
 	buy: "seagreen",
-	sell: "orange"
+	sell: "orange",
 };
 
-// <!-- TradeActionButton -->
+export const StyledTradeActionButton = styled.span`
+	width: max-content;
+	position: relative;
+`;
 
-// @todo: use TradeAction type for buy/sell
-export const StyledButton = styled.button<{ side: "buy" | "sell"; active?: boolean }>`
-	// @todo: use theme values
+export const StyledTradeActionInput = styled.input`
+	display: inline-block;
+	position: absolute;
+	z-index: 0;
+	left: calc(100% - 2rem);
+	opacity: 0;
+	width: 100%;
+	height: 100%;
+`;
+
+export const StyledTradeActionLabel = styled.label<{
+	action: TradeAction;
+	active?: boolean;
+	required?: boolean;
+}>`
+	display: inline-block;
+
+	// TODO: use theme values
 	width: 2.5rem;
 	padding: 0.5rem 1rem;
 
 	font-size: var(--text-medium);
 
 	border: 2px solid transparent;
-	border-color: ${p => p.active && sideToColor[p.side]};
+	border-color: ${(p) => p.active && actionToColor[p.action]};
 
 	background-color: transparent;
 
-	color: ${p => sideToColor[p.side]};
+	color: ${(p) => actionToColor[p.action]};
 
 	transition: all 35ms fade-out;
 
@@ -58,4 +86,10 @@ export const StyledButton = styled.button<{ side: "buy" | "sell"; active?: boole
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
+
+	${(p) =>
+		p.required &&
+		css`
+			border-bottom: 2px solid orange;
+		`}
 `;

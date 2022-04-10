@@ -9,7 +9,7 @@ export default function useAxios() {
 		baseURL: "http://localhost:5000",
 		withCredentials: true,
 		// Add username query parameter to every request
-		...(user?.username && { params: { username: user?.username } })
+		...(user?.username && { params: { username: user?.username } }),
 	});
 
 	return axiosInstance;

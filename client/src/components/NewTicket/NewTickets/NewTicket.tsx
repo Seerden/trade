@@ -1,13 +1,15 @@
-import { useMemo } from "react";
-import styled from "styled-components";
+import { useCallback, useMemo, useState } from "react";
+import { BsX } from "react-icons/bs";
+import { TradeAction } from "types/tickets";
+import { StyledButton, StyledNewTicket } from "./NewTicket.style";
 import Input from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
+import { useNewTickets } from "./useNewTickets";
 
-const sides = "buy sell".split(" ");
+const actions = "buy sell".split(" ") as TradeAction[];
 
 export type RawNewTicket = {
-	// TODO: use type
-	side: "buy" | "sell";
+	action: TradeAction;
 	ticker: string;
 	quantity: string;
 	date: string;
@@ -15,33 +17,49 @@ export type RawNewTicket = {
 	price: string;
 };
 
-const StyledRow = styled.div`
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	height: 2.5rem;
-`;
-
 type Props = {
 	ticketIndex: number;
 	ticket: Partial<RawNewTicket>;
-	setSide: (ticketIndex: number, side: RawNewTicket["side"]) => void;
-	setField: (e: React.ChangeEvent<HTMLInputElement>, ticketIndex: number) => void;
+	setAction: (ticketIndex: number, side: RawNewTicket["action"]) => void;
+	setField: (
+		e: React.ChangeEvent<HTMLInputElement>,
+		ticketIndex: number
+	) => void;
+	deleteTicket: ReturnType<typeof useNewTickets>["deleteTicket"];
 };
 
-const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
+const NewTicket = ({
+	ticketIndex,
+	ticket,
+	setAction,
+	setField,
+	deleteTicket,
+}: Props) => {
+	const hasFilledInFields = useMemo(() => {
+		return "price ticker quantity action"
+			.split(" ")
+			.some(
+				(field) =>
+					field in ticket &&
+					ticket[field] !== undefined &&
+					ticket[field]?.length
+			);
+	}, [ticket]);
+
 	const actionButtons = useMemo(
 		() =>
-			sides.map((side: "buy" | "sell") => {
-				const active = ticket?.side === side;
+			actions.map((action: TradeAction) => {
+				const active = ticket?.action === action;
 
 				return (
 					<TradeActionButton
-						key={side}
-						side={side}
+						required={hasFilledInFields && !ticket.action}
+						index={ticketIndex}
+						key={action}
+						action={action}
 						active={active}
 						onClick={() => {
-							setSide(ticketIndex, side);
+							setAction(ticketIndex, action);
 						}}
 					/>
 				);
@@ -49,98 +67,115 @@ const NewTicket = ({ ticketIndex, ticket, setSide, setField }: Props) => {
 		[ticket]
 	);
 
-	const priceStep = useMemo(() => {
-		const price = +ticket?.price;
+	/**
+	 * If hasFilledInFields, return `placeholder`, else return null.
+	 * To be used to only display placeholders for certain inputs if hasFilledInFields.
+	 *
+	 * @todo: refine condition hasFilledInFields to something slightly different:
+	 * - also want to display placeholder if user is focused or hovering the
+	 *   ticket, or if they have selected a tradeAction, or changed the `date` or
+	 *   `time` field.
+	 */
+	const getPlaceholder = useCallback(
+		(placeholder: string) => {
+			return hasFilledInFields ? placeholder : null;
+		},
+		[hasFilledInFields]
+	);
 
-		if (price >= 1000) {
-			return 1;
-		}
-		if (price >= 1) {
-			return 0.01;
-		}
-		return 1e-4;
-	}, [ticket?.price]);
+	const [shouldShowDelete, setShouldShowDelete] = useState<boolean>(false);
 
-	const quantityStep = useMemo(() => {
-		const quantity = +ticket?.quantity;
+	// TODO: combine showDelete and hideDelete into one function
+	const showDelete = useCallback(() => {
+		setShouldShowDelete(true);
+	}, [shouldShowDelete, setShouldShowDelete]);
 
-		if (quantity >= 1e6) {
-			return 1e4;
-		}
-		if (quantity >= 1e5) {
-			return 1000;
-		}
-		if (quantity >= 1e4) {
-			return 500;
-		}
-		if (quantity >= 1e3) {
-			return 100;
-		}
-		if (quantity >= 100) {
-			return 10;
-		}
-		return 1;
-	}, [ticket?.quantity]);
+	const hideDelete = useCallback(() => {
+		setShouldShowDelete(false);
+	}, [shouldShowDelete, setShouldShowDelete]);
 
 	return (
-		<StyledRow>
+		<StyledNewTicket
+			empty={!hasFilledInFields}
+			onMouseEnter={showDelete}
+			onMouseLeave={hideDelete}
+		>
 			{/* action buttons */}
-			{actionButtons}
+			{/* TODO: I don't like that these are just in a span. Has to be a more semantic way to do this. */}
+			<span>{actionButtons}</span>
 
 			{/* ticker field */}
 			<Input
+				required={hasFilledInFields}
 				$size="small"
 				title="Ticker"
 				name="ticker"
-				placeholder="ticker"
+				placeholder={getPlaceholder("ticker")}
 				// TODO: don't repeat e => setField(e, ticketIndex) every time, write
 				// a curried function instead
-				onChange={e => setField(e, ticketIndex)}
+				onChange={(e) => setField(e, ticketIndex)}
 			/>
 
 			{/* price field */}
 			<Input
+				required={hasFilledInFields}
 				$size="small"
 				title="Price per share"
 				name="price"
 				type="number"
 				min={0}
-				step={priceStep}
-				placeholder="price"
-				onChange={e => setField(e, ticketIndex)}
+				step="any"
+				placeholder={getPlaceholder("price")}
+				onChange={(e) => {
+					setField(e, ticketIndex);
+				}}
 			/>
 
 			{/* quantity field */}
 			<Input
+				required={hasFilledInFields}
 				$size="small"
 				title="Share quantity"
 				name="quantity"
 				type="number"
 				min={0}
-				step={quantityStep}
-				placeholder="quantity"
-				onChange={e => setField(e, ticketIndex)}
+				step="any"
+				placeholder={getPlaceholder("quantity")}
+				onChange={(e) => setField(e, ticketIndex)}
 			/>
 
 			{/* date field */}
 			<Input
+				required={hasFilledInFields}
 				$size="large"
 				title="Date"
 				name="date"
 				type="date"
-				onChange={e => setField(e, ticketIndex)}
+				onChange={(e) => setField(e, ticketIndex)}
 				defaultValue={ticket.date}
 			/>
 
 			{/* time field */}
 			<Input
+				required={hasFilledInFields}
 				title="Time of day (market time)"
 				name="time"
 				type="time"
-				onChange={e => setField(e, ticketIndex)}
+				onChange={(e) => setField(e, ticketIndex)}
 				defaultValue="09:30"
 			/>
-		</StyledRow>
+
+			{shouldShowDelete && (
+				<StyledButton
+					type="button"
+					onClick={() => {
+						deleteTicket(ticketIndex);
+					}}
+				>
+					<BsX type="button" overflow={"visible"} />
+				</StyledButton>
+			)}
+		</StyledNewTicket>
 	);
 };
 

@@ -24,7 +24,7 @@ export function useRegister() {
 	const [newUser, setNewUser] = useState<NewUser>({
 		username: null,
 		password: null,
-		repeatPassword: null
+		repeatPassword: null,
 	});
 
 	// used to flash a message, e.g. 'Username already exists' or 'password
@@ -81,12 +81,12 @@ export function useRegister() {
 	// onChange handler for username, password and repeatPassword inputs
 	function onChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = e.target;
-		setNewUser(current => ({ ...current, [name]: value }));
+		setNewUser((current) => ({ ...current, [name]: value }));
 	}
 
 	return {
 		onChange,
 		onSubmit,
-		message
+		message,
 	} as const;
 }

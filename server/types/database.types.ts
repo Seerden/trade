@@ -11,9 +11,16 @@ export type PriceActionRow = {
 	close: PriceType;
 };
 
-export type User = {
-	username: string;
+export type Trade = {
 	user_id: number;
-	created_at: string;
+	trade_id: number;
+	ticker: string;
+	trade_type: "long" | "short";
+};
+
+export type User = {
+	user_id: number;
+	username: string;
 	password: string;
+	created_at: string;
 };

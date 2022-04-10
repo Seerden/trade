@@ -1,4 +1,5 @@
 import express from "express";
+import { insertTickets } from "../database/queries/tickets/insert";
 import { getTradesByUser, getTradesWithTickets } from "../database/queries/trades/get";
 import { getUserId } from "../database/queries/users/get";
 import { isAllowed } from "../helpers/middleware/is-allowed";
@@ -29,19 +30,28 @@ tradeRouter.get("/tickets/:ticker?/:from?/:to?", async (req) => {
 	}
 });
 
-tradeRouter.post("/tickets", async (req) => {
-	const { newTickets } = req.body;
+tradeRouter.post("/tickets", async (req, res) => {
+	const { newTickets, username } = req.body;
 
-	if (newTickets?.length) {
-		// insert tickets into database
+	if (newTickets?.length && username) {
+		const savedTickets = await insertTickets({
+			username,
+			tickets: newTickets,
+		});
+		res.json({ savedTickets });
+	} else {
+		res.json({
+			message: "Request body does not contain `newTickets` array or `username` string",
+		});
 	}
 });
 
+/** Get a user's trades filtered by query string options */
 tradeRouter.get("/trades/", async (req, res) => {
-	// work with query string here to allow for most malleable handling
-	// get a user's trades filtered by query string options
+	// TODO: down the road, when implementing filtering results, work with query
+	// string here to allow for most malleable handling.
 
-	const { username } = req.user as Record<string, any>;
+	const { username } = req.user as { username?: string };
 
 	const trades = getTradesByUser({ userId: await getUserId(username) });
 	res.json({ trades });

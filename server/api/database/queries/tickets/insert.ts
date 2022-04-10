@@ -1,7 +1,9 @@
+/* eslint-disable no-continue */
 import format from "pg-format";
-import { BackendApiObject as API } from "../../../../database/pools/query-objects";
-import { NewTicket } from "../../../types/ticket.types";
-import { getLatestTrade } from "../trades/get";
+import { BackendApiObject } from "../../../../database/pools/query-objects";
+import { NewTicket, Ticket } from "../../../types/ticket.types";
+import { getLatestTradeByTickerWithTickets } from "../trades/get";
+import { insertTradeRow } from "../trades/insert";
 import { getUserId } from "../users/get";
 
 const newTicketFields = "ticker timestamp action quantity price".split(" ") as Array<
@@ -9,11 +11,11 @@ const newTicketFields = "ticker timestamp action quantity price".split(" ") as A
 >;
 
 interface TicketForDatabase extends NewTicket {
-	userId: number;
-	tradeId: number;
+	user_id: number;
+	trade_id: number;
 }
 
-const ticketForDatabaseFields = [...newTicketFields, "userId", "tradeId"] as Array<
+const ticketForDatabaseFields = [...newTicketFields, "user_id", "trade_id"] as Array<
 	keyof TicketForDatabase
 >;
 
@@ -30,14 +32,6 @@ const ticketForDatabaseFields = [...newTicketFields, "userId", "tradeId"] as Arr
  * Note the order of the fields we insert into the database.
  *
  */
-
-/**
- * Take a raw newTicket object, e.g. as expected to be sent from the client,
- * and add properties `userId` and `tradeId` to it
- */
-function addIdPropsToTicket(ticket: NewTicket, userId: number, tradeId: number) {
-	return { ...ticket, userId, tradeId };
-}
 
 /**
  * Take a newTicket object like {
@@ -69,41 +63,123 @@ function ticketObjectToArray(ticket: TicketForDatabase) {
 }
 
 /**
+ * Given two numbers (`prev` and `next`) representing a state change, check
+ * whether going from prev to next leads to a sign flip.
+ */
+function flippedSign(prev: number, next: number) {
+	return prev * next < 0;
+}
+
+function haveSameSign(a: number, b: number) {
+	if (a === 0 && b === 0) return true; // edge case, shouldn't really happen
+	return a * b > 0;
+}
+
+type Args = {
+	username: string;
+	tickets: NewTicket[];
+};
+/**
  * Insert a list of new tickets into the database
  */
-export async function insertTickets(username: string, tickets: Array<NewTicket>) {
-	/**
-	 * create a list that's usable with pg-format
-	 *
-	 * so go
-	 *  from    Array<Ticket>
-	 *  to      Array<[user_id, ticker, timestamp, action, ...]>
-	 */
+export async function insertTickets({ username, tickets }: Args) {
+	const userId = await getUserId(username);
 
-	const [userId] = await getUserId(username);
+	if (!userId) {
+		return;
+	}
+
 	const tickers = Array.from(new Set(tickets.map((ticket) => ticket.ticker)));
 
-	// TODO: get the tradeId for each ticket we want to insert. This might
-	// require first inserting new `trades` rows.
-	const tradeIds = await getLatestTrade({ userId, tickers });
+	// Assign the correct trade_id to each to-be-inserted ticket,
+	// which might involve inserting new rows into `trades` first.
+	const latestTrades = await getLatestTradeByTickerWithTickets({ userId, tickers });
 
-	const ticketsAsArrays = tickets.map((ticket, index) => {
-		const ticketWithIds = addIdPropsToTicket(ticket, userId, tradeIds[index]);
-		return ticketObjectToArray(ticketWithIds);
+	// We'll be appending tickets here after assigning a trade_id to each ticket
+	const ticketsToInsert: Omit<Ticket, "ticket_id">[] = [];
+
+	// Get position size of each open trade
+	for (const ticker of tickers) {
+		const latestTrade = latestTrades?.find((t) => t.trade?.ticker === ticker);
+
+		const ticketsForTicker = tickets.filter((t) => t.ticker === ticker);
+
+		const openTrade = latestTrade?.trade ?? null;
+		const openTickets = latestTrade?.tickets ?? null;
+
+		let openTradeId: number;
+
+		let openQty: number = openTickets?.length
+			? openTickets?.reduce((acc, cur) => {
+					if (cur.action === "buy") {
+						return acc + cur.quantity;
+					}
+					return acc - cur.quantity;
+			  }, 0)
+			: 0;
+
+		if (openTrade) {
+			openTradeId = openTrade.trade_id;
+		} else {
+			const tradeType = ticketsForTicker[0].action === "buy" ? "long" : "short";
+			const insertedTrade = await insertTradeRow({
+				userId,
+				ticker,
+				tradeType,
+			});
+			openTradeId = insertedTrade.trade_id;
+		}
+
+		for (const ticket of ticketsForTicker) {
+			const { action, quantity } = ticket;
+			const signedQty = (action === "buy" ? 1 : -1) * quantity;
+			const newQty = openQty + signedQty;
+
+			// TODO: if newQty has flipped sign w.r.t openQty, then we have to split the
+			// ticket into two
+
+			if (openQty === 0) {
+				// ticket is the first ticket in a new trade, which means we have to
+				// create a `trades` row
+				const tradeType = action === "buy" ? "long" : "short";
+				const insertedTrade = await insertTradeRow({
+					userId,
+					ticker,
+					tradeType,
+				});
+
+				openTradeId = insertedTrade.trade_id;
+			} else if (
+				haveSameSign(openQty, signedQty) || // ticket adds to position
+				newQty === 0 // ticket closes out position
+			) {
+				// ticket belongs to current trade
+				openQty = newQty;
+			}
+
+			// Assign trade_id and user_id and push the ticket to ticketsToInsert
+			const ticketToInsert: Omit<Ticket, "ticket_id"> = {
+				...ticket,
+				trade_id: openTradeId,
+				user_id: userId,
+			};
+
+			ticketsToInsert.push(ticketToInsert);
+		}
+	}
+
+	const ticketsAsArrays = ticketsToInsert.map((ticket) => ticketObjectToArray(ticket));
+
+	const response = await BackendApiObject.query({
+		text: format(
+			`
+            insert into tickets (
+               ticker, timestamp, action, quantity, price, user_id, trade_id
+            ) values %L returning *
+         `,
+			ticketsAsArrays
+		),
 	});
 
-	API.query({
-		text: format(`
-         insert into tickets (
-            ticker, 
-            timestamp, 
-            action, 
-            quantity, 
-            price,
-            user_id,
-            trade_id
-         ) values %L
-      `),
-		values: ticketsAsArrays,
-	});
+	return response as Ticket[];
 }

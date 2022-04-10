@@ -3,6 +3,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
+import { BackendApiObject } from "../../database/pools/query-objects";
 import { fetchPriceActionForTicker } from "../../price-action/database/queries/fetch-price-action";
 import {
 	// eslint-disable-next-line camelcase
@@ -12,7 +13,7 @@ import {
 } from "../../price-action/database/_dev/polygon/max-1m-query";
 import { fetchDailyOHLC } from "../../price-action/lib/polygon/requests/snapshot/snapshot-fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/snapshot-insert";
-import { getLatestTrade, getTradesWithTickets } from "../database/queries/trades/get";
+import { getTradesWithTickets } from "../database/queries/trades/get";
 import { getTradeDetails } from "../helpers/trades/trade-meta";
 
 dayjs.extend(relativeTime);
@@ -71,15 +72,26 @@ devRouter.post("/snapshot/:date", async (req, res) => {
 	res.json({ timestamp: await fetchAndInsertSnapshot({ date }) });
 });
 
-devRouter.get("/latest", async (req, res) => {
-	const response = await getLatestTrade({
-		userId: 1,
-		tickers: ["aa"],
+/**
+ * Select all trades.
+ */
+devRouter.get("/all/trades", async (req, res) => {
+	const response = await BackendApiObject.query({
+		text: "select * from trades",
 	});
 
-	res.json({
-		response,
+	res.json({ response });
+});
+
+/**
+ * Select all tickets.
+ */
+devRouter.get("/all/tickets", async (req, res) => {
+	const response = await BackendApiObject.query({
+		text: "select * from tickets",
 	});
+
+	res.json({ response });
 });
 
 devRouter.get("/trades-with-tickets", async (req, res) => {

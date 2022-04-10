@@ -27,7 +27,7 @@ export function useAuth() {
 	function logout(): void {
 		// reset user atom
 		setUser({
-			username: ""
+			username: "",
 		});
 
 		// remove user from local storage
@@ -38,6 +38,6 @@ export function useAuth() {
 		user,
 		login,
 		logout,
-		isLoggedIn
+		isLoggedIn,
 	} as const;
 }

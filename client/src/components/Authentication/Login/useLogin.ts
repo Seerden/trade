@@ -11,7 +11,7 @@ type User = {
 
 const emptyUser: User = {
 	username: "",
-	password: ""
+	password: "",
 };
 
 // this should match the shape of the response sent by the backend - @todo: find some way to unify this, or at least put all these together in a folder somewhere
@@ -30,7 +30,7 @@ function useLogin() {
 		e: React.ChangeEvent<HTMLInputElement> /* @todo: change event type? */
 	): void {
 		const { name, value } = e.target;
-		setUser(user => ({ ...user, [name]: value }));
+		setUser((user) => ({ ...user, [name]: value }));
 	}
 
 	function onChange(e: React.ChangeEvent<HTMLInputElement>): void {
@@ -51,7 +51,7 @@ function useLogin() {
 			const { data } = await axiosInstance.post<any, { data: UserResponse }>(
 				"/auth/login",
 				{
-					...user
+					...user,
 				}
 			);
 			const { username, created_at } = data;
@@ -88,7 +88,7 @@ function useLogin() {
 	return {
 		onChange,
 		onSubmit,
-		handleLogout
+		handleLogout,
 	} as const;
 }
 
