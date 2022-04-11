@@ -28,16 +28,21 @@ export const widePadding = {
 	huge: "1.5rem 2.5rem",
 	section: "2rem 4rem",
 	page: "2.5rem 5.5rem",
+	button: null,
 };
 
 export const padding = {
 	tiniest: "3px",
+	tinier: "0.3rem",
 	tiny: "0.5rem",
 	small: "0.8rem",
 	medium: "1.5rem",
 	large: "2.5rem",
 	wide: widePadding,
 };
+
+// Snippets that don't quite fall within existing definitions
+widePadding.button = `${padding.tiny} ${padding.medium}`;
 
 export const font = {
 	tiny: "0.75rem",
