@@ -19,12 +19,19 @@ export const size = {
 	large: "6px",
 };
 
+export const widePadding = {
+	tiny: "0.2rem 0.5rem",
+	small: "0.35rem 0.8rem",
+	medium: "0.45rem 1.1rem",
+};
+
 export const padding = {
 	tiniest: "3px",
 	tiny: "0.5rem",
 	small: "0.8rem",
 	medium: "1.5rem",
 	large: "2.5rem",
+	wide: widePadding,
 };
 
 export const font = {
