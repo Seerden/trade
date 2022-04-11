@@ -16,7 +16,7 @@ export const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
 	align-items: center;
 	height: 2.5rem;
 	gap: ${({ theme }) => theme.padding.tiny};
-	font-size: 0.88rem;
+	font-size: ${(p) => p.theme.font.small};
 
 	position: relative;
 	// TODO: the +2.5rem is to prevent layout shift when sliding in the delete

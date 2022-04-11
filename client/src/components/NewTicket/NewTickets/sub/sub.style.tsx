@@ -28,7 +28,7 @@ export const StyledInput = styled(SharedBaseInput)<{ $size?: string }>`
 		`}
 
 	&::placeholder {
-		font-size: 0.82rem;
+		font-size: ${({ theme }) => theme.font.smaller};
 	}
 
 	&:required {
@@ -70,7 +70,7 @@ export const StyledTradeActionLabel = styled.label<{
 	// TODO: use theme values
 	width: 2.5rem;
 	padding: ${(p) => p.theme.padding.wide.medium};
-	font-size: var(--text-medium);
+	font-size: ${(p) => p.theme.font.medium};
 
 	border: 2px solid transparent;
 	border-color: ${(p) => p.active && actionToColor[p.action]};

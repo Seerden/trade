@@ -28,14 +28,14 @@ export const StyledFields = styled.div`
 
 export const StyledLabel = styled.label`
 	display: flex;
-	font-size: var(--text-small);
+	font-size: ${(p) => p.theme.font.small};
 	padding-left: ${(p) => p.theme.padding.tiniest};
 	margin-bottom: ${(p) => p.theme.padding.tinier};
 	user-select: none;
 `;
 
 export const StyledTitle = styled.h2`
-	font-size: 1.5em;
+	font-size: ${(p) => p.theme.font.larger};
 	margin-bottom: ${(p) => p.theme.padding.tiny};
 	user-select: none;
 `;
@@ -50,7 +50,7 @@ export const StyledInput = styled(SharedBaseInput)``;
 
 export const StyledButton = styled.input<{ isRegisterButton?: boolean }>`
 	padding: ${(p) => p.theme.padding.wide.button.tiny};
-	font-size: var(--text-small);
+	font-size: ${(p) => p.theme.font.small};
 	outline: 1px solid transparent;
 
 	transition: all 75ms ease-out;

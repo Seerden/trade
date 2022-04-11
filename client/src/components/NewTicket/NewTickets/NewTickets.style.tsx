@@ -33,7 +33,7 @@ export const StyledButton = styled.input<{ round?: boolean }>`
 			  `}
 	display: inline-flex;
 	background-color: transparent;
-	font-size: 0.72rem;
+	font-size: ${(p) => p.theme.font.tiny};
 
 	border: 2px solid ${(p) => p.theme.colors.grey.light};
 
@@ -71,7 +71,7 @@ export const StyledTitle = styled.h1`
 	width: max-content;
 	position: relative;
 	z-index: 1;
-	font-size: 1.4rem;
+	font-size: ${(p) => p.theme.font.large};
 	font-weight: 600;
 	user-select: none;
 	margin-bottom: ${(p) => p.theme.padding.tiny};
@@ -93,7 +93,7 @@ export const StyledTitle = styled.h1`
 `;
 
 export const StyledSubtitle = styled.h3`
-	font-size: 0.9rem;
+	font-size: ${(p) => p.theme.font.medium};
 	word-wrap: break-word;
 	color: #aaa;
 	font-weight: 350;

@@ -69,7 +69,7 @@ export const StyledModalCloseButton = styled.button`
 export const StyledSubmitButton = styled.button`
 	margin-top: ${({ theme }) => theme.padding.small};
 	padding: ${({ theme }) => theme.padding.wide.button.small};
-	font-size: 0.82rem;
+	font-size: ${({ theme }) => theme.font.smaller};
 	font-weight: 400;
 
 	color: black;
@@ -94,7 +94,7 @@ export const StyledTicketRow = styled.li<{ saved?: boolean }>`
 	border-left-width: 4px;
 	border-radius: 3px;
 	padding: ${({ theme }) => theme.padding.wide.small};
-	font-size: 0.9rem;
+	font-size: ${({ theme }) => theme.font.medium};
 
 	border-left-color: ${(p) =>
 		typeof p.saved === "boolean"

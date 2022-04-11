@@ -29,7 +29,7 @@ const StyledHeader = styled.div`
 	label {
 		user-select: none;
 		text-align: center;
-		font-size: 0.88rem;
+		font-size: ${({ theme }) => theme.font.smaller};
 		font-weight: 500;
 		border-bottom: 2px solid #eee;
 		padding-bottom: ${(p) => p.theme.padding.tinier};
