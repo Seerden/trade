@@ -15,7 +15,7 @@ export const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
 	flex-direction: row;
 	align-items: center;
 	height: 2.5rem;
-	gap: 0.45rem;
+	gap: ${({ theme }) => theme.padding.tiny};
 	font-size: 0.88rem;
 
 	position: relative;

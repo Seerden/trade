@@ -24,7 +24,7 @@ const StyledHeader = styled.div`
 	// styles with these here so that they're always in sync. Would also make it
 	// easier to manage a responsive version of this component.
 	grid-template-columns: repeat(4, 5rem) 9rem 6.5rem;
-	gap: ${(p) => p.theme.padding.tiny};
+	gap: ${({ theme }) => theme.padding.tiny};
 
 	label {
 		user-select: none;

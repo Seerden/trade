@@ -11,7 +11,7 @@ export const StyledButtonWrapper = styled.span`
 	span {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.4rem;
+		gap: ${({ theme }) => theme.padding.tiny};
 	}
 `;
 
@@ -52,7 +52,7 @@ export const StyledButtons = styled.span`
 	top: 1rem;
 	flex-direction: row;
 
-	gap: 0.4rem;
+	gap: ${({ theme }) => theme.padding.tiny};
 `;
 
 export const StyledNewTickets = styled.form`
