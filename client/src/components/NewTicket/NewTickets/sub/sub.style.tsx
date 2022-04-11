@@ -69,8 +69,7 @@ export const StyledTradeActionLabel = styled.label<{
 
 	// TODO: use theme values
 	width: 2.5rem;
-	padding: 0.5rem 1rem;
-
+	padding: ${(p) => p.theme.padding.wide.medium};
 	font-size: var(--text-medium);
 
 	border: 2px solid transparent;

@@ -29,7 +29,7 @@ export const StyledButton = styled.input<{ round?: boolean }>`
 			  `
 			: css`
 					width: max-content;
-					padding: 0.3rem 1.6rem;
+					padding: ${(p) => p.theme.padding.wide.button.tiny};
 			  `}
 	display: inline-flex;
 	background-color: transparent;
@@ -61,7 +61,7 @@ export const StyledNewTickets = styled.form`
 	max-width: max-content;
 	width: max-content;
 
-	padding: 2rem 4rem;
+	padding: ${(p) => p.theme.padding.wide.section};
 	border-radius: 5px;
 	box-shadow: 0 0 0.2rem 0 #ccc;
 `;

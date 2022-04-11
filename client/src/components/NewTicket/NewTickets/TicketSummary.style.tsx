@@ -68,7 +68,7 @@ export const StyledModalCloseButton = styled.button`
 // TODO: all of this styling is temporary
 export const StyledSubmitButton = styled.button`
 	margin-top: 1rem;
-	padding: 0.5rem 1.5rem;
+	padding: ${({ theme }) => theme.padding.wide.button.small};
 	font-size: 0.82rem;
 	font-weight: 400;
 
@@ -86,14 +86,14 @@ export const StyledSubmitButton = styled.button`
 
 export const StyledTicketSummary = styled.ul`
 	width: max-content;
-	gap: 0.3rem;
+	gap: ${({ theme }) => theme.padding.tinier};
 `;
 
 export const StyledTicketRow = styled.li<{ saved?: boolean }>`
 	border: 2px solid transparent;
 	border-left-width: 4px;
 	border-radius: 3px;
-	padding: 0.4rem 0.7rem;
+	padding: ${({ theme }) => theme.padding.wide.small};
 	font-size: 0.9rem;
 
 	border-left-color: ${(p) =>
