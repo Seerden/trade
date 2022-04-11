@@ -28,7 +28,10 @@ export const widePadding = {
 	huge: "1.5rem 2.5rem",
 	section: "2rem 4rem",
 	page: "2.5rem 5.5rem",
-	button: null,
+	button: {
+		tiny: null,
+		small: null,
+	},
 };
 
 export const padding = {
@@ -42,7 +45,8 @@ export const padding = {
 };
 
 // Snippets that don't quite fall within existing definitions
-widePadding.button = `${padding.tiny} ${padding.medium}`;
+widePadding.button.small = `${padding.tiny} ${padding.medium}`;
+widePadding.button.tiny = `${padding.tinier} ${padding.medium}`;
 
 export const font = {
 	tiny: "0.75rem",
