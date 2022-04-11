@@ -11,7 +11,7 @@ export const StyledContainer = styled.section`
 	margin-top: 20vh;
 	left: 50%;
 	transform: translateX(-50%);
-	padding: 2rem;
+	padding: ${(p) => p.theme.padding.large};
 	border: 4px solid #444;
 	box-shadow: 0 0 1rem #111;
 	border-radius: 5px;
