@@ -11,9 +11,9 @@ import styled, { css } from "styled-components";
 
 export const StyledForm = styled.form`
 	width: max-content;
-	padding: 2em 4em;
-	margin: 2em;
-	margin: 2em auto;
+	padding: ${(p) => p.theme.padding.wide.section};
+	margin: ${(p) => p.theme.padding.medium};
+	margin: ${(p) => p.theme.padding.medium} auto;
 
 	border: 1px solid var(--main);
 	box-shadow: 0 0 0.5em 0 var(--main);
@@ -22,34 +22,34 @@ export const StyledForm = styled.form`
 export const StyledFields = styled.div`
 	display: flex;
 	flex-flow: column wrap;
-	gap: var(--pad-medium);
+	gap: ${(p) => p.theme.padding.tiny};
 	justify-content: center;
 `;
 
 export const StyledLabel = styled.label`
 	display: flex;
 	font-size: var(--text-small);
-	padding-left: var(--pad-small);
-	margin-bottom: 0.3em;
+	padding-left: ${(p) => p.theme.padding.tiniest};
+	margin-bottom: ${(p) => p.theme.padding.tinier};
 	user-select: none;
 `;
 
 export const StyledTitle = styled.h2`
 	font-size: 1.5em;
-	margin-bottom: var(--pad-medium);
+	margin-bottom: ${(p) => p.theme.padding.tiny};
 	user-select: none;
 `;
 
 export const StyledButtons = styled.div`
 	display: flex;
 	justify-content: space-between;
-	gap: var(--pad-medium);
+	gap: ${(p) => p.theme.padding.tiny};
 `;
 
 export const StyledInput = styled(SharedBaseInput)``;
 
 export const StyledButton = styled.input<{ isRegisterButton?: boolean }>`
-	padding: var(--pad-medium) 2em;
+	padding: ${(p) => p.theme.padding.wide.button};
 	font-size: var(--text-small);
 	outline: 1px solid transparent;
 
