@@ -45,7 +45,7 @@ export const StyledButton = styled.input<{ round?: boolean }>`
 `;
 
 export const StyledButtons = styled.span`
-	margin-bottom: 0.8rem;
+	margin-bottom: ${(p) => p.theme.padding.small};
 	display: block;
 	position: sticky;
 	z-index: 2;
@@ -74,7 +74,7 @@ export const StyledTitle = styled.h1`
 	font-size: 1.4rem;
 	font-weight: 600;
 	user-select: none;
-	margin-bottom: 0.5rem;
+	margin-bottom: ${(p) => p.theme.padding.tiny};
 
 	&::after {
 		content: "";
@@ -101,9 +101,9 @@ export const StyledSubtitle = styled.h3`
 	margin: 0 auto;
 
 	max-width: 720px;
-	margin-bottom: 0.8rem;
+	margin-bottom: ${(p) => p.theme.padding.tiny};
 `;
 
 export const StyledTickets = styled.section`
-	margin: 2.1rem 0;
+	margin: ${(p) => p.theme.padding.large} 0;
 `;

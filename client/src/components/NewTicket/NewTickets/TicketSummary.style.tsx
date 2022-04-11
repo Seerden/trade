@@ -67,7 +67,7 @@ export const StyledModalCloseButton = styled.button`
 
 // TODO: all of this styling is temporary
 export const StyledSubmitButton = styled.button`
-	margin-top: 1rem;
+	margin-top: ${({ theme }) => theme.padding.small};
 	padding: ${({ theme }) => theme.padding.wide.button.small};
 	font-size: 0.82rem;
 	font-weight: 400;
