@@ -49,7 +49,7 @@ export const StyledButtons = styled.div`
 export const StyledInput = styled(SharedBaseInput)``;
 
 export const StyledButton = styled.input<{ isRegisterButton?: boolean }>`
-	padding: ${(p) => p.theme.padding.wide.button};
+	padding: ${(p) => p.theme.padding.wide.button.tiny};
 	font-size: var(--text-small);
 	outline: 1px solid transparent;
 
