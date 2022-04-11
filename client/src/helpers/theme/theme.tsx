@@ -23,6 +23,11 @@ export const widePadding = {
 	tiny: "0.2rem 0.5rem",
 	small: "0.35rem 0.8rem",
 	medium: "0.45rem 1.1rem",
+	large: "0.7rem 1.45rem",
+	larger: "1rem 1.9rem",
+	huge: "1.5rem 2.5rem",
+	section: "2rem 4rem",
+	page: "2.5rem 5.5rem",
 };
 
 export const padding = {

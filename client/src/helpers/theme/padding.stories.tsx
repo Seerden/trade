@@ -68,7 +68,7 @@ export const WidePadding: ComponentStory<typeof StyledDiv> = ({
 );
 WidePadding.argTypes = {
 	widePadding: {
-		options: "medium small tiny".split(" "),
+		options: "page section huge larger large medium small tiny".split(" "),
 		control: { type: "radio" },
 		defaultValue: "medium",
 	},
