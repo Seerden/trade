@@ -1,9 +1,7 @@
 import { DateDayjsOrString } from "../../../../types/date.types";
 import { PolygonAggregateResults } from "./results.types";
 
-/**
- * @note We'll probably only be using 'minute', 'hour', 'day'.
- */
+/** @note We'll probably only be using 'minute', 'hour' and 'day'. */
 export type PolygonTimespan =
 	| "minute"
 	| "hour"
@@ -13,9 +11,7 @@ export type PolygonTimespan =
 	| "quarter"
 	| "year";
 
-/**
- * As mentioned, most valid timespans aren't relevant for us, for now.
- */
+/** @note As mentioned, most valid timespans aren't relevant for us, for now. */
 export type PermittedTimespan = "minute" | "hour" | "day";
 
 export type PolygonAggregateOptions = {
