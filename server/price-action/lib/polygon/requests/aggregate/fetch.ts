@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
-import polygon from "../../axios-instance";
+import { axiosPolygon } from "../../axios-instance";
 import {
-    PolygonAggregateOptions,
-    PolygonAggregateResponse,
+	PolygonAggregateOptions,
+	PolygonAggregateResponse,
 } from "../../types/aggregate.types";
 
 /**
@@ -10,18 +10,18 @@ import {
  * '2022-01-15' will include all data until the end of that day's trading session.
  */
 export async function fetchTickerAggregate({
-    ticker,
-    multiplier,
-    timespan,
-    from,
-    to,
-    sort = "asc",
-    limit = 50000,
+	ticker,
+	multiplier,
+	timespan,
+	from,
+	to,
+	sort = "asc",
+	limit = 50000,
 }: PolygonAggregateOptions) {
-    const [fromString, toString] = [from, to].map((date) =>
-        dayjs(date).format("YYYY-MM-DD")
-    );
-    const url = `/v2/aggs/ticker/${ticker.toUpperCase()}/range/${multiplier}/${timespan}/${fromString}/${toString}`;
-    const { data } = await polygon.get(url, { params: { limit, sort } });
-    return data as PolygonAggregateResponse;
+	const [fromString, toString] = [from, to].map((date) =>
+		dayjs(date).format("YYYY-MM-DD")
+	);
+	const url = `/v2/aggs/ticker/${ticker.toUpperCase()}/range/${multiplier}/${timespan}/${fromString}/${toString}`;
+	const { data } = await axiosPolygon.get(url, { params: { limit, sort } });
+	return data as PolygonAggregateResponse;
 }
