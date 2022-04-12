@@ -5,11 +5,11 @@ import { PriceActionRow } from "types/database.types";
 import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
 import { Timescale } from "../../../../../types/store.types";
 import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
+import { timescaleToTableName } from "../../../get-table-name";
 import {
 	PermittedTimespan,
-	timescaleToTableName,
-} from "../../../get-table-name";
-import { PolygonAggregateOptions } from "../../types/aggregate.types";
+	PolygonAggregateOptions,
+} from "../../types/aggregate.types";
 import { OHLC } from "../../types/ohlc.types";
 import { fetchTickerAggregate } from "./fetch";
 import { aggregateToPriceActionObjects } from "./transform";
@@ -27,18 +27,11 @@ const timespanToTimescaleMap: { [K in PermittedTimespan]: Timescale } = {
 	day: "1d",
 };
 
-/**
- * We re-use these columns in various places, and they always need to be in the
- * same order.
- * @todo should probably use a more specific variable name.
- */
+/** Use a fields variable so that we know they're always in the right order. */
 const fieldsString = "ticker, timestamp, open, close, high, low, volume";
 const fields = fieldsString.split(", ") as Array<OHLC>;
 
-/**
- * Take priceActionObjects (array of objects) and map to an array of arrays, for
- * use with pg-format.
- */
+/** Map a priceActionObject to an array, for use with pg-format */
 function priceActionObjectToArray(priceActionObject: PriceActionRow) {
 	return fields.map((column) => priceActionObject[column]);
 }
