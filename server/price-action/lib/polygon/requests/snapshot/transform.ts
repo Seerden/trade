@@ -1,12 +1,11 @@
+import { PriceActionRow } from "types/database.types";
 import { snapshotResponseKeyMap } from "../../constants/polygon-response-maps";
 import { OHLCFetchResponse } from "../../types/ohlc.types";
 import { SnapshotResult } from "../../types/results.types";
 
 // TODO: deal with types here. Consider doing something other than
 // acc[snapshotResponseKeyMap[key]] = result[key]
-export function snapshotToPriceAction({
-	results,
-}: OHLCFetchResponse): Array<unknown> {
+export function snapshotToPriceAction({ results }: OHLCFetchResponse) {
 	if (!results.length) return [];
 
 	const priceActionRows = results.map((result) =>
@@ -16,7 +15,7 @@ export function snapshotToPriceAction({
 			// @ts-ignore: Deal with this later.
 			acc[snapshotResponseKeyMap[key]] = result[key];
 			return acc;
-		}, {})
+		}, {} as PriceActionRow)
 	);
 
 	return priceActionRows;
