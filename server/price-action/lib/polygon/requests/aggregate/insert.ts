@@ -2,8 +2,8 @@
 
 import format from "pg-format";
 import { PriceActionRow } from "types/database.types";
+import { Timescale } from "types/store.types";
 import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
-import { Timescale } from "../../../../../types/store.types";
 import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
 import { timescaleToTableName } from "../../../get-table-name";
 import {
@@ -15,12 +15,7 @@ import { fetchTickerAggregate } from "./fetch";
 import { aggregateToPriceActionObjects } from "./transform";
 
 /**
- * Mapping object, maps a timespan like 'minute' to a timescale like '1m'.
- * TODO: could optionally extend this with converters, since 'hour' can be
- * represented by '1h', but of course also by '60m' and '3600s'. Since the
- * current only use-case for this mapping is to get a param for a polygon
- * request, there's no need to worry about this right now, though.
- */
+ /** Map a timespan like 'minute' to a timescale like '1m'. */
 const timespanToTimescaleMap: { [K in PermittedTimespan]: Timescale } = {
 	minute: "1m",
 	hour: "1h",
