@@ -15,13 +15,21 @@ export type PolygonTimespan =
 export type PermittedTimespan = "minute" | "hour" | "day";
 
 export type PolygonAggregateOptions = {
+	/** The ticker symbol of the stock/equity. */
 	ticker: string;
+	/** The size of the timespan multiplier. */
 	multiplier: number;
+	/** The size of the time window. */
 	timespan: PermittedTimespan;
+	/** The start of the aggregate time window. */
 	from: DateDayjsOrString;
+	/** The end of the aggregate time window. */
 	to: DateDayjsOrString;
+	/** Whether or not the results are adjusted for splits. By default, results are adjusted. Set this to false to get results that are NOT adjusted for splits.  */
 	adjusted?: boolean;
+	/** Sort the results by timestamp. asc will return results in ascending order (oldest at the top), desc will return results in descending order (newest at the top). */
 	sort?: "asc" | "desc";
+	/** Limits the number of base aggregates queried to create the aggregate results. Max 50000 and Default 5000. */
 	limit?: number;
 };
 
