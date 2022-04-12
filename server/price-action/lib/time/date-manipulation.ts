@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { DateDayjsOrString } from "../../../types/date.types";
-import { newYorkLocale } from "../constants/time-constants";
+import { newYorkLocale } from "../constants/time";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
