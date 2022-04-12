@@ -26,15 +26,22 @@ const timespanToTimescaleMap: { [K in PermittedTimespan]: Timescale } = {
 	day: "1d",
 };
 
+/**
+ * We re-use these columns in various places, and they always need to be in the
+ * same order.
+ * @todo should probably use a more specific variable name.
+ */
+const columnsString = "ticker, timestamp, open, close, high, low, volume";
+
+/**
+ * Take priceActionObjects (array of objects) and map to an array of arrays, for
+ * use with pg-format.
+ */
 export function priceActionObjectsToDatabaseRows(
 	priceActionObjects: ReturnType<typeof aggregateToPriceActionObjects>
 ) {
 	const rowsForDatabase = priceActionObjects.map((row) => {
-		/* make sure columns are in the same order as the columns in our query 
-            (see format() call in fetchAndInsertAggregate) */
-		const columns = "ticker, timestamp, open, close, high, low, volume".split(
-			", "
-		) as Array<OHLC>;
+		const columns = columnsString.split(", ") as Array<OHLC>;
 		return columns.map((column) => row[column]);
 	});
 
@@ -58,8 +65,9 @@ export async function insertAggregateIntoDatabase(
 	const timestampsInserted: Array<{ timestamp: string | number }> =
 		await PriceActionApiObject.query({
 			text: format(
-				"insert into %I (ticker, timestamp, open, close, high, low, volume) values %L returning (timestamp)",
+				"insert into %I %L values %L returning (timestamp)",
 				timescaleToTableName(timespan),
+				columnsString,
 				rowsForDatabase
 			),
 		});
@@ -76,39 +84,35 @@ export async function insertAggregateIntoDatabase(
 	return [];
 }
 
+type Options = {
+	timespan: PermittedTimespan;
+	ticker: string;
+	from: PolygonAggregateOptions["from"];
+	to: PolygonAggregateOptions["to"];
+};
+
 /**
  * - fetch price aggregate for a ticker
  * - insert OHLCV values into database
  * - add fetched date range to redis store
  */
-export async function fetchAndInsertAggregate({
-	timespan,
-	ticker,
-	from,
-	to,
-}: {
-	timespan: PermittedTimespan;
-	ticker: string;
-	from: PolygonAggregateOptions["from"];
-	to: PolygonAggregateOptions["to"];
-}) {
+export async function fetchAndInsertAggregate(options: Options) {
 	const rawResponse = await fetchTickerAggregate({
-		ticker,
-		from,
-		to,
-		timespan,
+		...options,
 		multiplier: 1,
 	});
-	// convert priceActionObjects to arrays for multi-insert with pg-promise
-	const rowsForDatabase = priceActionObjectsToDatabaseRows(
-		aggregateToPriceActionObjects(rawResponse)
-	);
+
+	const priceActionObjects = aggregateToPriceActionObjects(rawResponse);
+	const rowsForDatabase = priceActionObjectsToDatabaseRows(priceActionObjects);
+
+	const { ticker, timespan, from, to } = options;
 
 	const timestampsInserted: Array<{ timestamp: string | number }> =
 		await PriceActionApiObject.query({
 			text: format(
-				"insert into %I (ticker, timestamp, open, close, high, low, volume) values %L returning (timestamp)",
+				"insert into %I %L values %L returning (timestamp)",
 				timescaleToTableName(timespan),
+				columnsString,
 				rowsForDatabase
 			),
 		});
@@ -117,6 +121,8 @@ export async function fetchAndInsertAggregate({
 		return storeFetchedDateRange({
 			ticker,
 			timescale: timespanToTimescaleMap[timespan],
+			// TODO: I don't like how we're not uniformly using either {start, end}
+			// or {from, to}. Don't really care which one we use, but be consistent.
 			start: from,
 			end: to,
 		});
