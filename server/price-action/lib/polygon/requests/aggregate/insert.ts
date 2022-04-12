@@ -7,8 +7,8 @@ import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
 import { PermittedTimespan, timescaleToTableName } from "../../../get-table-name";
 import { PolygonAggregateOptions } from "../../types/aggregate.types";
 import { OHLC } from "../../types/ohlc.types";
-import { aggregateToPriceActionObjects } from "./aggregate-to-rows";
 import { fetchTickerAggregate } from "./fetch";
+import { aggregateToPriceActionObjects } from "./transform";
 
 /**
  * Map a timespan like 'minute' to a timescale/interval like '1m'
