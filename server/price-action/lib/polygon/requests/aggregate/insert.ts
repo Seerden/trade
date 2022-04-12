@@ -32,6 +32,7 @@ const timespanToTimescaleMap: { [K in PermittedTimespan]: Timescale } = {
  * @todo should probably use a more specific variable name.
  */
 const columnsString = "ticker, timestamp, open, close, high, low, volume";
+const columns = columnsString.split(", ") as Array<OHLC>;
 
 /**
  * Take priceActionObjects (array of objects) and map to an array of arrays, for
@@ -40,10 +41,9 @@ const columnsString = "ticker, timestamp, open, close, high, low, volume";
 export function priceActionObjectsToDatabaseRows(
 	priceActionObjects: ReturnType<typeof aggregateToPriceActionObjects>
 ) {
-	const rowsForDatabase = priceActionObjects.map((row) => {
-		const columns = columnsString.split(", ") as Array<OHLC>;
-		return columns.map((column) => row[column]);
-	});
+	const rowsForDatabase = priceActionObjects.map((row) =>
+		columns.map((column) => row[column])
+	);
 
 	return rowsForDatabase;
 }
@@ -65,7 +65,7 @@ export async function insertAggregateIntoDatabase(
 	const timestampsInserted: Array<{ timestamp: string | number }> =
 		await PriceActionApiObject.query({
 			text: format(
-				"insert into %I %L values %L returning (timestamp)",
+				"insert into %I (%s) values %L returning (timestamp)",
 				timescaleToTableName(timespan),
 				columnsString,
 				rowsForDatabase
@@ -107,14 +107,16 @@ export async function fetchAndInsertAggregate(options: Options) {
 
 	const { ticker, timespan, from, to } = options;
 
+	const text = format(
+		"insert into %I (%s) values %L returning (timestamp)",
+		timescaleToTableName(timespan),
+		columnsString,
+		rowsForDatabase
+	);
+
 	const timestampsInserted: Array<{ timestamp: string | number }> =
 		await PriceActionApiObject.query({
-			text: format(
-				"insert into %I %L values %L returning (timestamp)",
-				timescaleToTableName(timespan),
-				columnsString,
-				rowsForDatabase
-			),
+			text,
 		});
 
 	if (timestampsInserted.length) {
