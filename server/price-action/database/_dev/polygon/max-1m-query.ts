@@ -1,6 +1,6 @@
 import { DateDayjsOrString } from "../../../../types/date.types";
-import { fetchAndInsertAggregate } from "../../../lib/polygon/requests/aggregate/aggregate-insert";
 import { fetchTickerAggregate } from "../../../lib/polygon/requests/aggregate/fetch";
+import { fetchAndInsertAggregate } from "../../../lib/polygon/requests/aggregate/insert";
 import { nMarketDayRange } from "../../../lib/time/market-day-range";
 
 const maxDaysPerQuery = Math.floor(50_000 / (16 * 60));
