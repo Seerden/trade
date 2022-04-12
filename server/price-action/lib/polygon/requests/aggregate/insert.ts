@@ -1,7 +1,7 @@
 /* Insert a number of PriceActionRow objects into the database */
 
+import { objectToArray } from "helpers/object-to-array";
 import format from "pg-format";
-import { PriceActionRow } from "types/database.types";
 import { Timescale } from "types/store.types";
 import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
 import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
@@ -26,11 +26,6 @@ const timespanToTimescaleMap: { [K in PermittedTimespan]: Timescale } = {
 const fieldsString = "ticker, timestamp, open, close, high, low, volume";
 const fields = fieldsString.split(", ") as Array<OHLC>;
 
-/** Map a priceActionObject to an array, for use with pg-format */
-function priceActionObjectToArray(priceActionObject: PriceActionRow) {
-	return fields.map((column) => priceActionObject[column]);
-}
-
 type InsertOptions = Pick<
 	PolygonAggregateOptions,
 	"ticker" | "from" | "to" | "timespan"
@@ -41,8 +36,8 @@ type InsertOptions = Pick<
  * aggregateToPriceActionObjects, but could also be a manually constructed array),
  * and save the rows to table price_action_<1m|1h|1d>
  */
-export async function insertAggregate(
-	rowsForDatabase: ReturnType<typeof priceActionObjectToArray>[],
+export async function insertAggregate<T>(
+	rowsForDatabase: T,
 	{ ticker, from, to, timespan }: InsertOptions
 ) {
 	const text = format(
@@ -86,14 +81,13 @@ export async function fetchAndInsertAggregate(options: Options) {
 		multiplier: 1,
 	});
 
-	const priceActionObjects = aggregateToPriceActionObjects(rawResponse);
-	const rowsForDatabase = priceActionObjects.map((object) =>
-		priceActionObjectToArray(object)
+	const priceActionArrays = aggregateToPriceActionObjects(rawResponse).map(
+		(object) => objectToArray(object, fields)
 	);
 
 	const { ticker, timespan, from, to } = options;
 
-	const response = await insertAggregate(rowsForDatabase, {
+	const response = await insertAggregate(priceActionArrays, {
 		ticker,
 		from,
 		to,
