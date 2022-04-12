@@ -11,8 +11,8 @@ import {
 	fetchAndInsertMaxOneMinuteData,
 	fetchMaxOneMinuteData,
 } from "../../price-action/database/_dev/polygon/max-1m-query";
-import { fetchDailyOHLC } from "../../price-action/lib/polygon/requests/snapshot/snapshot-fetch";
-import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/snapshot-insert";
+import { fetchDailyOHLC } from "../../price-action/lib/polygon/requests/snapshot/fetch";
+import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
 import { getTradesWithTickets } from "../database/queries/trades/get";
 import { getTradeDetails } from "../helpers/trades/trade-meta";
 
