@@ -4,24 +4,27 @@ import format from "pg-format";
 import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
 import { Timescale } from "../../../../../types/store.types";
 import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
-import { PermittedTimespan, timescaleToTableName } from "../../../get-table-name";
+import {
+	PermittedTimespan,
+	timescaleToTableName,
+} from "../../../get-table-name";
 import { PolygonAggregateOptions } from "../../types/aggregate.types";
 import { OHLC } from "../../types/ohlc.types";
 import { fetchTickerAggregate } from "./fetch";
 import { aggregateToPriceActionObjects } from "./transform";
 
 /**
- * Map a timespan like 'minute' to a timescale/interval like '1m'
+ * Mapping object, maps a timespan like 'minute' to a timescale like '1m'.
+ * TODO: could optionally extend this with converters, since 'hour' can be
+ * represented by '1h', but of course also by '60m' and '3600s'. Since the
+ * current only use-case for this mapping is to get a param for a polygon
+ * request, there's no need to worry about this right now, though.
  */
-function timespanToTimescale(timespan: PermittedTimespan): Timescale {
-	const mapping: { [K in PermittedTimespan]: Timescale } = {
-		minute: "1m",
-		hour: "1h",
-		day: "1d",
-	};
-
-	return mapping[timespan];
-}
+const timespanToTimescaleMap: { [K in PermittedTimespan]: Timescale } = {
+	minute: "1m",
+	hour: "1h",
+	day: "1d",
+};
 
 export function priceActionObjectsToDatabaseRows(
 	priceActionObjects: ReturnType<typeof aggregateToPriceActionObjects>
@@ -64,7 +67,7 @@ export async function insertAggregateIntoDatabase(
 	if (timestampsInserted.length) {
 		return storeFetchedDateRange({
 			ticker,
-			timescale: timespanToTimescale(timespan),
+			timescale: timespanToTimescaleMap[timespan],
 			start: from,
 			end: to,
 		});
@@ -113,7 +116,7 @@ export async function fetchAndInsertAggregate({
 	if (timestampsInserted.length) {
 		return storeFetchedDateRange({
 			ticker,
-			timescale: timespanToTimescale(timespan),
+			timescale: timespanToTimescaleMap[timespan],
 			start: from,
 			end: to,
 		});
