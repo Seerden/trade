@@ -8,16 +8,6 @@ import {
 import { PolygonAggregateResponse } from "../../types/aggregate.types";
 import { PolygonAggregateResult } from "../../types/results.types";
 
-/**
- * Check, key-by-key, whether a polygon /aggregate response has the shape we expect it to have
- * @todo move this somewhere else, like a /validation folder
- */
-export function isValidResponse(response: PolygonAggregateResponse): boolean {
-	/* @todo: write functionality to verify that we receive a response shape from poly API,
-        in case they ever decide to change their API responses */
-	return response && true;
-}
-
 /** Take a price action row and set its ticker property to an uppercase ticker. */
 function withTicker(row: PriceActionRow, ticker: string) {
 	if (row.ticker) return row;
@@ -55,8 +45,6 @@ function mapAggregateResultToPriceAction(
 export function aggregateToPriceActionObjects(
 	response: PolygonAggregateResponse
 ): Array<PriceActionRow> {
-	if (!isValidResponse(response)) return [];
-
 	const { results, ticker } = response;
 	return results.map((result) =>
 		mapAggregateResultToPriceAction(result, ticker)
