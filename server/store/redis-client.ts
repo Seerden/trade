@@ -3,7 +3,8 @@ import session from "express-session";
 import { createClient } from "redis";
 
 export const redisClient = createClient({
-	url: "redis://store:6379", // note that `store` is the name we give to the redis service in docker-compose.yml
+	// `store` needs to match the name of our Docker Redis service
+	url: "redis://store:6379",
 });
 
 export const RedisStore = connectRedis(session);
@@ -14,7 +15,7 @@ export const redisSession: session.SessionOptions = {
 	secret: process.env.SESSION_SECRET,
 	resave: false,
 	cookie: {
-		maxAge: 7 * 24 * 3600 * 1000, // max age is a week by default
+		maxAge: 7 * 24 * 3600 * 1000, // One week.
 		secure: process.env.NODE_ENV === "production",
 	},
 };
@@ -22,9 +23,14 @@ export const redisSession: session.SessionOptions = {
 export async function startRedis() {
 	try {
 		await redisClient.connect();
-		redisClient.on("connected", () => console.log("connected"));
+		redisClient.on("connected", () =>
+			console.log("Successfully connected to Redis client")
+		);
 		redisClient.on("error", (e) => console.log(e));
 	} catch (error) {
-		console.log({ message: "Error connecting to redis client", error });
+		console.log({
+			message: "Error while trying to connect to Redis client",
+			error,
+		});
 	}
 }
