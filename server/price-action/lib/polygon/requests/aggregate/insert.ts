@@ -1,6 +1,7 @@
 /* Insert a number of PriceActionRow objects into the database */
 
 import format from "pg-format";
+import { PriceActionRow } from "types/database.types";
 import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
 import { Timescale } from "../../../../../types/store.types";
 import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
@@ -31,57 +32,52 @@ const timespanToTimescaleMap: { [K in PermittedTimespan]: Timescale } = {
  * same order.
  * @todo should probably use a more specific variable name.
  */
-const columnsString = "ticker, timestamp, open, close, high, low, volume";
-const columns = columnsString.split(", ") as Array<OHLC>;
+const fieldsString = "ticker, timestamp, open, close, high, low, volume";
+const fields = fieldsString.split(", ") as Array<OHLC>;
 
 /**
  * Take priceActionObjects (array of objects) and map to an array of arrays, for
  * use with pg-format.
  */
-export function priceActionObjectsToDatabaseRows(
-	priceActionObjects: ReturnType<typeof aggregateToPriceActionObjects>
-) {
-	const rowsForDatabase = priceActionObjects.map((row) =>
-		columns.map((column) => row[column])
-	);
-
-	return rowsForDatabase;
+function priceActionObjectToArray(priceActionObject: PriceActionRow) {
+	return fields.map((column) => priceActionObject[column]);
 }
 
-type InsertArgs = {
-	rowsForDatabase: ReturnType<typeof aggregateToPriceActionObjects>;
-	options: Pick<PolygonAggregateOptions, "ticker" | "from" | "to" | "timespan">;
-};
+type InsertOptions = Pick<
+	PolygonAggregateOptions,
+	"ticker" | "from" | "to" | "timespan"
+>;
 
 /**
  * Take an array of aggregate rows (presumably parsed from an aggregate fetch using
  * aggregateToPriceActionObjects, but could also be a manually constructed array),
  * and save the rows to table price_action_<1m|1h|1d>
  */
-export async function insertAggregateIntoDatabase(
-	rowsForDatabase: InsertArgs["rowsForDatabase"],
-	{ ticker, from, to, timespan }: InsertArgs["options"]
+export async function insertAggregate(
+	rowsForDatabase: ReturnType<typeof priceActionObjectToArray>[],
+	{ ticker, from, to, timespan }: InsertOptions
 ) {
-	const timestampsInserted: Array<{ timestamp: string | number }> =
-		await PriceActionApiObject.query({
-			text: format(
-				"insert into %I (%s) values %L returning (timestamp)",
-				timescaleToTableName(timespan),
-				columnsString,
-				rowsForDatabase
-			),
-		});
+	const text = format(
+		"insert into %I (%s) values %L returning (timestamp)",
+		timescaleToTableName(timespan),
+		fieldsString,
+		rowsForDatabase
+	);
 
-	if (timestampsInserted.length) {
-		return storeFetchedDateRange({
-			ticker,
-			timescale: timespanToTimescaleMap[timespan],
-			start: from,
-			end: to,
-		});
+	const timestampsInserted: string[] = await PriceActionApiObject.query({
+		text,
+	});
+
+	if (!timestampsInserted.length) {
+		return [];
 	}
 
-	return [];
+	return storeFetchedDateRange({
+		ticker,
+		timescale: timespanToTimescaleMap[timespan],
+		start: from,
+		end: to,
+	});
 }
 
 type Options = {
@@ -103,32 +99,18 @@ export async function fetchAndInsertAggregate(options: Options) {
 	});
 
 	const priceActionObjects = aggregateToPriceActionObjects(rawResponse);
-	const rowsForDatabase = priceActionObjectsToDatabaseRows(priceActionObjects);
+	const rowsForDatabase = priceActionObjects.map((object) =>
+		priceActionObjectToArray(object)
+	);
 
 	const { ticker, timespan, from, to } = options;
 
-	const text = format(
-		"insert into %I (%s) values %L returning (timestamp)",
-		timescaleToTableName(timespan),
-		columnsString,
-		rowsForDatabase
-	);
+	const response = await insertAggregate(rowsForDatabase, {
+		ticker,
+		from,
+		to,
+		timespan,
+	});
 
-	const timestampsInserted: Array<{ timestamp: string | number }> =
-		await PriceActionApiObject.query({
-			text,
-		});
-
-	if (timestampsInserted.length) {
-		return storeFetchedDateRange({
-			ticker,
-			timescale: timespanToTimescaleMap[timespan],
-			// TODO: I don't like how we're not uniformly using either {start, end}
-			// or {from, to}. Don't really care which one we use, but be consistent.
-			start: from,
-			end: to,
-		});
-	}
-
-	return [];
+	return response;
 }
