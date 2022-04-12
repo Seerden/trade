@@ -6,17 +6,26 @@ import { DateDayjsOrString } from "../../../../../types/date.types";
 import { fetchDailyOHLC } from "./fetch";
 import { snapshotToPriceAction } from "./transform";
 
+// TODO: these can be in a /constants file - just make sure to refine variable
+// names first.
+const fieldsString = "ticker, timestamp, open, close, high, low, volume";
+const fields = fieldsString.split(", ") as Array<keyof PriceActionRow>;
+
+/**
+ * Fetch daily OHLCV snapshot for all tickers, convert the response to priceAction
+ * rows, then insert these rows into our database.
+ */
 export async function fetchAndInsertSnapshot({
 	date,
 }: {
 	date: DateDayjsOrString;
 }) {
 	const rawResponse = await fetchDailyOHLC({ date });
+
 	const priceActionObjects = snapshotToPriceAction(rawResponse);
+
 	if (!priceActionObjects.length) return;
 
-	const fieldsString = "ticker, timestamp, open, close, high, low, volume";
-	const fields = fieldsString.split(", ") as Array<keyof PriceActionRow>;
 	const priceActionObjectsAsArrays = priceActionObjects.map((object) =>
 		objectToArray(object, fields)
 	);
@@ -27,7 +36,5 @@ export async function fetchAndInsertSnapshot({
 		priceActionObjectsAsArrays
 	);
 
-	return PriceActionApiObject.query({
-		text,
-	}) as unknown;
+	return PriceActionApiObject.query({ text });
 }
