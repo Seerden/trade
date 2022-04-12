@@ -93,18 +93,25 @@ async function main() {
 	 * and let the client handle what to do next (e.g. retry a few times, force
 	 * the user to log in again, etc).
 	 */
-	app.use((err: Error, req: Request, res: Response, next?: (args?: any) => unknown) => {
-		if (err) {
-			req.session = null;
-			req.logout();
+	app.use(
+		(
+			err: Error,
+			req: Request,
+			res: Response,
+			next?: (args?: any) => unknown
+		) => {
+			if (err) {
+				req.session = null;
+				req.logout();
 
-			// if (next) {
-			// 	next();
-			// } else {
-			res.json({ error: err });
-			// }
+				// if (next) {
+				// 	next();
+				// } else {
+				res.json({ error: err });
+				// }
+			}
 		}
-	});
+	);
 }
 
 main().catch((e) => console.error(e));
