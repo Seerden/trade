@@ -5,8 +5,7 @@ config();
 
 const { POLYGON_KEY } = process.env;
 
-// Axios instance with authentication header bearer token and api.polygon.io
-// baseUrl.
+/** Axios instance with Polygon baseUrl and auth header. */
 export const axiosPolygon = axios.create({
 	baseURL: "https://api.polygon.io",
 	headers: {
