@@ -14,7 +14,7 @@ async function getSnapshotDates() {
  * date.
  */
 async function isSavedSnapshotDate(date: DateDayjsOrString) {
-	await redisClient.sIsMember(redisSnapshotDatesKey, formatYMD(date));
+	return await redisClient.sIsMember(redisSnapshotDatesKey, formatYMD(date));
 }
 
 /**
@@ -34,9 +34,15 @@ async function removeSnapshotDate(date: DateDayjsOrString) {
 	await redisClient.sRem(redisSnapshotDatesKey, formatYMD(date));
 }
 
+/** Redis: delete entire `snapshot:dates` set. */
+async function removeAllSnapshotDates() {
+	await redisClient.del(redisSnapshotDatesKey);
+}
+
 export const snapshotStore = {
 	get: getSnapshotDates,
 	exists: isSavedSnapshotDate,
 	add: addSnapshotDate,
 	remove: removeSnapshotDate,
+	__DELETE: removeAllSnapshotDates,
 };
