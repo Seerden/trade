@@ -26,7 +26,7 @@ async function insertSnapshot(priceActionObjects: PriceActionRow[]) {
 		`with inserted_rows as (
          insert into price_action_1d (%s) values %L returning timestamp
       ) 
-      select jsonb_agg(distinct timestamp) timestamps 
+      select distinct timestamp
       from inserted_rows
       limit 10
       `,
@@ -34,8 +34,8 @@ async function insertSnapshot(priceActionObjects: PriceActionRow[]) {
 		priceActionArrays
 	);
 
-	const [{ timestamps }] = await PriceActionApiObject.query({ text });
-	return timestamps;
+	const response = await PriceActionApiObject.query({ text });
+	return response;
 }
 
 /**
