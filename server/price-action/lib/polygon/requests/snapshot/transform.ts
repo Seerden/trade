@@ -5,7 +5,7 @@ import { SnapshotResult } from "../../types/results.types";
 import { valueof } from "../aggregate/transform";
 
 export function snapshotToPriceAction({ results }: OHLCFetchResponse) {
-	if (!results.length) return [];
+	if (!results?.length) return [];
 
 	const priceActionRows = results.map((result) =>
 		Object.keys(result).reduce(

@@ -23,13 +23,19 @@ async function insertSnapshot(priceActionObjects: PriceActionRow[]) {
 	);
 
 	const text = format(
-		"insert into price_action_1d (%s) values %L returning timestamp",
+		`with inserted_rows as (
+         insert into price_action_1d (%s) values %L returning timestamp
+      ) 
+      select jsonb_agg(distinct timestamp) timestamps 
+      from inserted_rows
+      limit 10
+      `,
 		priceActionFieldsString,
 		priceActionArrays
 	);
 
-	const queryResponse = await PriceActionApiObject.query({ text });
-	return queryResponse;
+	const [{ timestamps }] = await PriceActionApiObject.query({ text });
+	return timestamps;
 }
 
 /**
@@ -38,12 +44,19 @@ async function insertSnapshot(priceActionObjects: PriceActionRow[]) {
  */
 export async function fetchAndInsertSnapshot(date: DateDayjsOrString) {
 	// Check if snapshot was already fetched previously.
-	if (snapshotStore.exists(date)) return;
+	if (await snapshotStore.exists(date)) return;
 
 	const rawResponse = await fetchSnapshot({ date });
 
 	const priceActionObjects = snapshotToPriceAction(rawResponse);
 	if (!priceActionObjects.length) return;
 
-	return await insertSnapshot(priceActionObjects);
+	const timestamps = await insertSnapshot(priceActionObjects);
+
+	if (timestamps) {
+		await snapshotStore.add(date);
+		return timestamps;
+	}
+
+	return "Failed to add to snapshotStore";
 }

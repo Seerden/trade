@@ -13,6 +13,7 @@ import {
 } from "../../price-action/database/_dev/polygon/max-1m-query";
 import { fetchSnapshot } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
+import { snapshotStore } from "../../price-action/store/snapshot-dates";
 import { getTradesWithTickets } from "../database/queries/trades/get";
 import { getTradeDetails } from "../helpers/trades/trade-meta";
 
@@ -71,7 +72,9 @@ devRouter.get("/:ticker/1m/:from/:to", async (req, res) => {
  */
 devRouter.post("/snapshot/:date", async (req, res) => {
 	const { date } = req.params;
-	res.json({ timestamp: await fetchAndInsertSnapshot(date) });
+
+	const timestamp = await fetchAndInsertSnapshot(date);
+	res.json({ timestamp });
 });
 
 /**
@@ -134,4 +137,15 @@ devRouter.get("/snapshot/raw", async (req, res) => {
 	const response = await fetchSnapshot({ date: "2022-04-12" });
 
 	res.json({ response });
+});
+
+devRouter.get("/snapshot/saved/dates", async (req, res) => {
+	const dates = await snapshotStore.get();
+
+	res.json({ dates });
+});
+
+devRouter.post("/snapshot/reset", async (req, res) => {
+	// delete redis set `snapshot:dates`
+	// remove all rows from price_action_1d
 });
