@@ -19,11 +19,9 @@ export const redisSession: session.SessionOptions = {
 
 export async function startRedis() {
 	try {
-		await redisClient.connect();
-		redisClient.on("connected", () =>
-			console.log("Successfully connected to Redis client")
-		);
-		redisClient.on("error", (e) => console.log(e));
+		if ((await redisClient.ping()) !== "PONG") {
+			await redisClient.connect();
+		}
 	} catch (error) {
 		console.log({
 			message: "Error while trying to connect to Redis client",
