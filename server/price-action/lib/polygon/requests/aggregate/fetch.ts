@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import { formatYMD } from "../../../time/format-YMD";
 import { axiosPolygon } from "../../axios-instance";
 import {
 	PolygonAggregateOptions,
@@ -18,9 +18,7 @@ export async function fetchTickerAggregate({
 	sort = "asc",
 	limit = 50000,
 }: PolygonAggregateOptions) {
-	const [fromString, toString] = [from, to].map((date) =>
-		dayjs(date).format("YYYY-MM-DD")
-	);
+	const [fromString, toString] = [from, to].map((date) => formatYMD(date));
 	const url = `/v2/aggs/ticker/${ticker.toUpperCase()}/range/${multiplier}/${timespan}/${fromString}/${toString}`;
 	const { data } = await axiosPolygon.get<PolygonAggregateResponse>(url, {
 		params: { limit, sort },

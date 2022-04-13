@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import { formatYMD } from "../../../time/format-YMD";
 import { axiosPolygon } from "../../axios-instance";
 import { OHLCFetchOptions, OHLCFetchResponse } from "../../types/ohlc.types";
 
@@ -10,7 +10,7 @@ import { OHLCFetchOptions, OHLCFetchResponse } from "../../types/ohlc.types";
  * to first check if snapshot already exists.
  */
 export async function fetchSnapshot({ date, adjusted }: OHLCFetchOptions) {
-	const formattedDate = dayjs(date).format("YYYY-MM-DD");
+	const formattedDate = formatYMD(date);
 	const url = `/v2/aggs/grouped/locale/us/market/stocks/${formattedDate}`;
 	const { data } = await axiosPolygon.get<OHLCFetchResponse>(url);
 	return data;
