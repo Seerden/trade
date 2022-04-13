@@ -1,13 +1,9 @@
 import connectRedis from "connect-redis";
 import session from "express-session";
-import { createClient } from "redis";
+import Redis from "ioredis";
 
-export const redisClient = createClient({
-	// `store` needs to match the name of our Docker Redis service
-	url: "redis://store:6379",
-	legacyMode: !!process.env.LEGACY_REDIS,
-});
-
+// `store` needs to match the name of our Docker Redis service
+export const redisClient = new Redis("redis://store:6379");
 export const RedisStore = connectRedis(session);
 
 export const redisSession: session.SessionOptions = {

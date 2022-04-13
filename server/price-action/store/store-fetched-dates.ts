@@ -16,21 +16,21 @@ import type { Timescale } from "../../types/store.types";
  * @returns all values in the redis list that we pushed the just-fetched range to.
  */
 export async function storeFetchedDateRange({
-    ticker,
-    timescale,
-    start,
-    end,
+	ticker,
+	timescale,
+	start,
+	end,
 }: {
-    ticker: string;
-    timescale: Timescale;
-    start: DateDayjsOrString;
-    end: DateDayjsOrString;
+	ticker: string;
+	timescale: Timescale;
+	start: DateDayjsOrString;
+	end: DateDayjsOrString;
 }) {
-    const [startString, endString] = [start, end].map((date) =>
-        dayjs(date).format("YYYY-MM-DD")
-    );
-    const startEndString = `${startString},${endString}`;
-    const storeKey = `ranges:${timescale}:${ticker.toUpperCase()}`;
-    await redisClient.rPush(storeKey, startEndString);
-    return await redisClient.lRange(storeKey, 0, -1);
+	const [startString, endString] = [start, end].map((date) =>
+		dayjs(date).format("YYYY-MM-DD")
+	);
+	const startEndString = `${startString},${endString}`;
+	const storeKey = `ranges:${timescale}:${ticker.toUpperCase()}`;
+	await redisClient.rpush(storeKey, startEndString);
+	return await redisClient.lrange(storeKey, 0, -1);
 }

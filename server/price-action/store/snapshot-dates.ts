@@ -6,7 +6,7 @@ const redisSnapshotDatesKey = "snapshot:dates";
 
 /** Redis: get list of dates for which Polygon snapshots have already been saved. */
 async function getSnapshotDates() {
-	return await redisClient.sMembers(redisSnapshotDatesKey);
+	return await redisClient.smembers(redisSnapshotDatesKey);
 }
 
 /**
@@ -14,7 +14,7 @@ async function getSnapshotDates() {
  * date.
  */
 async function isSavedSnapshotDate(date: DateDayjsOrString) {
-	return await redisClient.sIsMember(redisSnapshotDatesKey, formatYMD(date));
+	return await redisClient.sismember(redisSnapshotDatesKey, formatYMD(date));
 }
 
 /**
@@ -23,7 +23,7 @@ async function isSavedSnapshotDate(date: DateDayjsOrString) {
  * successfully.
  * */
 async function addSnapshotDate(date: DateDayjsOrString) {
-	await redisClient.sAdd(redisSnapshotDatesKey, formatYMD(date));
+	await redisClient.sadd(redisSnapshotDatesKey, formatYMD(date));
 }
 
 /**
@@ -31,7 +31,7 @@ async function addSnapshotDate(date: DateDayjsOrString) {
  * @returns 0 if date wasn't in the set, 1 if date was successfully removed.
  */
 async function removeSnapshotDate(date: DateDayjsOrString) {
-	await redisClient.sRem(redisSnapshotDatesKey, formatYMD(date));
+	await redisClient.srem(redisSnapshotDatesKey, formatYMD(date));
 }
 
 /** Redis: delete entire `snapshot:dates` set. */
