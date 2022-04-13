@@ -6,7 +6,6 @@
  * get rate limited
  */
 export async function delay(msDelay: number) {
-    return new Promise((resolve, reject) => {
-        return setTimeout(resolve, msDelay);
-    });
+	// eslint-disable-next-line no-promise-executor-return
+	return new Promise((resolve, reject) => setTimeout(resolve, msDelay));
 }
