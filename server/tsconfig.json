@@ -16,8 +16,8 @@
 		"types": ["jest", "node"],
 		"baseUrl": ".",
 		"paths": {
-			"helpers/*": ["./helpers/*"],
-			"types/*": ["./types/*"]
+			"@helpers/*": ["helpers/*"],
+			"@types/*": ["types/*"]
 		}
 	},
 	"ts-node": { "files": true },
