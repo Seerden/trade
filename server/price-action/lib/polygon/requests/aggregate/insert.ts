@@ -7,10 +7,13 @@ import { objectToArray } from "../../../../../helpers/object-to-array";
 import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
 import { timescaleToTableName } from "../../../get-table-name";
 import {
+	aggregateFields,
+	aggregateFieldsString,
+} from "../../constants/aggregate";
+import {
 	PermittedTimespan,
 	PolygonAggregateOptions,
 } from "../../types/aggregate.types";
-import { OHLC } from "../../types/ohlc.types";
 import { fetchTickerAggregate } from "./fetch";
 import { aggregateToPriceActionObjects } from "./transform";
 
@@ -21,10 +24,6 @@ const timespanToTimescaleMap: { [K in PermittedTimespan]: Timescale } = {
 	hour: "1h",
 	day: "1d",
 };
-
-/** Use a fields variable so that we know they're always in the right order. */
-const fieldsString = "ticker, timestamp, open, close, high, low, volume";
-const fields = fieldsString.split(", ") as Array<OHLC>;
 
 type InsertOptions = Pick<
 	PolygonAggregateOptions,
@@ -43,7 +42,7 @@ export async function insertAggregate<T>(
 	const text = format(
 		"insert into %I (%s) values %L returning (timestamp)",
 		timescaleToTableName(timespan),
-		fieldsString,
+		aggregateFieldsString,
 		rowsForDatabase
 	);
 
@@ -82,7 +81,7 @@ export async function fetchAndInsertAggregate(options: Options) {
 	});
 
 	const priceActionArrays = aggregateToPriceActionObjects(rawResponse).map(
-		(object) => objectToArray(object, fields)
+		(object) => objectToArray(object, aggregateFields)
 	);
 
 	const { ticker, timespan, from, to } = options;
