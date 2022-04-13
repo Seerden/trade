@@ -3,6 +3,7 @@ import { PriceActionRow } from "types/database.types";
 import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
 import { objectToArray } from "../../../../../helpers/object-to-array";
 import { DateDayjsOrString } from "../../../../../types/date.types";
+import { snapshotStore } from "../../../../store/snapshot-dates";
 import {
 	priceActionFields,
 	priceActionFieldsString,
@@ -36,6 +37,9 @@ async function insertSnapshot(priceActionObjects: PriceActionRow[]) {
  * rows, then insert these rows into our database.
  */
 export async function fetchAndInsertSnapshot(date: DateDayjsOrString) {
+	// Check if snapshot was already fetched previously.
+	if (snapshotStore.exists(date)) return;
+
 	const rawResponse = await fetchSnapshot({ date });
 
 	const priceActionObjects = snapshotToPriceAction(rawResponse);
