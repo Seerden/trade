@@ -16,7 +16,7 @@ import { snapshotToPriceAction } from "./transform";
  * @param priceActionObjects this is the return from `snapshotToPriceAction()`
  */
 async function insertSnapshot(priceActionObjects: PriceActionRow[]) {
-	if (!priceActionObjects.length) return;
+	if (!priceActionObjects?.length) return;
 
 	const priceActionArrays = priceActionObjects.map((object) =>
 		objectToArray(object, priceActionFields)
