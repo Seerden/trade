@@ -13,6 +13,7 @@ import {
 } from "../../price-action/database/_dev/polygon/max-1m-query";
 import { fetchSnapshot } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
+import { rateLimit } from "../../price-action/store/rate-limit";
 import { snapshotStore } from "../../price-action/store/snapshot-dates";
 import { getTradesWithTickets } from "../database/queries/trades/get";
 import { getTradeDetails } from "../helpers/trades/trade-meta";
@@ -148,4 +149,12 @@ devRouter.get("/snapshot/saved/dates", async (req, res) => {
 devRouter.post("/snapshot/reset", async (req, res) => {
 	// delete redis set `snapshot:dates`
 	// remove all rows from price_action_1d
+});
+
+devRouter.get("/rate-test", async (req, res) => {
+	const countStart = await rateLimit.getRequestCount();
+	await rateLimit.incrementRequestCount();
+	const countEnd = await rateLimit.getRequestCount();
+
+	res.json({ countStart, countEnd });
 });
