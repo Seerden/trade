@@ -1,4 +1,5 @@
 import { redisClient } from "../../store/redis-client";
+import { delay } from "../lib/wait";
 
 const requestCountKey = "request-count";
 
@@ -22,3 +23,18 @@ export const rateLimit = {
 		return +count < 5;
 	},
 };
+
+export async function makePossiblyDeferredRequest(
+	delayMilliseconds: number,
+	callback: (args?: unknown) => unknown
+) {
+	const isAllowed = await rateLimit.isWithinRateLimit();
+
+	if (!isAllowed) {
+		await delay(delayMilliseconds);
+	}
+
+	// `callback` can be an async function, but return await doesn't do anything
+	// anyway, so don't await it, for once.
+	return callback();
+}
