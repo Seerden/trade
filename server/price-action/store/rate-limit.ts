@@ -17,4 +17,8 @@ async function incrementRequestCount() {
 export const rateLimit = {
 	getRequestCount,
 	incrementRequestCount,
+	async isWithinRateLimit() {
+		const count = await getRequestCount();
+		return +count < 5;
+	},
 };

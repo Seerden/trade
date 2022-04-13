@@ -156,5 +156,9 @@ devRouter.get("/rate-test", async (req, res) => {
 	await rateLimit.incrementRequestCount();
 	const countEnd = await rateLimit.getRequestCount();
 
-	res.json({ countStart, countEnd });
+	res.json({
+		countStart,
+		countEnd,
+		canMakeRequest: await rateLimit.isWithinRateLimit(),
+	});
 });
