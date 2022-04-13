@@ -1,21 +1,27 @@
 import { PriceActionRow } from "types/database.types";
-import { snapshotResponseKeyMap } from "../../constants/polygon-response-maps";
+import { snapshotResponseKeyMap as keyMap } from "../../constants/polygon-response-maps";
 import { OHLCFetchResponse } from "../../types/ohlc.types";
 import { SnapshotResult } from "../../types/results.types";
+import { valueof } from "../aggregate/transform";
 
-// TODO: deal with types here. Consider doing something other than
-// acc[snapshotResponseKeyMap[key]] = result[key]
 export function snapshotToPriceAction({ results }: OHLCFetchResponse) {
 	if (!results.length) return [];
 
 	const priceActionRows = results.map((result) =>
-		Object.keys(result).reduce((acc, key: keyof SnapshotResult) => {
-			if (!(key in snapshotResponseKeyMap)) return acc;
+		Object.keys(result).reduce(
+			(priceActionRow, oldKey: keyof SnapshotResult) => {
+				if (!(oldKey in keyMap)) return priceActionRow;
 
-			// @ts-ignore: Deal with this later.
-			acc[snapshotResponseKeyMap[key]] = result[key];
-			return acc;
-		}, {} as PriceActionRow)
+				const newKey: keyof PriceActionRow = keyMap[
+					oldKey
+				] as keyof PriceActionRow;
+
+				(priceActionRow[newKey] as valueof<PriceActionRow>) = result[oldKey];
+
+				return priceActionRow;
+			},
+			{} as PriceActionRow
+		)
 	);
 
 	return priceActionRows;
