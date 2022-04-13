@@ -1,9 +1,9 @@
 /* Insert a number of PriceActionRow objects into the database */
 
-import { objectToArray } from "helpers/object-to-array";
 import format from "pg-format";
 import { Timescale } from "types/store.types";
 import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
+import { objectToArray } from "../../../../../helpers/object-to-array";
 import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
 import { timescaleToTableName } from "../../../get-table-name";
 import {

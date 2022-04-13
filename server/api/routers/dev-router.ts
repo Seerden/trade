@@ -11,7 +11,7 @@ import {
 	fetchAndInsertMaxOneMinuteData,
 	fetchMaxOneMinuteData,
 } from "../../price-action/database/_dev/polygon/max-1m-query";
-import { fetchDailyOHLC } from "../../price-action/lib/polygon/requests/snapshot/fetch";
+import { fetchSnapshot } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
 import { getTradesWithTickets } from "../database/queries/trades/get";
 import { getTradeDetails } from "../helpers/trades/trade-meta";
@@ -26,7 +26,7 @@ dayjs.extend(timezone);
 export const devRouter = express.Router({ mergeParams: true });
 
 devRouter.get("/daily/all", async (req, res) => {
-	const response = await fetchDailyOHLC({ date: "2021-12-13" });
+	const response = await fetchSnapshot({ date: "2021-12-13" });
 	res.json({ response });
 });
 
@@ -46,7 +46,9 @@ devRouter.get("/:ticker/1m/max/:to", async (req, res) => {
 
 	const response = await fetchMaxOneMinuteData({ ticker, to });
 
-	res.json({ resultEndpoints: dev_firstAndLastMaxOneMinuteDataResultRow(response) });
+	res.json({
+		resultEndpoints: dev_firstAndLastMaxOneMinuteDataResultRow(response),
+	});
 });
 
 devRouter.get("/:ticker/1m/:from/:to", async (req, res) => {
@@ -69,7 +71,7 @@ devRouter.get("/:ticker/1m/:from/:to", async (req, res) => {
  */
 devRouter.post("/snapshot/:date", async (req, res) => {
 	const { date } = req.params;
-	res.json({ timestamp: await fetchAndInsertSnapshot({ date }) });
+	res.json({ timestamp: await fetchAndInsertSnapshot(date) });
 });
 
 /**
@@ -126,4 +128,10 @@ devRouter.get("/trades-with-tickets", async (req, res) => {
 	}));
 
 	res.json({ tradesWithMetadata });
+});
+
+devRouter.get("/snapshot/raw", async (req, res) => {
+	const response = await fetchSnapshot({ date: "2022-04-12" });
+
+	res.json({ response });
 });
