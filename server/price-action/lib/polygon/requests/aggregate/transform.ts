@@ -50,5 +50,3 @@ export function aggregateToPriceActionObjects(
 		mapAggregateResultToPriceAction(result, ticker)
 	);
 }
-
-export type valueof<T> = T[keyof T];
