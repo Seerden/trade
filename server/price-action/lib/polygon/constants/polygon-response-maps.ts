@@ -14,8 +14,13 @@ export const aggregateResponseKeyMap = {
 	vw: "vwap",
 };
 
-export const priceActionColumns = "close high low open timestamp volume".split(" ");
+export const priceActionColumns = "close high low open timestamp volume".split(
+	" "
+);
 
 // Snapshot response is similar to aggregate response, except there's an
 // additional relevant T field, which represents the ticker.
-export const snapshotResponseKeyMap = { T: "ticker", aggregateResponseKeyMap };
+export const snapshotResponseKeyMap = {
+	T: "ticker",
+	...aggregateResponseKeyMap,
+};
