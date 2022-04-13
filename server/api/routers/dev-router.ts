@@ -13,8 +13,12 @@ import {
 } from "../../price-action/database/_dev/polygon/max-1m-query";
 import { fetchSnapshot } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
-import { rateLimit } from "../../price-action/store/rate-limit";
+import {
+	makePossiblyDeferredRequest,
+	rateLimit,
+} from "../../price-action/store/rate-limit";
 import { snapshotStore } from "../../price-action/store/snapshot-dates";
+import { redisClient } from "../../store/redis-client";
 import { getTradesWithTickets } from "../database/queries/trades/get";
 import { getTradeDetails } from "../helpers/trades/trade-meta";
 
@@ -161,4 +165,13 @@ devRouter.get("/rate-test", async (req, res) => {
 		countEnd,
 		canMakeRequest: await rateLimit.isWithinRateLimit(),
 	});
+});
+
+devRouter.get("/defer", async (req, res) => {
+	const response = await makePossiblyDeferredRequest(
+		100,
+		async () => await redisClient.get("request-count")
+	);
+
+	res.json({ response });
 });
