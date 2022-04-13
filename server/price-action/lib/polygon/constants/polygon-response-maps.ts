@@ -18,8 +18,6 @@ export const aggregateResponseKeyMap = {
 	vw: "vwap",
 };
 
-// Snapshot response is similar to aggregate response, except there's an
-// additional relevant T field, which represents the ticker.
 export const snapshotResponseKeyMap = {
 	T: "ticker",
 	...aggregateResponseKeyMap,
