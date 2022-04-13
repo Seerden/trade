@@ -5,6 +5,7 @@ import { createClient } from "redis";
 export const redisClient = createClient({
 	// `store` needs to match the name of our Docker Redis service
 	url: "redis://store:6379",
+	legacyMode: !!process.env.LEGACY_REDIS,
 });
 
 export const RedisStore = connectRedis(session);
