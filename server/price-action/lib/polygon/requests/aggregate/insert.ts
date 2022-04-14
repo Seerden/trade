@@ -61,29 +61,33 @@ export async function insertAggregate<T>(
 	});
 }
 
-type Options = {
-	timespan: PermittedTimespan;
-	ticker: string;
-	from: PolygonAggregateOptions["from"];
-	to: PolygonAggregateOptions["to"];
-};
-
 /**
  * - fetch price aggregate for a ticker
  * - insert OHLCV values into database
  * - add fetched date range to redis store
  */
-export async function fetchAndInsertAggregate(options: Options) {
+export async function fetchAndInsertAggregate({
+	timespan,
+	ticker,
+	from,
+	to,
+}: {
+	timespan: PermittedTimespan;
+	ticker: string;
+	from: PolygonAggregateOptions["from"];
+	to: PolygonAggregateOptions["to"];
+}) {
 	const rawResponse = await fetchAggregateWithLimiter({
-		...options,
+		timespan,
+		ticker,
+		from,
+		to,
 		multiplier: 1,
 	});
 
 	const priceActionArrays = aggregateToPriceActionObjects(rawResponse).map(
 		(object) => objectToArray(object, aggregateFields)
 	);
-
-	const { ticker, timespan, from, to } = options;
 
 	const response = await insertAggregate(priceActionArrays, {
 		ticker,
