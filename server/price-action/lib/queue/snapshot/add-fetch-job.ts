@@ -1,6 +1,6 @@
 import { DateDayjsOrString } from "../../../../types/date.types";
 import { formatYMD } from "../../time/format-YMD";
-import { polygonQueue, snapshotFetchQueueName } from "./snapshot-queue";
+import { polygonQueue, snapshotQueueName } from "./snapshot-queue";
 
 /**
  * Add a list of `dates` to the Bull queue for which we want to fetch Polygon
@@ -16,7 +16,7 @@ export async function addSnapshotFetchJobs(dates: DateDayjsOrString[]) {
 	if (formattedDates.some((date) => !date)) return;
 
 	const bulkObjects = formattedDates.map((date) => ({
-		name: snapshotFetchQueueName,
+		name: snapshotQueueName,
 		data: { date },
 	}));
 
