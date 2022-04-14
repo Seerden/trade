@@ -8,6 +8,7 @@ import { getUser } from "./api/helpers/auth/user";
 import { logRequests } from "./api/helpers/middleware/log-requests";
 import authRouter from "./api/routers/auth-router";
 import { tradeRouter } from "./api/routers/trade-router";
+import { polygonSnapshotFetchWorker } from "./price-action/lib/queue/snapshot/snapshot-queue";
 import { redisSession, startRedis } from "./store/redis-client";
 
 config();
@@ -33,6 +34,7 @@ async function main() {
 	);
 
 	await startRedis();
+	polygonSnapshotFetchWorker.run(); // only necessary if autorun = false
 	app.use(session(redisSession));
 
 	passport.use(strategy);
