@@ -1,8 +1,9 @@
 /** Goal: convert raw response from aggregate API endpoint to objects we can use for database insertion. */
 
 import { PriceActionRow } from "../../../../../types/database.types";
+import { valueof } from "../../../../../types/valueof";
 import { priceActionFields } from "../../../constants/fields";
-import { aggregateResponseKeyMap } from "../../constants/polygon-response-maps";
+import { aggregateResponseKeyMap as keyMap } from "../../constants/polygon-response-maps";
 import { PolygonAggregateResponse } from "../../types/aggregate.types";
 import { PolygonAggregateResult } from "../../types/results.types";
 
@@ -19,17 +20,14 @@ function mapAggregateResultToPriceAction(
 	ticker: string
 ) {
 	const res: PriceActionRow = Object.keys(result).reduce(
-		(acc, key: keyof typeof aggregateResponseKeyMap) => {
-			const mappedKey = aggregateResponseKeyMap[key] as keyof PriceActionRow;
+		(priceActionRow, oldKey: keyof typeof keyMap) => {
+			const newKey = keyMap[oldKey] as keyof PriceActionRow;
 
-			if (priceActionFields.includes(mappedKey)) {
-				const value = result[key];
+			if (!priceActionFields.includes(newKey)) return priceActionRow;
 
-				(acc[mappedKey] as string | number) = value;
-				return acc;
-			}
+			(priceActionRow[newKey] as valueof<PriceActionRow>) = result[oldKey];
 
-			return acc;
+			return priceActionRow;
 		},
 		{} as PriceActionRow
 	);
