@@ -16,6 +16,7 @@
 	"dependencies": {
 		"axios": "^0.24.0",
 		"bcrypt": "^5.0.1",
+		"bullmq": "^1.80.0",
 		"connect-redis": "^6.0.0",
 		"cors": "^2.8.5",
 		"dayjs": "^1.10.7",
