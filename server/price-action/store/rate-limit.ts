@@ -15,26 +15,37 @@ async function incrementRequestCount() {
 		.exec();
 }
 
-export const rateLimit = {
-	getRequestCount,
-	incrementRequestCount,
-	async isWithinRateLimit() {
-		const count = await getRequestCount();
-		return +count < 5;
-	},
-};
+async function isWithinRateLimit() {
+	const count = await getRequestCount();
+	return +count < 5;
+}
 
-export async function makePossiblyDeferredRequest(
+async function makePossiblyDeferredRequest(
 	delayMilliseconds: number,
 	callback: (args?: unknown) => unknown
 ) {
-	const isAllowed = await rateLimit.isWithinRateLimit();
+	const isAllowed = await isWithinRateLimit();
 
 	if (!isAllowed) {
 		await delay(delayMilliseconds);
 	}
 
-	// `callback` can be an async function, but return await doesn't do anything
-	// anyway, so don't await it, for once.
-	return callback();
+	try {
+		const response = await callback();
+		return response;
+	} catch (e) {
+		// TODO: generally, errors/empty states that end up being passed to an
+		// Express route handler should probably have a predefined shape. We also
+		// want to log these to Sentry.
+		console.error(e);
+	} finally {
+		await incrementRequestCount();
+	}
 }
+
+export const rateLimit = {
+	getRequestCount,
+	incrementRequestCount,
+	fetch: makePossiblyDeferredRequest,
+	isWithinRateLimit,
+};

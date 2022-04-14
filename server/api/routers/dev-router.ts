@@ -175,3 +175,10 @@ devRouter.get("/defer", async (req, res) => {
 
 	res.json({ response });
 });
+
+devRouter.get("/snapshot/defer", async (req, res) => {
+	const response = await fetchSnapshot({ date: "2022-04-13" });
+
+	const requestCount = await rateLimit.getRequestCount();
+	res.json({ response, requestCount });
+});

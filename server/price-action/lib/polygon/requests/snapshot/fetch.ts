@@ -1,3 +1,4 @@
+import { rateLimit } from "../../../../store/rate-limit";
 import { formatYMD } from "../../../time/format-YMD";
 import { axiosPolygon } from "../../axios-instance";
 import { OHLCFetchOptions, OHLCFetchResponse } from "../../types/ohlc.types";
@@ -11,7 +12,17 @@ import { OHLCFetchOptions, OHLCFetchResponse } from "../../types/ohlc.types";
  */
 export async function fetchSnapshot({ date, adjusted }: OHLCFetchOptions) {
 	const formattedDate = formatYMD(date);
+
+	if (!formattedDate) return;
+
 	const url = `/v2/aggs/grouped/locale/us/market/stocks/${formattedDate}`;
-	const { data } = await axiosPolygon.get<OHLCFetchResponse>(url);
-	return data;
+
+	try {
+		return await rateLimit.fetch(60 * 1000, async () => {
+			const { data } = await axiosPolygon.get<OHLCFetchResponse>(url);
+			return data;
+		});
+	} catch (error) {
+		console.error(error);
+	}
 }
