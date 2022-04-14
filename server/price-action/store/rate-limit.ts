@@ -43,7 +43,7 @@ async function makePossiblyDeferredRequest(
 	}
 }
 
-export const rateLimit = {
+export const rateLimiter = {
 	getRequestCount,
 	incrementRequestCount,
 	fetch: makePossiblyDeferredRequest,

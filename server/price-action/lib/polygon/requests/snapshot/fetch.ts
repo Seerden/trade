@@ -1,4 +1,4 @@
-import { rateLimit } from "../../../../store/rate-limit";
+import { rateLimiter } from "../../../../store/rate-limit";
 import { formatYMD } from "../../../time/format-YMD";
 import { axiosPolygon } from "../../axios-instance";
 import { OHLCFetchOptions, OHLCFetchResponse } from "../../types/ohlc.types";
@@ -18,7 +18,7 @@ export async function fetchSnapshot({ date, adjusted }: OHLCFetchOptions) {
 	const url = `/v2/aggs/grouped/locale/us/market/stocks/${formattedDate}`;
 
 	try {
-		return await rateLimit.fetch(60 * 1000, async () => {
+		return await rateLimiter.fetch(60 * 1000, async () => {
 			const { data } = await axiosPolygon.get<OHLCFetchResponse>(url);
 			return data;
 		});

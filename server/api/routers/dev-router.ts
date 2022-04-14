@@ -13,10 +13,7 @@ import {
 } from "../../price-action/database/_dev/polygon/max-1m-query";
 import { fetchSnapshot } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
-import {
-	makePossiblyDeferredRequest,
-	rateLimit,
-} from "../../price-action/store/rate-limit";
+import { rateLimiter } from "../../price-action/store/rate-limit";
 import { snapshotStore } from "../../price-action/store/snapshot-dates";
 import { redisClient } from "../../store/redis-client";
 import { getTradesWithTickets } from "../database/queries/trades/get";
@@ -156,19 +153,19 @@ devRouter.post("/snapshot/reset", async (req, res) => {
 });
 
 devRouter.get("/rate-test", async (req, res) => {
-	const countStart = await rateLimit.getRequestCount();
-	await rateLimit.incrementRequestCount();
-	const countEnd = await rateLimit.getRequestCount();
+	const countStart = await rateLimiter.getRequestCount();
+	await rateLimiter.incrementRequestCount();
+	const countEnd = await rateLimiter.getRequestCount();
 
 	res.json({
 		countStart,
 		countEnd,
-		canMakeRequest: await rateLimit.isWithinRateLimit(),
+		canMakeRequest: await rateLimiter.isWithinRateLimit(),
 	});
 });
 
 devRouter.get("/defer", async (req, res) => {
-	const response = await makePossiblyDeferredRequest(
+	const response = await rateLimiter.fetch(
 		100,
 		async () => await redisClient.get("request-count")
 	);
@@ -179,6 +176,6 @@ devRouter.get("/defer", async (req, res) => {
 devRouter.get("/snapshot/defer", async (req, res) => {
 	const response = await fetchSnapshot({ date: "2022-04-13" });
 
-	const requestCount = await rateLimit.getRequestCount();
+	const requestCount = await rateLimiter.getRequestCount();
 	res.json({ response, requestCount });
 });
