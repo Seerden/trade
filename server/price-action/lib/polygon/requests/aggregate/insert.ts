@@ -17,8 +17,7 @@ import {
 import { fetchAggregateWithLimiter } from "./fetch";
 import { aggregateToPriceActionObjects } from "./transform";
 
-/**
- /** Map a timespan like 'minute' to a timescale like '1m'. */
+/** Map a timespan like 'minute' to a timescale like '1m'. */
 const timespanToTimescaleMap: { [K in PermittedTimespan]: Timescale } = {
 	minute: "1m",
 	hour: "1h",
