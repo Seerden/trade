@@ -3,10 +3,6 @@
  * Polygon response keys (see link above) are not very descriptive, so let's map them for ease of use
  */
 
-export const priceActionColumns = "close high low open timestamp volume".split(
-	" "
-);
-
 export const aggregateResponseKeyMap = {
 	c: "close",
 	h: "high",
