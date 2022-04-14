@@ -3,19 +3,15 @@
 import format from "pg-format";
 import { Timescale } from "types/store.types";
 import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
-import { objectToArray } from "../../../../../helpers/object-to-array";
 import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
 import { timescaleToTableName } from "../../../get-table-name";
-import {
-	aggregateFields,
-	aggregateFieldsString,
-} from "../../constants/aggregate";
+import { aggregateFieldsString } from "../../constants/aggregate";
 import {
 	PermittedTimespan,
 	PolygonAggregateOptions,
 } from "../../types/aggregate.types";
 import { fetchAggregateWithLimiter } from "./fetch";
-import { aggregateToPriceActionObjects } from "./transform";
+import { aggregateToPriceAction } from "./transform";
 
 /** Map a timespan like 'minute' to a timescale like '1m'. */
 const timespanToTimescaleMap: { [K in PermittedTimespan]: Timescale } = {
@@ -85,9 +81,7 @@ export async function fetchAndInsertAggregate({
 		multiplier: 1,
 	});
 
-	const priceActionArrays = aggregateToPriceActionObjects(rawResponse).map(
-		(object) => objectToArray(object, aggregateFields)
-	);
+	const priceActionArrays = aggregateToPriceAction(rawResponse);
 
 	const response = await insertAggregate(priceActionArrays, {
 		ticker,
