@@ -1,36 +1,44 @@
 import { DateDayjsOrString } from "../../../../types/date.types";
-import { PermittedTimespan } from "../../get-table-name";
 import { PolygonAggregateResults } from "./results.types";
 
-// @dev -- note that these are all admissible timespans. for our purposes, we'll only be using minute, hour, day
+/** @note We'll probably only be using 'minute', 'hour' and 'day'. */
 export type PolygonTimespan =
-    | "minute"
-    | "hour"
-    | "day"
-    | "week"
-    | "month"
-    | "quarter"
-    | "year";
+	| "minute"
+	| "hour"
+	| "day"
+	| "week"
+	| "month"
+	| "quarter"
+	| "year";
+
+/** @note As mentioned, most valid timespans aren't relevant for us, for now. */
+export type PermittedTimespan = "minute" | "hour" | "day";
 
 export type PolygonAggregateOptions = {
-    ticker: string;
-    multiplier: number;
-    /*  polygon actually allows more timespans (see PolygonTimespan type above)
-        but we don't care for any of those, at least not at this point */
-    timespan: PermittedTimespan;
-    from: DateDayjsOrString;
-    to: DateDayjsOrString;
-    adjusted?: boolean;
-    sort?: "asc" | "desc";
-    limit?: number;
+	/** The ticker symbol of the stock/equity. */
+	ticker: string;
+	/** The size of the timespan multiplier. */
+	multiplier: number;
+	/** The size of the time window. */
+	timespan: PermittedTimespan;
+	/** The start of the aggregate time window. */
+	from: DateDayjsOrString;
+	/** The end of the aggregate time window. */
+	to: DateDayjsOrString;
+	/** Whether or not the results are adjusted for splits. By default, results are adjusted. Set this to false to get results that are NOT adjusted for splits.  */
+	adjusted?: boolean;
+	/** Sort the results by timestamp. asc will return results in ascending order (oldest at the top), desc will return results in descending order (newest at the top). */
+	sort?: "asc" | "desc";
+	/** Limits the number of base aggregates queried to create the aggregate results. Max 50000 and Default 5000. */
+	limit?: number;
 };
 
 export type PolygonAggregateResponse = {
-    ticker: string;
-    adjusted: boolean;
-    queryCount: number;
-    request_id: string;
-    resultsCount: number;
-    status: string;
-    results: PolygonAggregateResults;
+	ticker: string;
+	adjusted: boolean;
+	queryCount: number;
+	request_id: string;
+	resultsCount: number;
+	status: string;
+	results: PolygonAggregateResults;
 };

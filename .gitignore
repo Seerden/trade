@@ -8,5 +8,5 @@ node_modules
 /**/api-pg-data
 /**/redis-data
 
-/server/**/.rest
+/server/**/*.rest
 /server/**/*.csv

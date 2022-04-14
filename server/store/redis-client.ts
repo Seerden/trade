@@ -1,27 +1,31 @@
 import connectRedis from "connect-redis";
 import session from "express-session";
-import { createClient } from "redis";
+import Redis from "ioredis";
 
-export const redisClient = createClient({
-    url: "redis://store:6379", // note that `store` is the name we give to the redis service in docker-compose.yml
-    legacyMode: true,
-});
-
+// `store` needs to match the name of our Docker Redis service
+export const redisClient = new Redis("redis://store:6379");
 export const RedisStore = connectRedis(session);
 
 export const redisSession: session.SessionOptions = {
-    store: new RedisStore({ client: redisClient }),
-    saveUninitialized: false,
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    cookie: {
-        maxAge: 7 * 24 * 3600 * 1000, // max age is a week by default
-        secure: process.env.NODE_ENV === "production",
-    },
+	store: new RedisStore({ client: redisClient }),
+	saveUninitialized: false,
+	secret: process.env.SESSION_SECRET,
+	resave: false,
+	cookie: {
+		maxAge: 7 * 24 * 3600 * 1000, // One week.
+		secure: process.env.NODE_ENV === "production",
+	},
 };
 
 export async function startRedis() {
-    await redisClient.connect();
-    redisClient.on("connected", () => console.log("connected"));
-    redisClient.on("error", (e) => console.log(e));
+	try {
+		if ((await redisClient.ping()) !== "PONG") {
+			await redisClient.connect();
+		}
+	} catch (error) {
+		console.log({
+			message: "Error while trying to connect to Redis client",
+			error,
+		});
+	}
 }

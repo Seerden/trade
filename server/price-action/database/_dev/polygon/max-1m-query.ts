@@ -1,57 +1,59 @@
 import { DateDayjsOrString } from "../../../../types/date.types";
-import { fetchTickerAggregate } from "../../../lib/polygon/requests/aggregate/aggregate-fetch";
-import { fetchAndInsertAggregate } from "../../../lib/polygon/requests/aggregate/aggregate-insert";
+import { fetchAggregateWithLimiter } from "../../../lib/polygon/requests/aggregate/fetch";
+import { fetchAndInsertAggregate } from "../../../lib/polygon/requests/aggregate/insert";
 import { nMarketDayRange } from "../../../lib/time/market-day-range";
 
 const maxDaysPerQuery = Math.floor(50_000 / (16 * 60));
 
 export async function fetchMaxOneMinuteData({
-    ticker,
-    to,
+	ticker,
+	to,
 }: {
-    ticker: string;
-    to?: DateDayjsOrString;
+	ticker: string;
+	to?: DateDayjsOrString;
 }) {
-    const [start, end] = nMarketDayRange({ n: maxDaysPerQuery, end: to });
+	const [start, end] = nMarketDayRange({ n: maxDaysPerQuery, end: to });
 
-    const rawResponse = await fetchTickerAggregate({
-        ticker,
-        from: start,
-        to: end,
-        timespan: "minute",
-        multiplier: 1,
-    });
+	const rawResponse = await fetchAggregateWithLimiter({
+		ticker,
+		from: start,
+		to: end,
+		timespan: "minute",
+		multiplier: 1,
+	});
 
-    return rawResponse;
+	return rawResponse;
 }
 
 /** Extract first and last row of fetchMaxOneMinuteData response */
 // eslint-disable-next-line camelcase
 export function dev_firstAndLastMaxOneMinuteDataResultRow(
-    rawResponse: Awaited<ReturnType<typeof fetchMaxOneMinuteData>>
+	rawResponse: Awaited<ReturnType<typeof fetchMaxOneMinuteData>>
 ) {
-    const [firstRow, lastRow] = [0, -1].map((index) => rawResponse.results.at(index));
-    return [firstRow, lastRow];
+	const [firstRow, lastRow] = [0, -1].map((index) =>
+		rawResponse.results.at(index)
+	);
+	return [firstRow, lastRow];
 }
 
 export async function fetchAndInsertMaxOneMinuteData({
-    ticker,
-    to,
+	ticker,
+	to,
 }: {
-    ticker: string;
-    to?: DateDayjsOrString;
+	ticker: string;
+	to?: DateDayjsOrString;
 }) {
-    const [start, end] = nMarketDayRange({ n: maxDaysPerQuery, end: to });
+	const [start, end] = nMarketDayRange({ n: maxDaysPerQuery, end: to });
 
-    try {
-        return await fetchAndInsertAggregate({
-            timespan: "minute",
-            ticker,
-            from: start,
-            to: end,
-        });
-    } catch (error) {
-        console.error(error);
-        return "error";
-    }
+	try {
+		return await fetchAndInsertAggregate({
+			timespan: "minute",
+			ticker,
+			from: start,
+			to: end,
+		});
+	} catch (error) {
+		console.error(error);
+		return "error";
+	}
 }
