@@ -1,7 +1,7 @@
-import dayjs from "dayjs";
 import { redisClient } from "../../store/redis-client";
 import type { DateDayjsOrString } from "../../types/date.types";
 import type { Timescale } from "../../types/store.types";
+import { formatYMD } from "../lib/time/format-YMD";
 
 /**
  * Whenever we fetch price action from an external API, we store the date range of the
@@ -26,9 +26,12 @@ export async function storeFetchedDateRange({
 	start: DateDayjsOrString;
 	end: DateDayjsOrString;
 }) {
-	const [startString, endString] = [start, end].map((date) =>
-		dayjs(date).format("YYYY-MM-DD")
-	);
+	const [startString, endString] = [start, end].map((date) => formatYMD(date));
+
+	if (!startString || !endString) {
+		// TODO: trigger a Sentry message here
+		return;
+	}
 	const startEndString = `${startString},${endString}`;
 	const storeKey = `ranges:${timescale}:${ticker.toUpperCase()}`;
 	await redisClient.rpush(storeKey, startEndString);
