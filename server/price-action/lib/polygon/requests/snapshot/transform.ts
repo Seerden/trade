@@ -1,8 +1,8 @@
 import { PriceActionRow } from "types/database.types";
+import type { valueof } from "../../../../../types/valueof";
 import { snapshotResponseKeyMap as keyMap } from "../../constants/polygon-response-maps";
 import { OHLCFetchResponse } from "../../types/ohlc.types";
 import { SnapshotResult } from "../../types/results.types";
-import { valueof } from "../aggregate/transform";
 
 export function snapshotToPriceAction({ results }: OHLCFetchResponse) {
 	if (!results?.length) return [];
