@@ -14,7 +14,7 @@ import {
 	PermittedTimespan,
 	PolygonAggregateOptions,
 } from "../../types/aggregate.types";
-import { fetchTickerAggregate } from "./fetch";
+import { fetchAggregateWithLimiter } from "./fetch";
 import { aggregateToPriceActionObjects } from "./transform";
 
 /**
@@ -75,7 +75,7 @@ type Options = {
  * - add fetched date range to redis store
  */
 export async function fetchAndInsertAggregate(options: Options) {
-	const rawResponse = await fetchTickerAggregate({
+	const rawResponse = await fetchAggregateWithLimiter({
 		...options,
 		multiplier: 1,
 	});

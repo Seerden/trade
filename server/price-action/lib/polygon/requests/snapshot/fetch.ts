@@ -7,10 +7,11 @@ import { OHLCFetchOptions, OHLCFetchResponse } from "../../types/ohlc.types";
  * Fetch daily OHLCV for all tickers. Note that we're on a free plan, so we can
  * only fetch data for a given date if that date's trading session has fully ended.
  *
- * @usage Only use inside fetchAndInsertSnapshot. If used elsewhere, make sure
- * to first check if snapshot already exists.
+ * @usage This function is wrapped by fetchSnapshotWithLimiter. Do not export
+ * this function, since we need the rate limiting functionality as long as we
+ * don't use a paid Polygon plan.
  */
-export async function fetchSnapshot({ date, adjusted }: OHLCFetchOptions) {
+async function fetchSnapshot({ date, adjusted }: OHLCFetchOptions) {
 	const formattedDate = formatYMD(date);
 
 	if (!formattedDate) return;
@@ -30,7 +31,7 @@ export async function fetchSnapshotWithLimiter(
 ) {
 	const callback = async () => await fetchSnapshot(...params);
 	try {
-		return await rateLimiter.fetch(60 * 1000, callback);
+		return (await rateLimiter.fetch(60 * 1000, callback)) as OHLCFetchResponse;
 	} catch (e) {
 		console.error(e);
 	}

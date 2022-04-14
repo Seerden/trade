@@ -1,5 +1,5 @@
 import { DateDayjsOrString } from "../../../../types/date.types";
-import { fetchTickerAggregate } from "../../../lib/polygon/requests/aggregate/fetch";
+import { fetchAggregateWithLimiter } from "../../../lib/polygon/requests/aggregate/fetch";
 import { fetchAndInsertAggregate } from "../../../lib/polygon/requests/aggregate/insert";
 import { nMarketDayRange } from "../../../lib/time/market-day-range";
 
@@ -14,7 +14,7 @@ export async function fetchMaxOneMinuteData({
 }) {
 	const [start, end] = nMarketDayRange({ n: maxDaysPerQuery, end: to });
 
-	const rawResponse = await fetchTickerAggregate({
+	const rawResponse = await fetchAggregateWithLimiter({
 		ticker,
 		from: start,
 		to: end,
@@ -30,7 +30,9 @@ export async function fetchMaxOneMinuteData({
 export function dev_firstAndLastMaxOneMinuteDataResultRow(
 	rawResponse: Awaited<ReturnType<typeof fetchMaxOneMinuteData>>
 ) {
-	const [firstRow, lastRow] = [0, -1].map((index) => rawResponse.results.at(index));
+	const [firstRow, lastRow] = [0, -1].map((index) =>
+		rawResponse.results.at(index)
+	);
 	return [firstRow, lastRow];
 }
 

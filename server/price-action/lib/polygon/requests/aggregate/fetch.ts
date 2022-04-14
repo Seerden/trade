@@ -1,3 +1,4 @@
+import { rateLimiter } from "../../../../store/rate-limit";
 import { formatYMD } from "../../../time/format-YMD";
 import { axiosPolygon } from "../../axios-instance";
 import {
@@ -29,7 +30,7 @@ function getAggregateUrl({
  * Fetch aggregate data for a ticker in a given time-range. Note that using a date like
  * '2022-01-15' will include all data until the end of that day's trading session.
  */
-export async function fetchTickerAggregate({
+async function fetchTickerAggregate({
 	ticker,
 	multiplier,
 	timespan,
@@ -39,6 +40,9 @@ export async function fetchTickerAggregate({
 	limit = 50000,
 }: PolygonAggregateOptions) {
 	const [fromString, toString] = [from, to].map((date) => formatYMD(date));
+
+	if (!fromString || !toString) return;
+
 	const url = getAggregateUrl({
 		ticker,
 		multiplier,
@@ -46,8 +50,28 @@ export async function fetchTickerAggregate({
 		from: fromString,
 		to: toString,
 	});
-	const { data } = await axiosPolygon.get<PolygonAggregateResponse>(url, {
-		params: { limit, sort },
-	});
-	return data;
+
+	try {
+		const { data } = await axiosPolygon.get<PolygonAggregateResponse>(url, {
+			params: { limit, sort },
+		});
+
+		return data;
+	} catch (e) {
+		console.error(e);
+	}
+}
+
+export async function fetchAggregateWithLimiter(
+	...params: Parameters<typeof fetchTickerAggregate>
+) {
+	try {
+		const callback = async () => await fetchTickerAggregate(...params);
+		return (await rateLimiter.fetch(
+			60 * 1000,
+			callback
+		)) as PolygonAggregateResponse;
+	} catch (e) {
+		console.error(e);
+	}
 }
