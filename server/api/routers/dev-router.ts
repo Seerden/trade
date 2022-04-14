@@ -11,7 +11,10 @@ import {
 	fetchAndInsertMaxOneMinuteData,
 	fetchMaxOneMinuteData,
 } from "../../price-action/database/_dev/polygon/max-1m-query";
-import { fetchSnapshot } from "../../price-action/lib/polygon/requests/snapshot/fetch";
+import {
+	fetchSnapshot,
+	fetchSnapshotWithLimiter,
+} from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
 import { rateLimiter } from "../../price-action/store/rate-limit";
 import { snapshotStore } from "../../price-action/store/snapshot-dates";
@@ -174,7 +177,7 @@ devRouter.get("/defer", async (req, res) => {
 });
 
 devRouter.get("/snapshot/defer", async (req, res) => {
-	const response = await fetchSnapshot({ date: "2022-04-13" });
+	const response = await fetchSnapshotWithLimiter({ date: "2022-04-13" });
 
 	const requestCount = await rateLimiter.getRequestCount();
 	res.json({ response, requestCount });

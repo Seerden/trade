@@ -18,11 +18,20 @@ export async function fetchSnapshot({ date, adjusted }: OHLCFetchOptions) {
 	const url = `/v2/aggs/grouped/locale/us/market/stocks/${formattedDate}`;
 
 	try {
-		return await rateLimiter.fetch(60 * 1000, async () => {
-			const { data } = await axiosPolygon.get<OHLCFetchResponse>(url);
-			return data;
-		});
+		const { data } = await axiosPolygon.get<OHLCFetchResponse>(url);
+		return data;
 	} catch (error) {
 		console.error(error);
+	}
+}
+
+export async function fetchSnapshotWithLimiter(
+	...params: Parameters<typeof fetchSnapshot>
+) {
+	const callback = async () => await fetchSnapshot(...params);
+	try {
+		return await rateLimiter.fetch(60 * 1000, callback);
+	} catch (e) {
+		console.error(e);
 	}
 }
