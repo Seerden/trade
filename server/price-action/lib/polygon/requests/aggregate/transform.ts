@@ -8,8 +8,6 @@ import { PolygonAggregateResult } from "../../types/results.types";
 
 /** Take a price action row and set its ticker property to an uppercase ticker. */
 function withTicker(row: PriceActionRow, ticker: string) {
-	if (row.ticker) return row;
-
 	// eslint-disable-next-line no-param-reassign
 	row.ticker = ticker.toUpperCase();
 	return row;
