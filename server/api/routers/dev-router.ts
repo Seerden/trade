@@ -13,6 +13,8 @@ import {
 } from "../../price-action/database/_dev/polygon/max-1m-query";
 import { fetchSnapshotWithLimiter } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
+import { addSnapshotFetchJobs } from "../../price-action/lib/queue/snapshot/add-fetch-job";
+import { polygonQueue } from "../../price-action/lib/queue/snapshot/snapshot-queue";
 import { rateLimiter } from "../../price-action/store/rate-limit";
 import { snapshotStore } from "../../price-action/store/snapshot-dates";
 import { redisClient } from "../../store/redis-client";
@@ -178,4 +180,27 @@ devRouter.get("/snapshot/defer", async (req, res) => {
 
 	const requestCount = await rateLimiter.getRequestCount();
 	res.json({ response, requestCount });
+});
+
+devRouter.get("/job-counts", async (req, res) => {
+	const counts = await polygonQueue.getJobCounts();
+
+	res.json({ counts });
+});
+
+devRouter.get("/job/add/:date", async (req, res) => {
+	const { date } = req.params;
+	const returnvalue = await addSnapshotFetchJobs([date]);
+
+	res.json({ returnvalue });
+});
+
+devRouter.get("/job/return/:id", async (req, res) => {
+	const { id } = req.params;
+
+	if (!id) return res.json({ message: "no job id specified" });
+
+	const job = await polygonQueue.getJob(id);
+
+	res.json({ job });
 });
