@@ -1,3 +1,4 @@
+import axios from "axios";
 import { rateLimiter } from "../../../../store/rate-limit";
 import { formatYMD } from "../../../time/format-YMD";
 import { axiosPolygon } from "../../axios-instance";
@@ -22,7 +23,7 @@ async function fetchSnapshot({ date, adjusted }: OHLCFetchOptions) {
 		const { data } = await axiosPolygon.get<OHLCFetchResponse>(url);
 		return data;
 	} catch (error) {
-		console.error(error);
+		return error;
 	}
 }
 
@@ -33,6 +34,10 @@ export async function fetchSnapshotWithLimiter(
 	try {
 		return (await rateLimiter.fetch(60 * 1000, callback)) as OHLCFetchResponse;
 	} catch (e) {
-		console.error(e);
+		if (axios.isAxiosError(e)) {
+			console.error(e.message);
+		}
+
+		console.error(e?.status);
 	}
 }
