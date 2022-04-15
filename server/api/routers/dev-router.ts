@@ -23,8 +23,10 @@ import {
 } from "../../price-action/lib/queue/snapshot/fetch-daily";
 import { polygonQueue } from "../../price-action/lib/queue/snapshot/snapshot-queue";
 import { getAllMarketDaysInPastTwoYears } from "../../price-action/lib/time/dates";
+import { formatYMD } from "../../price-action/lib/time/format-YMD";
 import { rateLimiter } from "../../price-action/store/rate-limit";
 import { snapshotStore } from "../../price-action/store/snapshot-dates";
+import { fetchExistingSnapshotTimestamps } from "../../price-action/store/snapshot-reconcile";
 import { redisClient } from "../../store/redis-client";
 import { getTradesWithTickets } from "../database/queries/trades/get";
 import { getTradeDetails } from "../helpers/trades/trade-meta";
@@ -256,4 +258,14 @@ devRouter.get("/price-action/high-volume", async (req, res) => {
 
 	res.json({ rows });
 	console.timeEnd("high-vol-query");
+});
+
+devRouter.get("/snapshots/timestamps/reconcile", async (req, res) => {
+	const [{ timestamps }] = await fetchExistingSnapshotTimestamps();
+
+	const dates = timestamps.map((t: string) => formatYMD(t));
+
+	const response = await snapshotStore.bulkAdd(dates);
+
+	res.json({ response });
 });
