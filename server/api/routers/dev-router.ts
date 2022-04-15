@@ -20,7 +20,7 @@ import { addSnapshotFetchJobs } from "../../price-action/lib/queue/snapshot/add-
 import {
 	addJob,
 	repeatQueue,
-} from "../../price-action/lib/queue/snapshot/fetch-daily";
+} from "../../price-action/lib/queue/snapshot/repeat-queue";
 import { polygonQueue } from "../../price-action/lib/queue/snapshot/snapshot-queue";
 import { getAllMarketDaysInPastTwoYears } from "../../price-action/lib/time/dates";
 import { formatYMD } from "../../price-action/lib/time/format-YMD";

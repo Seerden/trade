@@ -6,7 +6,7 @@ import { fetchAndInsertSnapshot } from "../../polygon/requests/snapshot/insert";
 // BullMQ wants to connect to Redis separately. For now, we'll use the same
 // store we use elsewhere, but we might want to create a separate Docker service
 // for this eventually.
-const connection = new Redis("redis://store:6379", {
+export const connection = new Redis("redis://store:6379", {
 	maxRetriesPerRequest: null,
 });
 
