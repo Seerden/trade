@@ -196,13 +196,20 @@ devRouter.get("/snapshot/defer", async (req, res) => {
 	res.json({ response, requestCount });
 });
 
-devRouter.get("/job-counts", async (req, res) => {
+devRouter.get("/job-counts/polygon", async (req, res) => {
 	const counts = await polygonQueue.getJobCounts();
 
 	const failed = await polygonQueue.getFailed();
 	const completed = await polygonQueue.getCompleted();
 
 	res.json({ counts, failed, completed });
+});
+
+devRouter.get("/job-counts/repeat", async (req, res) => {
+	res.json({
+		counts: await repeatQueue.getJobCounts(),
+		delayed: await repeatQueue.getDelayed(),
+	});
 });
 
 devRouter.get("/job/add/:date", async (req, res) => {
