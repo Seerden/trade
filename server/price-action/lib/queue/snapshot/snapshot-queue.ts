@@ -14,9 +14,9 @@ const connection = new Redis("redis://store:6379", {
 	maxRetriesPerRequest: null,
 });
 
-export const snapshotQueueName = "polygonSnapshotFetchQueue";
+export const polygonQueueName = "polygonSnapshotFetchQueue";
 
-export const snapshotQueue = new Queue(snapshotQueueName, {
+export const polygonQueue = new Queue(polygonQueueName, {
 	connection,
 	defaultJobOptions: {
 		removeOnComplete: 10, // keep only the latest 10 snapshots
@@ -27,15 +27,15 @@ export const snapshotQueue = new Queue(snapshotQueueName, {
 // I don't think there are any adverse effect if we initialize it regardless.
 // Note that it doesn't have to be .run() or anything, it starts up as soon as
 // it's initialized.
-const snapshotQueueScheduler = new QueueScheduler(snapshotQueueName, {
+const polygonQueueScheduler = new QueueScheduler(polygonQueueName, {
 	connection,
 });
 
-const snapshotQueueEvents = new QueueEvents(snapshotQueueName, {
+const polygonQueueEvents = new QueueEvents(polygonQueueName, {
 	connection,
 });
 
-snapshotQueueEvents.on("completed", ({ jobId, returnvalue }) => {
+polygonQueueEvents.on("completed", ({ jobId, returnvalue }) => {
 	console.log(`Completed job ${jobId}`);
 
 	// Can use this to log the result of the process that was just completed by
@@ -44,7 +44,7 @@ snapshotQueueEvents.on("completed", ({ jobId, returnvalue }) => {
 });
 
 export const polygonSnapshotFetchWorker = new Worker(
-	snapshotQueueName,
+	polygonQueueName,
 	async ({ data, name }: Job<SnapshotJobData | AggregateJobData>) => {
 		if (name === "aggregate") {
 			try {

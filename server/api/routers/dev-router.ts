@@ -17,14 +17,14 @@ import {
 import { fetchSnapshotWithLimiter } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
 import {
-	addAggregateJob,
+	addAggregateFetchJobs,
 	addSnapshotFetchJobs,
 } from "../../price-action/lib/queue/snapshot/add-fetch-job";
 import {
 	addJob,
 	repeatQueue,
 } from "../../price-action/lib/queue/snapshot/repeat-queue";
-import { snapshotQueue } from "../../price-action/lib/queue/snapshot/snapshot-queue";
+import { polygonQueue } from "../../price-action/lib/queue/snapshot/snapshot-queue";
 import { getAllMarketDaysInPastTwoYears } from "../../price-action/lib/time/dates";
 import { formatYMD } from "../../price-action/lib/time/format-YMD";
 import { rateLimiter } from "../../price-action/store/rate-limit";
@@ -197,10 +197,10 @@ devRouter.get("/snapshot/defer", async (req, res) => {
 });
 
 devRouter.get("/job-counts", async (req, res) => {
-	const counts = await snapshotQueue.getJobCounts();
+	const counts = await polygonQueue.getJobCounts();
 
-	const failed = await snapshotQueue.getFailed();
-	const completed = await snapshotQueue.getCompleted();
+	const failed = await polygonQueue.getFailed();
+	const completed = await polygonQueue.getCompleted();
 
 	res.json({ counts, failed, completed });
 });
@@ -217,7 +217,7 @@ devRouter.get("/job/return/:id", async (req, res) => {
 
 	if (!id) return res.json({ message: "no job id specified" });
 
-	const job = await snapshotQueue.getJob(id);
+	const job = await polygonQueue.getJob(id);
 
 	res.json({ job });
 });
@@ -274,12 +274,14 @@ devRouter.get("/snapshots/timestamps/reconcile", async (req, res) => {
 });
 
 devRouter.get("/job/aggregate", async (req, res) => {
-	const response = await addAggregateJob({
-		timespan: "minute",
-		from: "2022-04-11",
-		to: "2022-04-12",
-		ticker: "VERU",
-	});
+	const response = await addAggregateFetchJobs([
+		{
+			timespan: "minute",
+			from: "2022-04-11",
+			to: "2022-04-12",
+			ticker: "VERU",
+		},
+	]);
 
 	res.json({ response });
 });
