@@ -1,5 +1,10 @@
 import { Job, Queue, QueueEvents, QueueScheduler, Worker } from "bullmq";
 import Redis from "ioredis";
+import {
+	AggregateJobData,
+	SnapshotJobData,
+} from "../../../../types/queue.types";
+import { fetchAndInsertAggregate } from "../../polygon/requests/aggregate/insert";
 import { fetchAndInsertSnapshot } from "../../polygon/requests/snapshot/insert";
 
 // BullMQ wants to connect to Redis separately. For now, we'll use the same
@@ -40,15 +45,30 @@ snapshotQueueEvents.on("completed", ({ jobId, returnvalue }) => {
 
 export const polygonSnapshotFetchWorker = new Worker(
 	snapshotQueueName,
-	async ({ data }: Job<{ date: string }>) => {
-		const response = await fetchAndInsertSnapshot(data.date);
-
-		if (!response?.status) {
-			if (Array.isArray(response)) {
-				return response[0];
+	async ({ data, name }: Job<SnapshotJobData | AggregateJobData>) => {
+		if (name === "aggregate") {
+			try {
+				const response = await fetchAndInsertAggregate(
+					data as AggregateJobData
+				);
+				return response;
+			} catch (error) {
+				return error;
 			}
-		} else {
-			return response.status;
+		}
+
+		if (name === "snapshot") {
+			const response = await fetchAndInsertSnapshot(
+				(data as SnapshotJobData).date
+			);
+
+			if (!response?.status) {
+				if (Array.isArray(response)) {
+					return response[0];
+				}
+			} else {
+				return response.status;
+			}
 		}
 	},
 	{
