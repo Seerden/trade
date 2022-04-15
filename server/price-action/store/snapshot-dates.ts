@@ -26,11 +26,16 @@ async function addSnapshotDate(date: DateDayjsOrString) {
 	await redisClient.sadd(redisSnapshotDatesKey, formatYMD(date));
 }
 
-async function bulkAdd(dates: DateDayjsOrString[]) {
+/** Bulk add dates to `snapshot:dates`. */
+async function bulkAddSnapshotDates(dates: DateDayjsOrString[]) {
 	const pipeline = redisClient.pipeline();
 
-	for (const date of dates) {
-		pipeline.sadd(redisSnapshotDatesKey, formatYMD(date));
+	const ymdDates = dates.map((date) => formatYMD(date));
+
+	if (ymdDates.some((date) => !date)) return; // TODO: send Sentry message.
+
+	for (const date of ymdDates) {
+		pipeline.sadd(redisSnapshotDatesKey, date);
 	}
 
 	return await pipeline.exec();
@@ -53,7 +58,7 @@ export const snapshotStore = {
 	get: getSnapshotDates,
 	exists: isSavedSnapshotDate,
 	add: addSnapshotDate,
-	bulkAdd,
+	bulkAdd: bulkAddSnapshotDates,
 	remove: removeSnapshotDate,
 	__DELETE: removeAllSnapshotDates,
 };
