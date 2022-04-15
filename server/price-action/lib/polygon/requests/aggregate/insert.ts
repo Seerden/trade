@@ -3,7 +3,9 @@
 import format from "pg-format";
 import { Timescale } from "types/store.types";
 import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
+import { objectToArray } from "../../../../../helpers/object-to-array";
 import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
+import { priceActionFields } from "../../../constants/fields";
 import { timescaleToTableName } from "../../../get-table-name";
 import { aggregateFieldsString } from "../../constants/aggregate";
 import {
@@ -34,27 +36,31 @@ export async function insertAggregate<T>(
 	rowsForDatabase: T,
 	{ ticker, from, to, timespan }: InsertOptions
 ) {
-	const text = format(
-		"insert into %I (%s) values %L returning (timestamp)",
-		timescaleToTableName(timespan),
-		aggregateFieldsString,
-		rowsForDatabase
-	);
+	try {
+		const text = format(
+			"insert into %I (%s) values %L returning (timestamp)",
+			timescaleToTableName(timespan),
+			aggregateFieldsString,
+			rowsForDatabase
+		);
 
-	const timestampsInserted: string[] = await PriceActionApiObject.query({
-		text,
-	});
+		const timestampsInserted: string[] = await PriceActionApiObject.query({
+			text,
+		});
 
-	if (!timestampsInserted.length) {
-		return [];
+		if (!timestampsInserted.length) {
+			return [];
+		}
+
+		return storeFetchedDateRange({
+			ticker,
+			timescale: timespanToTimescaleMap[timespan],
+			start: from,
+			end: to,
+		});
+	} catch (error) {
+		console.error(error); // TODO: send Sentry message
 	}
-
-	return storeFetchedDateRange({
-		ticker,
-		timescale: timespanToTimescaleMap[timespan],
-		start: from,
-		end: to,
-	});
 }
 
 /**
@@ -81,7 +87,10 @@ export async function fetchAndInsertAggregate({
 		multiplier: 1,
 	});
 
-	const priceActionArrays = aggregateToPriceAction(rawResponse);
+	const priceActionObjects = aggregateToPriceAction(rawResponse);
+	const priceActionArrays = priceActionObjects.map((obj) =>
+		objectToArray(obj, priceActionFields)
+	);
 
 	const response = await insertAggregate(priceActionArrays, {
 		ticker,
