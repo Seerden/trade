@@ -16,7 +16,10 @@ import {
 } from "../../price-action/database/_dev/polygon/max-1m-query";
 import { fetchSnapshotWithLimiter } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
-import { addSnapshotFetchJobs } from "../../price-action/lib/queue/snapshot/add-fetch-job";
+import {
+	addAggregateJob,
+	addSnapshotFetchJobs,
+} from "../../price-action/lib/queue/snapshot/add-fetch-job";
 import {
 	addJob,
 	repeatQueue,
@@ -266,6 +269,17 @@ devRouter.get("/snapshots/timestamps/reconcile", async (req, res) => {
 	const dates = timestamps.map((t: string) => formatYMD(t));
 
 	const response = await snapshotStore.bulkAdd(dates);
+
+	res.json({ response });
+});
+
+devRouter.get("/job/aggregate", async (req, res) => {
+	const response = await addAggregateJob({
+		timespan: "minute",
+		from: "2022-04-11",
+		to: "2022-04-12",
+		ticker: "VERU",
+	});
 
 	res.json({ response });
 });
