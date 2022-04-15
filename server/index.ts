@@ -34,7 +34,9 @@ async function main() {
 	);
 
 	await startRedis();
-	polygonSnapshotFetchWorker.run(); // only necessary if autorun = false
+	if (!polygonSnapshotFetchWorker.isRunning) {
+		polygonSnapshotFetchWorker.run(); // only necessary if autorun = false
+	}
 	app.use(session(redisSession));
 
 	passport.use(strategy);
@@ -73,9 +75,16 @@ async function main() {
 		res.json({ message: "/ GET successful" });
 	});
 
-	app.listen(process.env.PORT || 5000, () => {
+	const instance = app.listen(process.env.PORT || 5000, () => {
 		console.log(`Server started on ${new Date()}`);
 	});
+
+	// Uncomment below to gracefully shut down Express server and polygonSnapshot
+	// BullMQ worker.
+	// instance.close(async () => {
+	// 	await polygonSnapshotFetchWorker.close();
+	// 	console.log("Shut down express server.");
+	// });
 
 	/**
 	 * Catch-all piece of middleware that handles errors during route handling.
