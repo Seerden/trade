@@ -3,7 +3,10 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
-import { BackendApiObject } from "../../database/pools/query-objects";
+import {
+	BackendApiObject,
+	PriceActionApiObject,
+} from "../../database/pools/query-objects";
 import { fetchPriceActionForTicker } from "../../price-action/database/queries/fetch-price-action";
 import {
 	// eslint-disable-next-line camelcase
@@ -14,7 +17,12 @@ import {
 import { fetchSnapshotWithLimiter } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
 import { addSnapshotFetchJobs } from "../../price-action/lib/queue/snapshot/add-fetch-job";
+import {
+	addJob,
+	repeatQueue,
+} from "../../price-action/lib/queue/snapshot/fetch-daily";
 import { polygonQueue } from "../../price-action/lib/queue/snapshot/snapshot-queue";
+import { getAllMarketDaysInPastTwoYears } from "../../price-action/lib/time/dates";
 import { rateLimiter } from "../../price-action/store/rate-limit";
 import { snapshotStore } from "../../price-action/store/snapshot-dates";
 import { redisClient } from "../../store/redis-client";
@@ -137,8 +145,9 @@ devRouter.get("/trades-with-tickets", async (req, res) => {
 	res.json({ tradesWithMetadata });
 });
 
-devRouter.get("/snapshot/raw", async (req, res) => {
-	const response = await fetchSnapshotWithLimiter({ date: "2022-04-12" });
+devRouter.get("/snapshot/raw/:date", async (req, res) => {
+	const { date } = req.params;
+	const response = await fetchSnapshotWithLimiter({ date });
 
 	res.json({ response });
 });
@@ -185,7 +194,10 @@ devRouter.get("/snapshot/defer", async (req, res) => {
 devRouter.get("/job-counts", async (req, res) => {
 	const counts = await polygonQueue.getJobCounts();
 
-	res.json({ counts });
+	const failed = await polygonQueue.getFailed();
+	const completed = await polygonQueue.getCompleted();
+
+	res.json({ counts, failed, completed });
 });
 
 devRouter.get("/job/add/:date", async (req, res) => {
@@ -203,4 +215,45 @@ devRouter.get("/job/return/:id", async (req, res) => {
 	const job = await polygonQueue.getJob(id);
 
 	res.json({ job });
+});
+
+devRouter.get("/job/repeat/add", async (req, res) => {
+	let repeatableJobs = await repeatQueue.getRepeatableJobs();
+
+	console.log({ repeatableJobs });
+
+	await addJob();
+
+	repeatableJobs = await repeatQueue.getRepeatableJobs();
+	console.log({ repeatableJobs });
+
+	res.json({ repeatableJobs });
+});
+
+devRouter.get("/job/repeat/all", async (req, res) => {
+	const jobs = await repeatQueue.getRepeatableJobs();
+	const allJobs = await repeatQueue.getJobs();
+
+	// await repeatQueue.removeRepeatable("delay", {
+	// 	cron: "* * * * *",
+	// });
+
+	res.json({ jobs, allJobs });
+});
+
+devRouter.get("/job/snapshot/backlog", async (req, res) => {
+	const dates = getAllMarketDaysInPastTwoYears();
+	const jobs = await addSnapshotFetchJobs(dates);
+
+	res.json({ jobs });
+});
+
+devRouter.get("/price-action/high-volume", async (req, res) => {
+	console.time("high-vol-query");
+	const rows = await PriceActionApiObject.query({
+		text: "select * from price_action_1d where volume > 5e8 order by volume",
+	});
+
+	res.json({ rows });
+	console.timeEnd("high-vol-query");
 });
