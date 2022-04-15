@@ -1,0 +1,1 @@
+pg_restore -U postgres -d trade -F c psql-backups/5_backup_1d.sql
