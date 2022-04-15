@@ -1,6 +1,6 @@
 import { Job, Queue, QueueEvents, QueueScheduler, Worker } from "bullmq";
 import Redis from "ioredis";
-import { fetchSnapshotWithLimiter } from "../../polygon/requests/snapshot/fetch";
+import { fetchAndInsertSnapshot } from "../../polygon/requests/snapshot/insert";
 
 // BullMQ wants to connect to Redis separately. For now, we'll use the same
 // store we use elsewhere, but we might want to create a separate Docker service
@@ -14,7 +14,7 @@ export const snapshotQueueName = "polygonSnapshotFetchQueue";
 export const polygonQueue = new Queue(snapshotQueueName, {
 	connection,
 	defaultJobOptions: {
-		removeOnComplete: true,
+		removeOnComplete: 10, // keep only the latest 10 snapshots
 	},
 });
 
@@ -29,6 +29,7 @@ const polygonQueueScheduler = new QueueScheduler(snapshotQueueName, {
 const snapshotQueueEvents = new QueueEvents(snapshotQueueName, {
 	connection,
 });
+
 snapshotQueueEvents.on("completed", ({ jobId, returnvalue }) => {
 	console.log(`Completed job ${jobId}`);
 	// Can use this to log the result of the process that was just completed by
@@ -38,14 +39,23 @@ snapshotQueueEvents.on("completed", ({ jobId, returnvalue }) => {
 
 export const polygonSnapshotFetchWorker = new Worker(
 	snapshotQueueName,
-	async ({ data }: Job<{ date: string }>) =>
-		await fetchSnapshotWithLimiter({ date: data.date }),
+	async ({ data }: Job<{ date: string }>) => {
+		const response = await fetchAndInsertSnapshot(data.date);
+
+		if (!response?.status) {
+			if (Array.isArray(response)) {
+				return response[0];
+			}
+		} else {
+			return response.status;
+		}
+	},
 	{
 		connection,
 		limiter: {
 			max: 5,
 			duration: 60 * 1000,
 		},
-		autorun: false,
+		autorun: true,
 	}
 );
