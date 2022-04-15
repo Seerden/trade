@@ -11,7 +11,7 @@ const connection = new Redis("redis://store:6379", {
 
 export const snapshotQueueName = "polygonSnapshotFetchQueue";
 
-export const polygonQueue = new Queue(snapshotQueueName, {
+export const snapshotQueue = new Queue(snapshotQueueName, {
 	connection,
 	defaultJobOptions: {
 		removeOnComplete: 10, // keep only the latest 10 snapshots
@@ -22,7 +22,7 @@ export const polygonQueue = new Queue(snapshotQueueName, {
 // I don't think there are any adverse effect if we initialize it regardless.
 // Note that it doesn't have to be .run() or anything, it starts up as soon as
 // it's initialized.
-const polygonQueueScheduler = new QueueScheduler(snapshotQueueName, {
+const snapshotQueueScheduler = new QueueScheduler(snapshotQueueName, {
 	connection,
 });
 

@@ -21,7 +21,7 @@ import {
 	addJob,
 	repeatQueue,
 } from "../../price-action/lib/queue/snapshot/repeat-queue";
-import { polygonQueue } from "../../price-action/lib/queue/snapshot/snapshot-queue";
+import { snapshotQueue } from "../../price-action/lib/queue/snapshot/snapshot-queue";
 import { getAllMarketDaysInPastTwoYears } from "../../price-action/lib/time/dates";
 import { formatYMD } from "../../price-action/lib/time/format-YMD";
 import { rateLimiter } from "../../price-action/store/rate-limit";
@@ -194,10 +194,10 @@ devRouter.get("/snapshot/defer", async (req, res) => {
 });
 
 devRouter.get("/job-counts", async (req, res) => {
-	const counts = await polygonQueue.getJobCounts();
+	const counts = await snapshotQueue.getJobCounts();
 
-	const failed = await polygonQueue.getFailed();
-	const completed = await polygonQueue.getCompleted();
+	const failed = await snapshotQueue.getFailed();
+	const completed = await snapshotQueue.getCompleted();
 
 	res.json({ counts, failed, completed });
 });
@@ -214,7 +214,7 @@ devRouter.get("/job/return/:id", async (req, res) => {
 
 	if (!id) return res.json({ message: "no job id specified" });
 
-	const job = await polygonQueue.getJob(id);
+	const job = await snapshotQueue.getJob(id);
 
 	res.json({ job });
 });
