@@ -10,9 +10,10 @@ import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { Wrapper } from "./App.style";
-const NewTickets = lazy(
-	() => import("components/NewTicket/NewTickets/NewTickets")
+const NewTickets = lazy(() =>
+	import("components/NewTicket/NewTickets/NewTickets")
 );
+const Chart = lazy(() => import("components/Charts/Chart/Chart"));
 
 const App = () => {
 	useReconcileSession();
@@ -37,6 +38,16 @@ const App = () => {
 
 						<Route path="login" element={<Login />} />
 						<Route path="register" element={<Register />} />
+						<Route
+							path="chart"
+							element={
+								<Suspense fallback={<></>}>
+									<ErrorBoundary fallback={<></>}>
+										<Private component={<Chart />} />
+									</ErrorBoundary>
+								</Suspense>
+							}
+						/>
 						<Route
 							path="/"
 							element={
