@@ -8,7 +8,7 @@ import {
 	priceActionFields,
 	priceActionFieldsString,
 } from "../../../constants/fields";
-import { fetchSnapshot } from "./fetch";
+import { fetchSnapshotWithLimiter } from "./fetch";
 import { snapshotToPriceAction } from "./transform";
 
 /**
@@ -46,7 +46,7 @@ export async function fetchAndInsertSnapshot(date: DateDayjsOrString) {
 	// Check if snapshot was already fetched previously.
 	if (await snapshotStore.exists(date)) return;
 
-	const rawResponse = await fetchSnapshot({ date });
+	const rawResponse = await fetchSnapshotWithLimiter({ date });
 
 	const priceActionObjects = snapshotToPriceAction(rawResponse);
 	if (!priceActionObjects.length) return;
