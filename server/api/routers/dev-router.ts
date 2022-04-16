@@ -3,7 +3,10 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
-import { BackendApiObject } from "../../database/pools/query-objects";
+import {
+	BackendApiObject,
+	PriceActionApiObject,
+} from "../../database/pools/query-objects";
 import { fetchPriceActionForTicker } from "../../price-action/database/queries/fetch-price-action";
 import {
 	// eslint-disable-next-line camelcase
@@ -11,13 +14,19 @@ import {
 	fetchAndInsertMaxOneMinuteData,
 	fetchMaxOneMinuteData,
 } from "../../price-action/database/_dev/polygon/max-1m-query";
-import {
-	fetchSnapshot,
-	fetchSnapshotWithLimiter,
-} from "../../price-action/lib/polygon/requests/snapshot/fetch";
+import { fetchSnapshotWithLimiter } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
+import { addSnapshotFetchJobs } from "../../price-action/lib/queue/snapshot/add-fetch-job";
+import {
+	addJob,
+	repeatQueue,
+} from "../../price-action/lib/queue/snapshot/fetch-daily";
+import { polygonQueue } from "../../price-action/lib/queue/snapshot/snapshot-queue";
+import { getAllMarketDaysInPastTwoYears } from "../../price-action/lib/time/dates";
+import { formatYMD } from "../../price-action/lib/time/format-YMD";
 import { rateLimiter } from "../../price-action/store/rate-limit";
 import { snapshotStore } from "../../price-action/store/snapshot-dates";
+import { fetchExistingSnapshotTimestamps } from "../../price-action/store/snapshot-reconcile";
 import { redisClient } from "../../store/redis-client";
 import { getTradesWithTickets } from "../database/queries/trades/get";
 import { getTradeDetails } from "../helpers/trades/trade-meta";
@@ -32,7 +41,7 @@ dayjs.extend(timezone);
 export const devRouter = express.Router({ mergeParams: true });
 
 devRouter.get("/daily/all", async (req, res) => {
-	const response = await fetchSnapshot({ date: "2021-12-13" });
+	const response = await fetchSnapshotWithLimiter({ date: "2021-12-13" });
 	res.json({ response });
 });
 
@@ -138,8 +147,9 @@ devRouter.get("/trades-with-tickets", async (req, res) => {
 	res.json({ tradesWithMetadata });
 });
 
-devRouter.get("/snapshot/raw", async (req, res) => {
-	const response = await fetchSnapshot({ date: "2022-04-12" });
+devRouter.get("/snapshot/raw/:date", async (req, res) => {
+	const { date } = req.params;
+	const response = await fetchSnapshotWithLimiter({ date });
 
 	res.json({ response });
 });
@@ -181,4 +191,81 @@ devRouter.get("/snapshot/defer", async (req, res) => {
 
 	const requestCount = await rateLimiter.getRequestCount();
 	res.json({ response, requestCount });
+});
+
+devRouter.get("/job-counts", async (req, res) => {
+	const counts = await polygonQueue.getJobCounts();
+
+	const failed = await polygonQueue.getFailed();
+	const completed = await polygonQueue.getCompleted();
+
+	res.json({ counts, failed, completed });
+});
+
+devRouter.get("/job/add/:date", async (req, res) => {
+	const { date } = req.params;
+	const returnvalue = await addSnapshotFetchJobs([date]);
+
+	res.json({ returnvalue });
+});
+
+devRouter.get("/job/return/:id", async (req, res) => {
+	const { id } = req.params;
+
+	if (!id) return res.json({ message: "no job id specified" });
+
+	const job = await polygonQueue.getJob(id);
+
+	res.json({ job });
+});
+
+devRouter.get("/job/repeat/add", async (req, res) => {
+	let repeatableJobs = await repeatQueue.getRepeatableJobs();
+
+	console.log({ repeatableJobs });
+
+	await addJob();
+
+	repeatableJobs = await repeatQueue.getRepeatableJobs();
+	console.log({ repeatableJobs });
+
+	res.json({ repeatableJobs });
+});
+
+devRouter.get("/job/repeat/all", async (req, res) => {
+	const jobs = await repeatQueue.getRepeatableJobs();
+	const allJobs = await repeatQueue.getJobs();
+
+	// await repeatQueue.removeRepeatable("delay", {
+	// 	cron: "* * * * *",
+	// });
+
+	res.json({ jobs, allJobs });
+});
+
+devRouter.get("/job/snapshot/backlog", async (req, res) => {
+	const dates = getAllMarketDaysInPastTwoYears();
+	const jobs = await addSnapshotFetchJobs(dates);
+
+	res.json({ jobs });
+});
+
+devRouter.get("/price-action/high-volume", async (req, res) => {
+	console.time("high-vol-query");
+	const rows = await PriceActionApiObject.query({
+		text: "select * from price_action_1d where volume > 5e8 order by volume",
+	});
+
+	res.json({ rows });
+	console.timeEnd("high-vol-query");
+});
+
+devRouter.get("/snapshots/timestamps/reconcile", async (req, res) => {
+	const [{ timestamps }] = await fetchExistingSnapshotTimestamps();
+
+	const dates = timestamps.map((t: string) => formatYMD(t));
+
+	const response = await snapshotStore.bulkAdd(dates);
+
+	res.json({ response });
 });
