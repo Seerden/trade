@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/node";
+import * as Tracing from "@sentry/tracing";
 import cors from "cors";
 import { config } from "dotenv";
 import express, { Request, Response } from "express";
@@ -15,6 +17,21 @@ config();
 
 async function main() {
 	const app = express();
+
+	Sentry.init({
+		dsn: process.env.SENTRY_DSN,
+		tracesSampleRate: 1,
+		autoSessionTracking: false,
+		normalizeDepth: 10,
+		integrations: [
+			new Tracing.Integrations.Express({
+				app,
+			}),
+		],
+	});
+
+	app.use(Sentry.Handlers.requestHandler() as express.RequestHandler);
+
 	app.use(
 		express.urlencoded({
 			limit: "5mb",
@@ -85,6 +102,8 @@ async function main() {
 	// 	await polygonSnapshotFetchWorker.close();
 	// 	console.log("Shut down express server.");
 	// });
+
+	app.use(Sentry.Handlers.errorHandler());
 
 	/**
 	 * Catch-all piece of middleware that handles errors during route handling.

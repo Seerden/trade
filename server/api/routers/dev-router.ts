@@ -1,28 +1,29 @@
+import { captureMessage } from "@sentry/node";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
 import {
-	BackendApiObject,
-	PriceActionApiObject,
+   BackendApiObject,
+   PriceActionApiObject
 } from "../../database/pools/query-objects";
 import { fetchPriceActionForTicker } from "../../price-action/database/queries/fetch-price-action";
 import {
-	// eslint-disable-next-line camelcase
-	dev_firstAndLastMaxOneMinuteDataResultRow,
-	fetchAndInsertMaxOneMinuteData,
-	fetchMaxOneMinuteData,
+   // eslint-disable-next-line camelcase
+   dev_firstAndLastMaxOneMinuteDataResultRow,
+   fetchAndInsertMaxOneMinuteData,
+   fetchMaxOneMinuteData
 } from "../../price-action/database/_dev/polygon/max-1m-query";
 import { fetchSnapshotWithLimiter } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
 import {
-	addAggregateFetchJobs,
-	addSnapshotFetchJobs,
+   addAggregateFetchJobs,
+   addSnapshotFetchJobs
 } from "../../price-action/lib/queue/snapshot/add-fetch-job";
 import {
-	addJob,
-	repeatQueue,
+   addJob,
+   repeatQueue
 } from "../../price-action/lib/queue/snapshot/repeat-queue";
 import { polygonQueue } from "../../price-action/lib/queue/snapshot/snapshot-queue";
 import { getAllMarketDaysInPastTwoYears } from "../../price-action/lib/time/dates";
@@ -150,9 +151,14 @@ devRouter.get("/trades-with-tickets", async (req, res) => {
 	res.json({ tradesWithMetadata });
 });
 
+<<<<<<< HEAD
 devRouter.get("/snapshot/raw/:date", async (req, res) => {
 	const { date } = req.params;
 	const response = await fetchSnapshotWithLimiter({ date });
+=======
+devRouter.get("/snapshot/raw", async (req, res) => {
+	const response = await fetchSnapshotWithLimiter({ date: "2022-04-12" });
+>>>>>>> 03bfc37ede1c2d1135055f81364043397cf182e0
 
 	res.json({ response });
 });
@@ -291,4 +297,7 @@ devRouter.get("/job/aggregate", async (req, res) => {
 	]);
 
 	res.json({ response });
+devRouter.get("/error", (req, res) => {
+	const id = captureMessage("I'm a manually thrown Sentry message.");
+	res.json({ response: { message: `Error #${id} was sent to Sentry.` } });
 });
