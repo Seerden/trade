@@ -7,6 +7,7 @@ import format from "pg-format";
 import { PriceActionApiObject } from "../../../database/pools/query-objects";
 import { DateDayjsOrString } from "../../../types/date.types";
 import { formatYMD } from "../../lib/time/format-YMD";
+import { isEarlyClose } from "../../lib/time/market-holidays";
 
 dayjs.extend(utc);
 dayjs.extend(tz);
@@ -15,11 +16,11 @@ dayjs.extend(tz);
  * Convert a date to a timestamp corresponding to the market close of that day.
  * Doesn't account for weekends and holidays, just gets us a timestamp for 4PM
  * on that day.
- *
- * @todo what to do with half-day market days?
  */
 function dateToEODTimestamp(date: DateDayjsOrString) {
 	const ymdDate = formatYMD(date);
+
+	const closeTime = isEarlyClose(date) ? "13:00" : "16:00";
 
 	// Using dayjs.tz(date, timezone) actually gets us the time for that date
 	// in that timezone. Doing something like dayjs(date).tz(timezone) doesn't
@@ -31,23 +32,25 @@ function dateToEODTimestamp(date: DateDayjsOrString) {
 
 	// So, to be clear: the below statement actually gets us the timestamp for market close.
 	const timestamp = dayjs(
-		dayjs.tz(`${ymdDate} 16:00`, "America/New_York")
+		dayjs.tz(`${ymdDate} ${closeTime}`, "America/New_York")
 	).valueOf();
 	return timestamp;
 }
 
-/**
- * Construct the query text for getDailyMostActive().
- */
-function constructDailyMostActiveQuery(date: DateDayjsOrString) {
+/** Construct the query text for getDailyMostActive(). */
+function constructDailyMostActiveQuery(
+	date: DateDayjsOrString,
+	tickerCount = 300
+) {
 	const text = format(
 		`
       select * from price_action_1d 
       where timestamp = %L
       order by volume desc
-      limit 300
+      limit %L
       `,
-		dateToEODTimestamp(date)
+		dateToEODTimestamp(date),
+		tickerCount
 	);
 
 	return text;
@@ -55,12 +58,14 @@ function constructDailyMostActiveQuery(date: DateDayjsOrString) {
 
 export async function getDailyMostActive({
 	date,
+	tickerCount = 300,
 }: {
 	date: DateDayjsOrString;
+	tickerCount?: number;
 }) {
 	try {
 		return await PriceActionApiObject.query({
-			text: constructDailyMostActiveQuery(date),
+			text: constructDailyMostActiveQuery(date, tickerCount),
 		});
 	} catch (error) {
 		console.error(error);
