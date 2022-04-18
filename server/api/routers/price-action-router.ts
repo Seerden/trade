@@ -1,5 +1,7 @@
+import dayjs from "dayjs";
 import { Router } from "express";
 import { fetchDailyMovers } from "../../price-action/database/queries/daily-movers";
+import { fetchPriceActionForTicker } from "../../price-action/database/queries/fetch-price-action";
 import { getDailyMostActive } from "../../price-action/database/queries/most-active";
 
 export const priceActionRouter = Router({ mergeParams: true });
@@ -20,4 +22,22 @@ priceActionRouter.get("/ticker/:date/gainers/:direction", async (req, res) => {
 	);
 
 	res.json({ response: rows });
+});
+
+priceActionRouter.get("/1d/:tickers/:start/:end", async (req, res) => {
+	const { tickers, start, end } = req.params;
+
+	const from = dayjs(start).startOf("day");
+	const to = dayjs(end).add(1, "day").startOf("day");
+
+	const tickersArray = tickers.replace(/w/g, "").split(",");
+
+	const rows = await fetchPriceActionForTicker({
+		timescale: "day",
+		from,
+		to,
+		tickers: tickersArray,
+	});
+
+	res.json({ rows });
 });

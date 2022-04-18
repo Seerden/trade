@@ -7,7 +7,7 @@ import { unixMillis } from "../../lib/time/date-manipulation";
 
 type Options = {
 	timescale: PermittedTimespan;
-	ticker: string;
+	tickers: string[];
 	from: DateDayjsOrString;
 	to: DateDayjsOrString;
 	limit?: string | number;
@@ -16,15 +16,23 @@ type Options = {
 /** Fetch price action for one ticker for a given date range and timescale. */
 export async function fetchPriceActionForTicker({
 	timescale,
-	ticker,
+	tickers,
 	from,
 	to,
-	limit = "750",
+	limit = "5000",
 }: Options) {
 	const text = format(
-		"select * from %I where ticker = '%s' and timestamp between %L and %L limit %L",
+		// Note: https://stackoverflow.com/a/67687175
+		// jsonb_agg only takes a single parameter. So have to do jsonb_agg(to_jsonb(...))
+		`
+         select ticker, jsonb_agg(to_jsonb(p) - 'ticker') rows 
+         from %I p 
+         where ticker in (%L) 
+         and timestamp between %L and %L 
+         group by ticker
+      `,
 		timescaleToTableName(timescale),
-		ticker.toUpperCase(),
+		tickers.map((t) => t.toUpperCase()),
 		unixMillis(from),
 		unixMillis(to),
 		limit
