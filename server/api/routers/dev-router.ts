@@ -6,7 +6,6 @@ import utc from "dayjs/plugin/utc";
 import express from "express";
 import { BackendApiObject } from "../../database/pools/query-objects";
 import { fetchPriceActionForTicker } from "../../price-action/database/queries/fetch-price-action";
-import { getDailyMostActive } from "../../price-action/database/queries/most-active";
 import {
 	// eslint-disable-next-line camelcase
 	dev_firstAndLastMaxOneMinuteDataResultRow,
@@ -180,14 +179,6 @@ devRouter.get("/snapshot/defer", async (req, res) => {
 
 	const requestCount = await rateLimiter.getRequestCount();
 	res.json({ response, requestCount });
-});
-
-devRouter.get("/tickers/:date/active", async (req, res) => {
-	const { date } = req.params;
-
-	const response = await getDailyMostActive({ date });
-
-	res.json({ response });
 });
 
 devRouter.get("/T", async (req, res) => {
