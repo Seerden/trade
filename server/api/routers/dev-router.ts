@@ -11,10 +11,7 @@ import {
 	fetchAndInsertMaxOneMinuteData,
 	fetchMaxOneMinuteData,
 } from "../../price-action/database/_dev/polygon/max-1m-query";
-import {
-	fetchSnapshot,
-	fetchSnapshotWithLimiter,
-} from "../../price-action/lib/polygon/requests/snapshot/fetch";
+import { fetchSnapshotWithLimiter } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { fetchAndInsertSnapshot } from "../../price-action/lib/polygon/requests/snapshot/insert";
 import { rateLimiter } from "../../price-action/store/rate-limit";
 import { snapshotStore } from "../../price-action/store/snapshot-dates";
@@ -32,7 +29,7 @@ dayjs.extend(timezone);
 export const devRouter = express.Router({ mergeParams: true });
 
 devRouter.get("/daily/all", async (req, res) => {
-	const response = await fetchSnapshot({ date: "2021-12-13" });
+	const response = await fetchSnapshotWithLimiter({ date: "2021-12-13" });
 	res.json({ response });
 });
 
@@ -139,7 +136,7 @@ devRouter.get("/trades-with-tickets", async (req, res) => {
 });
 
 devRouter.get("/snapshot/raw", async (req, res) => {
-	const response = await fetchSnapshot({ date: "2022-04-12" });
+	const response = await fetchSnapshotWithLimiter({ date: "2022-04-12" });
 
 	res.json({ response });
 });
