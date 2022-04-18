@@ -1,3 +1,4 @@
+import { captureMessage } from "@sentry/node";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
@@ -194,4 +195,9 @@ devRouter.get("/T", async (req, res) => {
 		dayjs.tz("2022-04-14 16:00", "America/New_York")
 	).valueOf();
 	res.json({ there });
+});
+
+devRouter.get("/error", (req, res) => {
+	const id = captureMessage("I'm a manually thrown Sentry message.");
+	res.json({ response: { message: `Error #${id} was sent to Sentry.` } });
 });
