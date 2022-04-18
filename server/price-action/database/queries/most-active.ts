@@ -1,5 +1,6 @@
 // fetch 300 most active tickers for a given data from the _1d database
 
+import { captureMessage } from "@sentry/node";
 import dayjs from "dayjs";
 import tz from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
@@ -63,11 +64,17 @@ export async function getDailyMostActive({
 	date: DateDayjsOrString;
 	tickerCount?: number;
 }) {
+	const text = constructDailyMostActiveQuery(date, tickerCount);
 	try {
 		return await PriceActionApiObject.query({
-			text: constructDailyMostActiveQuery(date, tickerCount),
+			text,
 		});
 	} catch (error) {
-		console.error(error);
+		captureMessage(`Error fetching most active ticker data for ${date}`, {
+			extra: {
+				text,
+				error,
+			},
+		});
 	}
 }
