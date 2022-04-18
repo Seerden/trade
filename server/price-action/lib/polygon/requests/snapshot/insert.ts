@@ -11,6 +11,17 @@ import {
 import { fetchSnapshotWithLimiter } from "./fetch";
 import { snapshotToPriceAction } from "./transform";
 
+const insertConflictSnippet = format(`
+   on conflict (ticker, timestamp)
+   do update
+   set
+      open = excluded.open,
+      high = excluded.high,
+      low = excluded.low,
+      close = excluded.close,
+      volume = excluded.volume
+`);
+
 /**
  * Insert a polygon daily snapshot into the database.
  * @param priceActionObjects this is the return from `snapshotToPriceAction()`
@@ -24,7 +35,9 @@ async function insertSnapshot(priceActionObjects: PriceActionRow[]) {
 
 	const text = format(
 		`with inserted_rows as (
-         insert into price_action_1d (%s) values %L returning timestamp
+         insert into price_action_1d (%s) values %L 
+         ${insertConflictSnippet}
+         returning timestamp
       ) 
       select distinct timestamp
       from inserted_rows

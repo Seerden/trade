@@ -2,12 +2,12 @@ import format from "pg-format";
 import { PermittedTimespan } from "price-action/lib/polygon/types/aggregate.types";
 import { PriceActionApiObject } from "../../../database/pools/query-objects";
 import { DateDayjsOrString } from "../../../types/date.types";
-import { timescaleToTableName } from "../../lib/get-table-name";
-import { asMillisecondUnixTimestamp } from "../../lib/time/as-unix-ms";
+import { timespanToTableMap } from "../../lib/get-table-name";
+import { unixMillis } from "../../lib/time/date-manipulation";
 
 type Options = {
-	timescale: PermittedTimespan;
-	ticker: string;
+	timespan: PermittedTimespan;
+	tickers: string[];
 	from: DateDayjsOrString;
 	to: DateDayjsOrString;
 	limit?: string | number;
@@ -15,18 +15,26 @@ type Options = {
 
 /** Fetch price action for one ticker for a given date range and timescale. */
 export async function fetchPriceActionForTicker({
-	timescale,
-	ticker,
+	timespan,
+	tickers,
 	from,
 	to,
-	limit = "750",
+	limit = "5000",
 }: Options) {
 	const text = format(
-		"select * from %I where ticker = '%s' and timestamp between %L and %L limit %L",
-		timescaleToTableName(timescale),
-		ticker.toUpperCase(),
-		asMillisecondUnixTimestamp(from),
-		asMillisecondUnixTimestamp(to),
+		// Note: https://stackoverflow.com/a/67687175
+		// jsonb_agg only takes a single parameter. So have to do jsonb_agg(to_jsonb(...))
+		`
+         select ticker, jsonb_agg(to_jsonb(p) - 'ticker') rows 
+         from %I p 
+         where ticker in (%L) 
+         and timestamp between %L and %L 
+         group by ticker
+      `,
+		timespanToTableMap[timespan],
+		tickers.map((t) => t.toUpperCase()),
+		unixMillis(from),
+		unixMillis(to),
 		limit
 	);
 

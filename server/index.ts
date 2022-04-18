@@ -9,6 +9,7 @@ import { strategy } from "./api/helpers/auth/passport/config";
 import { getUser } from "./api/helpers/auth/user";
 import { logRequests } from "./api/helpers/middleware/log-requests";
 import authRouter from "./api/routers/auth-router";
+import { priceActionRouter } from "./api/routers/price-action-router";
 import { tradeRouter } from "./api/routers/trade-router";
 import { redisSession, startRedis } from "./store/redis-client";
 
@@ -83,6 +84,7 @@ async function main() {
 
 	app.use("/auth", authRouter);
 	app.use("/t", tradeRouter);
+	app.use("/p", priceActionRouter);
 
 	app.get("/", (req, res) => {
 		res.json({ message: "/ GET successful" });

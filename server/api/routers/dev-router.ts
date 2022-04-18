@@ -5,7 +5,6 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
 import { BackendApiObject } from "../../database/pools/query-objects";
-import { fetchPriceActionForTicker } from "../../price-action/database/queries/fetch-price-action";
 import {
 	// eslint-disable-next-line camelcase
 	dev_firstAndLastMaxOneMinuteDataResultRow,
@@ -53,21 +52,6 @@ devRouter.get("/:ticker/1m/max/:to", async (req, res) => {
 	res.json({
 		resultEndpoints: dev_firstAndLastMaxOneMinuteDataResultRow(response),
 	});
-});
-
-devRouter.get("/:ticker/1m/:from/:to", async (req, res) => {
-	const { ticker, from, to } = req.params;
-	const { limit } = req.query;
-
-	const rows = await fetchPriceActionForTicker({
-		timescale: "minute",
-		ticker: ticker.toUpperCase(),
-		from,
-		to,
-		limit: limit ? String(limit) : null,
-	});
-
-	res.json({ rows });
 });
 
 /**
@@ -179,6 +163,13 @@ devRouter.get("/snapshot/defer", async (req, res) => {
 
 	const requestCount = await rateLimiter.getRequestCount();
 	res.json({ response, requestCount });
+});
+
+devRouter.get("/T", async (req, res) => {
+	const there = dayjs(
+		dayjs.tz("2022-04-14 16:00", "America/New_York")
+	).valueOf();
+	res.json({ there });
 });
 
 devRouter.get("/error", (req, res) => {
