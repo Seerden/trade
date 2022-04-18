@@ -20,6 +20,14 @@ export function dateToTimestamp(date: DateDayjsOrString) {
  * To get something usable as New York time, we have to convert to a string, otherwis dayjs will,
  * with most methods, end up using the host machine's locale again.
  */
-export function toNewYorkTime(date: DateDayjsOrString, format = "YYYY-MM-DD HH:mm:ss") {
+export function toNewYorkTime(
+	date: DateDayjsOrString,
+	format = "YYYY-MM-DD HH:mm:ss"
+) {
 	return dayjs(date).tz(newYorkLocale).format(format);
+}
+
+/** Convert date to UNIX timestamp in milliseconds. */
+export function unixMillis(date: DateDayjsOrString) {
+	return dayjs(date).valueOf();
 }

@@ -3,7 +3,7 @@ import { PermittedTimespan } from "price-action/lib/polygon/types/aggregate.type
 import { PriceActionApiObject } from "../../../database/pools/query-objects";
 import { DateDayjsOrString } from "../../../types/date.types";
 import { timescaleToTableName } from "../../lib/get-table-name";
-import { unixMillis } from "../../lib/time/as-unix-ms";
+import { unixMillis } from "../../lib/time/date-manipulation";
 
 type Options = {
 	timescale: PermittedTimespan;
