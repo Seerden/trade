@@ -2,11 +2,11 @@ import format from "pg-format";
 import { PermittedTimespan } from "price-action/lib/polygon/types/aggregate.types";
 import { PriceActionApiObject } from "../../../database/pools/query-objects";
 import { DateDayjsOrString } from "../../../types/date.types";
-import { timescaleToTableName } from "../../lib/get-table-name";
+import { timespanToTableMap } from "../../lib/get-table-name";
 import { unixMillis } from "../../lib/time/date-manipulation";
 
 type Options = {
-	timescale: PermittedTimespan;
+	timespan: PermittedTimespan;
 	tickers: string[];
 	from: DateDayjsOrString;
 	to: DateDayjsOrString;
@@ -15,7 +15,7 @@ type Options = {
 
 /** Fetch price action for one ticker for a given date range and timescale. */
 export async function fetchPriceActionForTicker({
-	timescale,
+	timespan,
 	tickers,
 	from,
 	to,
@@ -31,7 +31,7 @@ export async function fetchPriceActionForTicker({
          and timestamp between %L and %L 
          group by ticker
       `,
-		timescaleToTableName(timescale),
+		timespanToTableMap[timespan],
 		tickers.map((t) => t.toUpperCase()),
 		unixMillis(from),
 		unixMillis(to),

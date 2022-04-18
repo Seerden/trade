@@ -3,6 +3,7 @@ import { Router } from "express";
 import { fetchDailyMovers } from "../../price-action/database/queries/daily-movers";
 import { fetchPriceActionForTicker } from "../../price-action/database/queries/fetch-price-action";
 import { getDailyMostActive } from "../../price-action/database/queries/most-active";
+import { PermittedTimespan } from "../../price-action/lib/polygon/types/aggregate.types";
 
 export const priceActionRouter = Router({ mergeParams: true });
 
@@ -24,20 +25,26 @@ priceActionRouter.get("/ticker/:date/gainers/:direction", async (req, res) => {
 	res.json({ response: rows });
 });
 
-priceActionRouter.get("/1d/:tickers/:start/:end", async (req, res) => {
-	const { tickers, start, end } = req.params;
+function isValidTimespan(timespan: string): timespan is PermittedTimespan {
+	return "day, hour, minute".split(", ").includes(timespan);
+}
 
-	const from = dayjs(start).startOf("day");
-	const to = dayjs(end).add(1, "day").startOf("day");
+priceActionRouter.get("/:timespan/:tickers/:start/:end", async (req, res) => {
+	const { tickers, start, end, timespan } = req.params;
 
-	const tickersArray = tickers.replace(/w/g, "").split(",");
+	if (isValidTimespan(timespan)) {
+		const from = dayjs(start).startOf("day");
+		const to = dayjs(end).add(1, "day").startOf("day");
 
-	const rows = await fetchPriceActionForTicker({
-		timescale: "day",
-		from,
-		to,
-		tickers: tickersArray,
-	});
+		const tickersArray = tickers.replace(/w/g, "").split(",");
 
-	res.json({ rows });
+		const rows = await fetchPriceActionForTicker({
+			timespan,
+			from,
+			to,
+			tickers: tickersArray,
+		});
+
+		res.json({ rows });
+	}
 });
