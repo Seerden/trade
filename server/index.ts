@@ -11,7 +11,7 @@ import { logRequests } from "./api/helpers/middleware/log-requests";
 import authRouter from "./api/routers/auth-router";
 import { priceActionRouter } from "./api/routers/price-action-router";
 import { tradeRouter } from "./api/routers/trade-router";
-import { polygonSnapshotFetchWorker } from "./price-action/lib/queue/snapshot/snapshot-queue";
+import { polygonSnapshotFetchWorker } from "./price-action/lib/queue/snapshot/polygon-queue";
 import { redisSession, startRedis } from "./store/redis-client";
 
 config();

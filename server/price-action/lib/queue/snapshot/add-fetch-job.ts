@@ -1,7 +1,7 @@
 import { DateDayjsOrString } from "../../../../types/date.types";
 import { AggregateJobData } from "../../../../types/queue.types";
 import { formatYMD } from "../../time/format-YMD";
-import { polygonQueue } from "./snapshot-queue";
+import { polygonQueue } from "./polygon-queue";
 
 /**
  * Add a list of `dates` to the Bull queue for which we want to fetch Polygon
