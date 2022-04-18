@@ -1,5 +1,3 @@
-// fetch 300 most active tickers for a given data from the _1d database
-
 import { captureMessage } from "@sentry/node";
 import dayjs from "dayjs";
 import tz from "dayjs/plugin/timezone";
