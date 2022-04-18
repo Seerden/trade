@@ -3,7 +3,7 @@ import { PermittedTimespan } from "price-action/lib/polygon/types/aggregate.type
 import { PriceActionApiObject } from "../../../database/pools/query-objects";
 import { DateDayjsOrString } from "../../../types/date.types";
 import { timescaleToTableName } from "../../lib/get-table-name";
-import { asMillisecondUnixTimestamp } from "../../lib/time/as-unix-ms";
+import { unixMillis } from "../../lib/time/as-unix-ms";
 
 type Options = {
 	timescale: PermittedTimespan;
@@ -25,8 +25,8 @@ export async function fetchPriceActionForTicker({
 		"select * from %I where ticker = '%s' and timestamp between %L and %L limit %L",
 		timescaleToTableName(timescale),
 		ticker.toUpperCase(),
-		asMillisecondUnixTimestamp(from),
-		asMillisecondUnixTimestamp(to),
+		unixMillis(from),
+		unixMillis(to),
 		limit
 	);
 

@@ -4,6 +4,6 @@ import { DateDayjsOrString } from "../../../types/date.types";
 /**
  * Convert date to UNIX timestamp in milliseconds
  */
-export function asMillisecondUnixTimestamp(date: DateDayjsOrString) {
-    return dayjs(date).unix() * 1000;
+export function unixMillis(date: DateDayjsOrString) {
+	return dayjs(date).valueOf();
 }
