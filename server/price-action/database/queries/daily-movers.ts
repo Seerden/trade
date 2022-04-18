@@ -1,23 +1,42 @@
 import format from "pg-format";
+import { PriceActionApiObject } from "../../../database/pools/query-objects";
 import { DateDayjsOrString } from "../../../types/date.types";
 import { dateToEODTimestamp } from "./most-active";
 
-export function makeDailyMoversQuery(
+/**
+ * Construct a database query to fetch the biggest gainers or losers on a given
+ * date.
+ */
+function makeDailyMoversQuery(
 	date: DateDayjsOrString,
-	tickerCount = 300
+	tickerCount = 300,
+	type: "gainers" | "losers" = "gainers"
 ) {
 	const timestamp = dateToEODTimestamp(date);
 
+	const sortDirection = type === "gainers" ? "desc" : "asc";
+
 	const text = format(
 		`
-      select * from price_action_1m
+      select * from price_action_1d
       where timestamp = %L
-      order by (high-low)/low desc
-      limit %L
+      order by (high-low)/low %s
+      limit %s
    `,
 		timestamp,
+		sortDirection,
 		tickerCount
 	);
 
 	return text;
+}
+
+export async function fetchDailyMovers(
+	...options: Parameters<typeof makeDailyMoversQuery>
+) {
+	const rows = await PriceActionApiObject.query({
+		text: makeDailyMoversQuery(...options),
+	});
+
+	return rows;
 }
