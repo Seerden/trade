@@ -3,19 +3,22 @@ import { Router } from "express";
 import { fetchDailyMovers } from "../../price-action/database/queries/daily-movers";
 import { fetchPriceActionForTicker } from "../../price-action/database/queries/fetch-price-action";
 import { getDailyMostActive } from "../../price-action/database/queries/most-active";
-import { PermittedTimespan } from "../../price-action/lib/polygon/types/aggregate.types";
+import { isValidTimespan } from "../../types/guards/is-valid-timespan";
 
 export const priceActionRouter = Router({ mergeParams: true });
 
-priceActionRouter.get("/tickers/:date/active", async (req, res) => {
-	const { date } = req.params;
+priceActionRouter.get("/:date/active/:timespan?", async (req, res) => {
+	const { date, timespan = "day" } = req.params;
 
-	const response = await getDailyMostActive({ date });
-
-	res.json({ response });
+	if (isValidTimespan(timespan)) {
+		const response = await getDailyMostActive({ date, timespan });
+		res.json({ response });
+	} else {
+		res.status(400).json({ error: "Invalid timespan provided." });
+	}
 });
 
-priceActionRouter.get("/ticker/:date/gainers/:direction", async (req, res) => {
+priceActionRouter.get("/:date/gainers/:direction", async (req, res) => {
 	const rows = await fetchDailyMovers(
 		req.params.date,
 		300,
@@ -24,10 +27,6 @@ priceActionRouter.get("/ticker/:date/gainers/:direction", async (req, res) => {
 
 	res.json({ response: rows });
 });
-
-function isValidTimespan(timespan: string): timespan is PermittedTimespan {
-	return "day, hour, minute".split(", ").includes(timespan);
-}
 
 priceActionRouter.get("/:timespan/:tickers/:start/:end", async (req, res) => {
 	const { tickers, start, end, timespan } = req.params;

@@ -5,6 +5,9 @@ import utc from "dayjs/plugin/utc";
 import format from "pg-format";
 import { PriceActionApiObject } from "../../../database/pools/query-objects";
 import { DateDayjsOrString } from "../../../types/date.types";
+import { isValidTimespan } from "../../../types/guards/is-valid-timespan";
+import { timespanToTableMap } from "../../lib/get-table-name";
+import { PermittedTimespan } from "../../lib/polygon/types/aggregate.types";
 import { formatYMD } from "../../lib/time/format-YMD";
 import { isEarlyClose } from "../../lib/time/market-holidays";
 
@@ -29,30 +32,38 @@ export function dateToEODTimestamp(date: DateDayjsOrString) {
 /** Construct the query text for getDailyMostActive(). */
 function constructDailyMostActiveQuery(
 	date: DateDayjsOrString,
+	timespan: PermittedTimespan = "day",
 	tickerCount = 300
 ) {
-	const text = format(
-		`
-      select * from price_action_1d 
-      where timestamp = %L
-      order by volume desc
-      limit %L
-      `,
-		dateToEODTimestamp(date),
-		tickerCount
-	);
+	if (isValidTimespan(timespan)) {
+		const table = timespanToTableMap[timespan];
 
-	return text;
+		const text = format(
+			`
+            select * from %s 
+            where timestamp = %L
+            order by volume desc
+            limit %L
+         `,
+			table,
+			dateToEODTimestamp(date),
+			tickerCount
+		);
+
+		return text;
+	}
 }
 
 export async function getDailyMostActive({
 	date,
+	timespan = "day",
 	tickerCount = 300,
 }: {
 	date: DateDayjsOrString;
+	timespan?: PermittedTimespan;
 	tickerCount?: number;
 }) {
-	const text = constructDailyMostActiveQuery(date, tickerCount);
+	const text = constructDailyMostActiveQuery(date, timespan, tickerCount);
 	try {
 		return await PriceActionApiObject.query({
 			text,
