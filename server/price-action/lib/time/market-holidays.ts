@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { DateDayjsOrString } from "../../../types/date.types";
 import { formatYMD } from "./format-YMD";
 
 /* Market holidays calendar: https://www.nyse.com/markets/hours-calendars
@@ -21,3 +22,13 @@ const holidays2022 =
 export const marketHolidays = [...holidays2021, ...holidays2022].map((date) =>
 	formatYMD(date)
 );
+
+/** List of market days (YYYY-MM-DD) in the next few years on which close is at 1.00 PM. */
+export const halfDays =
+	"2023-07-03 2024-07-03 2022-11-25 2023-11-24 2024-11-29 2024-12-24".split(
+		" "
+	);
+
+export function isEarlyClose(date: DateDayjsOrString) {
+	return halfDays.includes(formatYMD(date));
+}
