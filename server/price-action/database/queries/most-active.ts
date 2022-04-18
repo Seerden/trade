@@ -17,7 +17,7 @@ dayjs.extend(tz);
  * Doesn't account for weekends and holidays, just gets us a timestamp for 4PM
  * on that day.
  */
-function dateToEODTimestamp(date: DateDayjsOrString) {
+export function dateToEODTimestamp(date: DateDayjsOrString) {
 	const ymdDate = formatYMD(date);
 
 	const closeTime = isEarlyClose(date) ? "13:00" : "16:00";
