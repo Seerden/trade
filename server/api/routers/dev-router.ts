@@ -3,6 +3,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
+import { redisClient } from "../../store/redis-client";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -13,6 +14,11 @@ dayjs.extend(timezone);
  */
 export const devRouter = express.Router({ mergeParams: true });
 
-devRouter.get("/test", async (req, res) => {
-	res.json({ message: "Hello, world!" });
+/** Little speedtest for Redis retrieval. */
+devRouter.get("/redis/speedtest", async (req, res) => {
+	console.time("redis-speedtest");
+	const keys = await redisClient.keys("*");
+	console.timeEnd("redis-speedtest");
+
+	res.json({ keys });
 });
