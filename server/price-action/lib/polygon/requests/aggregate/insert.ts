@@ -1,12 +1,13 @@
 /* Insert a number of PriceActionRow objects into the database */
 
+import { captureMessage } from "@sentry/node";
 import format from "pg-format";
 import { Timescale } from "types/store.types";
 import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
 import { objectToArray } from "../../../../../helpers/object-to-array";
 import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
 import { priceActionFields } from "../../../constants/fields";
-import { timescaleToTableName } from "../../../get-table-name";
+import { timespanToTableMap } from "../../../get-table-name";
 import { aggregateFieldsString } from "../../constants/aggregate";
 import {
 	PermittedTimespan,
@@ -39,7 +40,7 @@ export async function insertAggregate<T>(
 	try {
 		const text = format(
 			"insert into %I (%s) values %L returning (timestamp)",
-			timescaleToTableName(timespan),
+			timespanToTableMap[timespan],
 			aggregateFieldsString,
 			rowsForDatabase
 		);
@@ -59,7 +60,12 @@ export async function insertAggregate<T>(
 			end: to,
 		});
 	} catch (error) {
-		console.error(error); // TODO: send Sentry message
+		captureMessage("Error inserting aggregate into database.", {
+			extra: {
+				rowsForDatabase,
+				options: { ticker, from, to, timespan },
+			},
+		});
 	}
 }
 
