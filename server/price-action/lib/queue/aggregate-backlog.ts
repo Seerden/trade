@@ -17,12 +17,6 @@ import {
  */
 
 /**
- * Create a list of all days on which stock markets were open in the past two
- * years, up to and possibly including today.
- *
- * @usage A free Polygon plan only allows fetching data going back at most two
- * years.
- *
  * @todo: This function actually adds entries to redis sets. In development, we
  * may end up calling this function without subsequently actually fetching the
  * data. On a second fetch of this function with overlapping dates, this means
