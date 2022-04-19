@@ -6,7 +6,7 @@ import { formatYMD } from "./format-YMD";
     No point in using a scraper for this, there are fewer than 10 dates per year,
     so it's much quicker to manually write them out  */
 const holidays2021 =
-	"Jan 1, Jan 18, Feb 15, Apr 2, May 31, Jul 5, Sep 6, Dec 24"
+	"Jan 1, Jan 18, Feb 15, Apr 2, May 31, Jul 5, Sep 6, Nov 25, Dec 24"
 		.split(",")
 		.map((date) => dayjs(`2021 ${date}`));
 
