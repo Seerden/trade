@@ -26,19 +26,18 @@ describe("getAllMarketDaysInPastTwoYears", () => {
 	});
 });
 
-describe("getNearestFinishedMarketDay", () => {
-	test("returns correct value if passed a regular trading day that's still in session", () => {
-		const result = getNearestPastFinishedMarketDay("2022-04-19 19:58");
+describe("getNearestFinished", () => {
+	test("returns previous market day if `date`'s market session not finished yet", () => {
+		const result = getNearestPastFinishedMarketDay("2022-04-19 21:08");
+
 		expect(result).toEqual("2022-04-18");
 	});
 
-	test("returns correct value if given easter sunday", () => {
-		const result = getNearestPastFinishedMarketDay("2022-04-17 15:00");
-		expect(result).toEqual("2022-04-14");
+	test("return same day if past market close", () => {
+		const result = getNearestPastFinishedMarketDay("2022-04-19 22:50");
+		expect(result).toEqual("2022-04-19");
 	});
 
-	test("returns correct result if given a date in the future", () => {
-		const result = getNearestPastFinishedMarketDay("2022-05-15");
-		expect(result).toEqual("2022-04-18");
-	});
+	// TODO: Still need to test behavior if passed future date. But that requires
+	// checking whether today is an active and finished session.
 });

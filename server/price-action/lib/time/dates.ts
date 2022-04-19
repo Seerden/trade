@@ -2,6 +2,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { DateDayjsOrString } from "../../../types/date.types";
 import { dateToEODTimestamp } from "../../database/queries/most-active";
 import { isActiveMarketDay, isHoliday, isWorkday } from "./check-date";
+import { unixMillis } from "./date-manipulation";
 import { formatYMD } from "./format-YMD";
 
 // get list of all market days in the past two years
@@ -24,6 +25,22 @@ export function getAllMarketDaysInPastTwoYears() {
 	return dates.map((date) => formatYMD(date));
 }
 
+// Return true if the dateA occurs on a future day w.r.t dateB. So if dateA and
+// dateB are different times on the same day, this returns false.
+export function isDayInFuture(
+	dateA: DateDayjsOrString | number,
+	dateB: DateDayjsOrString | number
+) {
+	const dateAYMD = formatYMD(dayjs(dateA));
+	const dateBYMD = formatYMD(dayjs(dateB));
+
+	return dateAYMD.valueOf() > dateBYMD.valueOf();
+}
+
+export function isSameDay(dateA: DateDayjsOrString, dateB: DateDayjsOrString) {
+	return formatYMD(dateA) === formatYMD(dateB);
+}
+
 /**
  * Get the date corresponding to the nearest (in the past) finished trading
  * session. If date is either (1) a market date, but the session is still
@@ -31,38 +48,25 @@ export function getAllMarketDaysInPastTwoYears() {
  * another market day.
  */
 export function getNearestPastFinishedMarketDay(
-	date: DateDayjsOrString = new Date()
-) {
-	const initialDate = dayjs(date);
-	const initialTimestamp = initialDate.valueOf();
-	const eodTimestamp = dateToEODTimestamp(initialDate);
-	const eodToday = dateToEODTimestamp(new Date());
-
-	// Handle case where given a future date.
-	if (initialTimestamp > eodToday) {
-		// If trading session has ended, return today.
-		if (!(eodToday > new Date().valueOf())) {
-			return formatYMD(new Date());
-		}
-		// Handle case where we're passed a timestamp on a trading day that's
-		// already ended.
-	} else if (initialTimestamp > eodTimestamp) {
-		return formatYMD(initialDate);
+	referenceDate?: DateDayjsOrString
+): string {
+	if (isDayInFuture(referenceDate, new Date())) {
+		return getNearestPastFinishedMarketDay(new Date());
 	}
 
-	let currentDate = dayjs(initialDate).add(-1, "day");
-	while (
-		// if date not market date, keep walking back
-		!isActiveMarketDay(currentDate) ||
-		// if date is after today, keep walking back
-		dayjs(formatYMD(currentDate)).valueOf() >
-			dayjs(formatYMD(new Date())).valueOf() ||
-		// if date is today and today's session not ended, keep walking back
-		(formatYMD(currentDate) === formatYMD(new Date()) &&
-			currentDate.valueOf() < dateToEODTimestamp(currentDate))
-	) {
-		currentDate = currentDate.add(-1, "day");
+	const now = referenceDate || new Date();
+	const nowMillis = unixMillis(now);
+
+	// Today's session is over: today is the nearest finished market day.
+	if (nowMillis > dateToEODTimestamp(now)) {
+		return formatYMD(now);
 	}
 
-	return formatYMD(currentDate);
+	// Today's session isn't over: find nearest past non-weekend, non-holiday.
+	let date = dayjs(now).add(-1, "day");
+	while (!isActiveMarketDay(now)) {
+		date = date.add(-1, "day");
+	}
+
+	return formatYMD(date);
 }
