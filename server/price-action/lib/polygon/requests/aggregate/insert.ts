@@ -39,7 +39,9 @@ export async function insertAggregate<T>(
 ) {
 	try {
 		const text = format(
-			"insert into %I (%s) values %L returning (timestamp)",
+			`insert into %I (%s) values %L 
+         on conflict do nothing 
+         returning (timestamp)`,
 			timespanToTableMap[timespan],
 			aggregateFieldsString,
 			rowsForDatabase
