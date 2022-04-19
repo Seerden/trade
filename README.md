@@ -4,6 +4,8 @@ Stock trading review application - charts and trading lookup and performance rev
 # This README
 I'm currently going through rapid iteration to work towards a minimum viable product, so this README will remain a little light for a short while, while I get the project up and running. 
 
+There's pretty much not a single page or component that's in a viable state right now. Give me a week or two from this date and I'll have more to show. 😅
+
 # Run locally
 Create two .env files (I'm not entirely sure if we actually need to, so feel free to play around..)
 - `./_containers/.env`
