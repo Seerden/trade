@@ -72,3 +72,9 @@ devRouter.get("/snapshot/raw/:date", async (req, res) => {
 devRouter.get("/queue/polygon/jobs", async (req, res) => {
 	res.json({ jobs: await listPolygonQueueJobs() });
 });
+
+devRouter.get("/queue/polygon/jobs/count/delayed", async (req, res) => {
+	res.json({
+		delayedJobCount: await polygonQueue.getJobCountByTypes("delayed"),
+	});
+});
