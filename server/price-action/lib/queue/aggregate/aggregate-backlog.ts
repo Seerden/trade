@@ -1,13 +1,13 @@
 import { captureMessage } from "@sentry/node";
 import { writeFile } from "fs/promises";
-import { redisClient } from "../../../store/redis-client";
-import { getDailyMostActive } from "../../database/queries/most-active";
-import { isActiveMarketDay } from "../time/check-date";
-import { getAllMarketDaysInPastTwoYears } from "../time/dates";
+import { redisClient } from "../../../../store/redis-client";
+import { getDailyMostActive } from "../../../database/queries/most-active";
+import { isActiveMarketDay } from "../../time/check-date";
+import { getAllMarketDaysInPastTwoYears } from "../../time/dates";
 import {
 	listMarketDaysInRange,
 	nMarketDayRange,
-} from "../time/market-day-range";
+} from "../../time/market-day-range";
 
 /**
  * Goal of this helper file: find out for which dates we haven't yet retrieved

@@ -1,11 +1,8 @@
 import { Job, Queue, QueueEvents, QueueScheduler, Worker } from "bullmq";
 import Redis from "ioredis";
-import {
-	AggregateJobData,
-	SnapshotJobData,
-} from "../../../../types/queue.types";
-import { fetchAndInsertAggregate } from "../../polygon/requests/aggregate/insert";
-import { fetchAndInsertSnapshot } from "../../polygon/requests/snapshot/insert";
+import { AggregateJobData, SnapshotJobData } from "../../../types/queue.types";
+import { fetchAndInsertAggregate } from "../polygon/requests/aggregate/insert";
+import { fetchAndInsertSnapshot } from "../polygon/requests/snapshot/insert";
 
 // BullMQ wants to connect to Redis separately. For now, we'll use the same
 // store we use elsewhere, but we might want to create a separate Docker service

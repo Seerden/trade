@@ -6,7 +6,7 @@ import express from "express";
 import { readFile } from "fs/promises";
 import { getDailyMostActive } from "../../price-action/database/queries/most-active";
 import { fetchSnapshotWithLimiter } from "../../price-action/lib/polygon/requests/snapshot/fetch";
-import { writeAggregateTickerDateTuplesToFetchToFile } from "../../price-action/lib/queue/aggregate-backlog";
+import { writeAggregateTickerDateTuplesToFetchToFile } from "../../price-action/lib/queue/aggregate/aggregate-backlog";
 import { addSnapshotFetchJobs } from "../../price-action/lib/queue/snapshot/add-fetch-job";
 import { redisClient } from "../../store/redis-client";
 
