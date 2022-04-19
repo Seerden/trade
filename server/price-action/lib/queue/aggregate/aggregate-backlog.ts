@@ -25,7 +25,7 @@ import {
  * - We can programatically reset the associated redis keys,
  * - or we can do it through the redis cli: redis-cli keys "1m:*" | xargs redis-cli DEL
  */
-export async function queueAggregateBacklog() {
+export async function getTuplesForAggregateBacklog() {
 	const datesToFetchFor = getAllMarketDaysInPastTwoYears().reverse();
 
 	// Through iteration below, the following object will end up like
@@ -116,7 +116,7 @@ export async function queueAggregateBacklog() {
 }
 
 export async function writeAggregateTickerDateTuplesToFetchToFile() {
-	const tuples = await queueAggregateBacklog();
+	const tuples = await getTuplesForAggregateBacklog();
 	const stringifiedTuples = JSON.stringify(tuples);
 	await writeFile("data/aggregate-tuples-to-fetch.json", stringifiedTuples);
 }
