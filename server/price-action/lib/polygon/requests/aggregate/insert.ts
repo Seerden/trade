@@ -62,6 +62,7 @@ export async function insertAggregate<T>(
 	} catch (error) {
 		captureMessage("Error inserting aggregate into database.", {
 			extra: {
+				error,
 				rowsForDatabase,
 				options: { ticker, from, to, timespan },
 			},
