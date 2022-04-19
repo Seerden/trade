@@ -1,6 +1,12 @@
+import { captureMessage } from "@sentry/node";
 import { Job, Queue, QueueEvents, QueueScheduler, Worker } from "bullmq";
 import Redis from "ioredis";
-import { AggregateJobData, SnapshotJobData } from "../../../types/queue.types";
+import {
+	AggregateJobData,
+	MaxAggregateJobData,
+	SnapshotJobData,
+} from "../../../types/queue.types";
+import { fetchAndInsertMaxOneMinuteData } from "../../database/_dev/polygon/max-1m-query";
 import { fetchAndInsertAggregate } from "../polygon/requests/aggregate/insert";
 import { fetchAndInsertSnapshot } from "../polygon/requests/snapshot/insert";
 
@@ -17,6 +23,7 @@ export const polygonQueue = new Queue(polygonQueueName, {
 	connection,
 	defaultJobOptions: {
 		removeOnComplete: 10, // keep only the latest 10 snapshots
+		removeOnFail: false,
 	},
 });
 
@@ -26,6 +33,7 @@ export const polygonQueue = new Queue(polygonQueueName, {
 // it's initialized.
 const polygonQueueScheduler = new QueueScheduler(polygonQueueName, {
 	connection,
+	stalledInterval: 20 * 1000,
 });
 
 const polygonQueueEvents = new QueueEvents(polygonQueueName, {
@@ -40,9 +48,16 @@ polygonQueueEvents.on("completed", ({ jobId, returnvalue }) => {
 	// console.log({ returnvalue });
 });
 
+polygonQueueEvents.on("failed", ({ jobId, failedReason, prev }) => {
+	captureMessage("Failed job", { extra: { jobId, failedReason, prev } });
+});
+
 export const polygonSnapshotFetchWorker = new Worker(
 	polygonQueueName,
-	async ({ data, name }: Job<SnapshotJobData | AggregateJobData>) => {
+	async ({
+		data,
+		name,
+	}: Job<SnapshotJobData | AggregateJobData | MaxAggregateJobData>) => {
 		if (name === "aggregate") {
 			try {
 				const response = await fetchAndInsertAggregate(
@@ -67,6 +82,21 @@ export const polygonSnapshotFetchWorker = new Worker(
 				return response.status;
 			}
 		}
+
+		if (name === "aggregate-backlog") {
+			try {
+				return await fetchAndInsertMaxOneMinuteData(
+					data as MaxAggregateJobData
+				);
+			} catch (error) {
+				return captureMessage("Error queueing aggregate-backlog job", {
+					extra: {
+						data,
+						error,
+					},
+				});
+			}
+		}
 	},
 	{
 		connection,
@@ -77,3 +107,10 @@ export const polygonSnapshotFetchWorker = new Worker(
 		autorun: true,
 	}
 );
+
+export async function listPolygonQueueJobs() {
+	return {
+		jobs: await polygonQueue.getJobs(),
+		failed: await polygonQueue.getFailed(),
+	};
+}
