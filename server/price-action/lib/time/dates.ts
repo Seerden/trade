@@ -1,28 +1,31 @@
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { DateDayjsOrString } from "../../../types/date.types";
 import { dateToEODTimestamp } from "../../database/queries/most-active";
 import { isActiveMarketDay, isHoliday, isWorkday } from "./check-date";
 import { unixMillis } from "./date-manipulation";
 import { formatYMD } from "./format-YMD";
 
-// get list of all market days in the past two years
+/**
+ * Create a list of all days in the past two years on which the stock market was
+ * open, up to and possibly including today.
+ */
 export function getAllMarketDaysInPastTwoYears() {
 	const today = dayjs().startOf("day");
 	const twoYearsAgo = today.add(-2, "year");
 
 	let latest = twoYearsAgo;
 
-	const dates: Dayjs[] = [latest];
+	const dates: string[] = [formatYMD(latest)];
 
 	while (latest.valueOf() < today.valueOf()) {
 		latest = latest.add(1, "day");
 
 		if (isWorkday(latest) && !isHoliday(latest)) {
-			dates.push(latest);
+			dates.push(formatYMD(latest));
 		}
 	}
 
-	return dates.map((date) => formatYMD(date));
+	return dates;
 }
 
 // Return true if the dateA occurs on a future day w.r.t dateB. So if dateA and
