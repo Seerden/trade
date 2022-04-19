@@ -39,8 +39,7 @@ export async function queueAggregateBacklog() {
 	// dates, and use a for...of loop instead. That would also mean we wouldn't
 	// need decrementCurrentDate() anymore.
 	for (const date of datesToFetchFor) {
-		// If we're here, 1d data exists for this date: fetch most active tickers
-		// for this date.
+		// 1d data exists for this date: fetch most active tickers for this date.
 		if (!isActiveMarketDay(date)) {
 			continue;
 		}
@@ -54,7 +53,7 @@ export async function queueAggregateBacklog() {
 		});
 
 		if (Array.isArray(priceActionRows) && !priceActionRows?.length) {
-			// If we're here, it means we didn't get data for this date.
+			// We didn't get data for this date. Perhaps we're missing a snapshot.
 			captureMessage("getDailyMostActive: database returned 0 rows.", {
 				extra: {
 					date,
@@ -75,16 +74,19 @@ export async function queueAggregateBacklog() {
 		);
 
 		const activeTickers = Array.from(
-			// Should only contain one row per ticker, but let's filter just in case.
+			// Should only contain one row per ticker, but let's filter to a set
+			// just in case.
 			new Set(priceActionRows.map((value) => value.ticker))
 		);
 
 		for (const ticker of activeTickers) {
 			const redis1mKeyForTicker = `1m:${ticker}`;
 
-			// If the below === true, then the date is already present in 1m:${ticker}
 			if (!(await redisClient.sismember(redis1mKeyForTicker, date))) {
+				// Date is not yet present in 1m:${ticker} and it, and all other
+				// dates for this 51-day interval, should be added to the set.
 				const multi = redisClient.multi();
+
 				for (const dateInRange of dateRangeForMaxAggregateQueryEndingThisDate) {
 					multi.sadd(redis1mKeyForTicker, dateInRange);
 				}
@@ -115,8 +117,6 @@ export async function queueAggregateBacklog() {
 
 export async function writeAggregateTickerDateTuplesToFetchToFile() {
 	const tuples = await queueAggregateBacklog();
-
 	const stringifiedTuples = JSON.stringify(tuples);
-
 	await writeFile("data/aggregate-tuples-to-fetch.json", stringifiedTuples);
 }
