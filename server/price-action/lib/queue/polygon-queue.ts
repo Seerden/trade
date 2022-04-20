@@ -52,6 +52,12 @@ polygonQueueEvents.on("failed", ({ jobId, failedReason, prev }) => {
 	captureMessage("Failed job", { extra: { jobId, failedReason, prev } });
 });
 
+polygonQueueEvents.on("stalled", async (_) => {
+	captureMessage("Stalled job", {
+		extra: { ..._, job: await polygonQueue.getJob(_.jobId) },
+	});
+});
+
 export const polygonSnapshotFetchWorker = new Worker(
 	polygonQueueName,
 	async ({
