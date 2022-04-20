@@ -1,7 +1,10 @@
 import dayjs from "dayjs";
+import tz from "dayjs/plugin/timezone";
 import { isHoliday, isWorkday } from "../check-date";
 import { getAllMarketDaysInPastTwoYears } from "../dates";
 import { formatYMD } from "../format-YMD";
+
+dayjs.extend(tz);
 
 beforeAll(() => {
 	dayjs.tz.setDefault("Europe/Amsterdam");
