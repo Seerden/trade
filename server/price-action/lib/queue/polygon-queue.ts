@@ -42,10 +42,6 @@ const polygonQueueEvents = new QueueEvents(polygonQueueName, {
 
 polygonQueueEvents.on("completed", ({ jobId, returnvalue }) => {
 	console.log(`Completed job ${jobId}`);
-
-	// Can use this to log the result of the process that was just completed by
-	// the worker, but since that's going to be 120k+ rows, let's not. :)
-	// console.log({ returnvalue });
 });
 
 polygonQueueEvents.on("failed", ({ jobId, failedReason, prev }) => {
