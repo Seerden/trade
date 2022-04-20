@@ -6,6 +6,10 @@ import {
 } from "../dates";
 import { formatYMD } from "../format-YMD";
 
+beforeAll(() => {
+	dayjs.tz.setDefault("Europe/Amsterdam");
+});
+
 describe("getAllMarketDaysInPastTwoYears", () => {
 	test("returns correct values", () => {
 		const result = getAllMarketDaysInPastTwoYears();
