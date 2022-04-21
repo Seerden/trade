@@ -4,6 +4,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
 import { readFile } from "fs/promises";
+import { PriceActionApiObject } from "../../database/pools/query-objects";
 import { getDailyMostActive } from "../../price-action/database/queries/most-active";
 import { fetchSnapshotWithLimiter } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { writeAggregateTickerDateTuplesToFetchToFile } from "../../price-action/lib/queue/aggregate/aggregate-backlog";
@@ -77,4 +78,22 @@ devRouter.get("/queue/polygon/jobs/count/delayed", async (req, res) => {
 	res.json({
 		delayedJobCount: await polygonQueue.getJobCountByTypes("delayed"),
 	});
+});
+
+devRouter.get("/1m/unique-tickers", async (req, res) => {
+	const rows = await PriceActionApiObject.query({
+		text: `
+   WITH RECURSIVE cte AS (
+      (SELECT ticker FROM price_action_1m ORDER BY ticker LIMIT 1)
+      UNION ALL
+      SELECT (SELECT ticker FROM price_action_1m
+              WHERE  ticker > t.ticker ORDER BY ticker LIMIT 1)
+      FROM   cte t
+      WHERE  t.ticker IS NOT NULL
+      )
+   SELECT array_agg(ticker) tickers, count(ticker) FROM cte;
+   `,
+	});
+
+	res.json({ rows });
 });
