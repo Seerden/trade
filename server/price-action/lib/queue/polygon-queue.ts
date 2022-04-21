@@ -112,7 +112,18 @@ export const polygonSnapshotFetchWorker = new Worker(
 
 export async function listPolygonQueueJobs() {
 	return {
+		completed: {
+			count: await polygonQueue.getCompletedCount(),
+			jobs: await polygonQueue.getCompleted(),
+		},
+		failed: {
+			count: await polygonQueue.getFailedCount(),
+			jobs: await polygonQueue.getFailed(),
+		},
+		delayed: {
+			count: await polygonQueue.getDelayedCount(),
+			jobs: await polygonQueue.getDelayed(),
+		},
 		jobs: await polygonQueue.getJobs(),
-		failed: await polygonQueue.getFailed(),
 	};
 }
