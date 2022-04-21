@@ -15,6 +15,7 @@ import {
 } from "../../price-action/lib/queue/polygon-queue";
 import { addSnapshotFetchJobs } from "../../price-action/lib/queue/snapshot/add-fetch-job";
 import { redisClient } from "../../store/redis-client";
+import { snapshotRouter } from "./snapshot-router";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -24,6 +25,7 @@ dayjs.extend(timezone);
  * API endpoints to be used in development only
  */
 export const devRouter = express.Router({ mergeParams: true });
+devRouter.use("/s", snapshotRouter);
 
 /** Little speedtest for Redis retrieval. */
 devRouter.get("/redis/speedtest", async (req, res) => {
