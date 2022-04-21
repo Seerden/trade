@@ -41,7 +41,7 @@ const polygonQueueEvents = new QueueEvents(polygonQueueName, {
 });
 
 polygonQueueEvents.on("completed", ({ jobId, returnvalue }) => {
-	console.log(`Completed job ${jobId}`);
+	console.log(`Completed job ${jobId} at ${new Date().toLocaleString()}`);
 });
 
 polygonQueueEvents.on("failed", ({ jobId, failedReason, prev }) => {
