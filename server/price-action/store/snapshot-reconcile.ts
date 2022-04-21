@@ -13,15 +13,35 @@
  */
 
 import { PriceActionApiObject } from "../../database/pools/query-objects";
+import { formatYMD } from "../lib/time/format-YMD";
 
 export async function fetchExistingSnapshotTimestamps() {
-	const rows = await PriceActionApiObject.query({
+	const [{ timestamps }] = await PriceActionApiObject.query<
+		[{ timestamps: string[] }]
+	>({
 		// Since the snapshot endpoint returns a snapshot of _every_ ticker for a
 		// given date, all we have to do is find a ticker that's always present
 		// and return all existing timestamps for that ticker. Much faster than
 		// querying everything.
-		text: "select jsonb_agg(timestamp) timestamps from price_action_1d where ticker='SPY'",
+		text: "select array_agg(timestamp) timestamps from price_action_1d where ticker='SPY'",
 	});
 
-	return rows;
+	return timestamps;
+}
+
+/**
+ * - map existing timestamps (fetchExistingSnapshotTimestamps) to dates
+ * - compare dates to market-active days from the past two years
+ * - if we're missing data for any market days, queue a job to fetch that data
+ */
+
+export async function fetchExistingSnapshotDates() {
+	const timestamps = await fetchExistingSnapshotTimestamps();
+
+	return Array.from(new Set(timestamps.map((t) => formatYMD(new Date(t)))));
+}
+
+export async function getMissingSnapshotDates() {
+	// TODO: get a list of dates from past two years on which market was open, but for
+	// which we don't have snapshot data yet.
 }
