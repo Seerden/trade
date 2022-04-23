@@ -35,6 +35,5 @@ export async function addAggregateFetchJobs(dataList: AggregateJobData[]) {
 		data,
 	}));
 
-	const addedJobs = await polygonQueue.addBulk(bulkObjects);
-	return { addedJobs };
+	return await polygonQueue.addBulk(bulkObjects);
 }
