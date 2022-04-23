@@ -37,6 +37,8 @@ queueEvents.on("completed", ({ jobId, returnvalue }) => {
 	});
 });
 
+// TODO: add listeners for 'failed', 'stalled', and possibly more event types.
+
 export const fetchWorker = new Worker(
 	queueName,
 	async ({ data }: Job<{ date: string }>) => {
