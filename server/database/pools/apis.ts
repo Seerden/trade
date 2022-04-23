@@ -1,4 +1,4 @@
-import { apiPool, priceActionPool } from "./construct-pool";
+import { apiPool, pricePool } from "./construct-pool";
 import {
 	constructMakePooledQueries,
 	constructMakePooledQuery,
@@ -20,6 +20,6 @@ export const API = {
  * `database` service).
  */
 export const PriceAPI = {
-	query: constructMakePooledQuery(priceActionPool),
-	queries: constructMakePooledQueries(priceActionPool),
+	query: constructMakePooledQuery(pricePool),
+	queries: constructMakePooledQueries(pricePool),
 };

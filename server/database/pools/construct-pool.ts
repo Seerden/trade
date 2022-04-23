@@ -2,7 +2,7 @@ import { Pool } from "pg";
 import {
 	apiPoolConfig,
 	DatabasePoolCredentials,
-	priceActionPoolConfig,
+	pricePoolConfig,
 } from "./pool-credentials";
 
 /**
@@ -19,4 +19,4 @@ function createPool(poolCredentials: DatabasePoolCredentials) {
 }
 
 export const apiPool = createPool(apiPoolConfig);
-export const priceActionPool = createPool(priceActionPoolConfig);
+export const pricePool = createPool(pricePoolConfig);

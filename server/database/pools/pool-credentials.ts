@@ -22,7 +22,7 @@ const {
 /**
  * Partial pool config for the `database` service, i.e. the price action database.
  */
-export const priceActionPoolConfig: DatabasePoolCredentials = {
+export const pricePoolConfig: DatabasePoolCredentials = {
 	host: DB_HOST,
 	user: POSTGRES_USER,
 	password: POSTGRES_PASSWORD,
