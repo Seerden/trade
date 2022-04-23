@@ -9,6 +9,11 @@
  * to fetch data we already have, we reconcile store state with database state
  * on startup.
  *
+ * The reconciliation can be implemented as follows (TODO: WIP):
+ * - map existing timestamps (fetchExistingSnapshotTimestamps) to dates
+ * - compare dates to market-active days from the past two years
+ * - if we're missing data for any market days, queue a job to fetch that data
+ *
  * @todo: Run reconciliation on startup.
  */
 
@@ -28,12 +33,6 @@ export async function fetchExistingSnapshotTimestamps() {
 
 	return timestamps;
 }
-
-/**
- * - map existing timestamps (fetchExistingSnapshotTimestamps) to dates
- * - compare dates to market-active days from the past two years
- * - if we're missing data for any market days, queue a job to fetch that data
- */
 
 export async function fetchExistingSnapshotDates() {
 	const timestamps = await fetchExistingSnapshotTimestamps();
