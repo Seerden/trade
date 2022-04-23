@@ -44,6 +44,8 @@ export const fetchWorker = new Worker(
 	async ({ data }: Job<{ date: string }>) => {
 		// Get yesterday's date. Since this function is supposed to run at ~1am,
 		// this represents the date of the most recent market session.
+
+		// TODO: should check if the following date doesn't fall in a holiday or weekend
 		const dateToFetchFor = dayjs(new Date()).add(-1, "day");
 		await fetchAndInsertSnapshot(dateToFetchFor);
 	},
@@ -58,6 +60,7 @@ export const fetchWorker = new Worker(
 );
 
 export async function addJob() {
+	// TODO: refine this function name
 	const job = await repeatQueue.add(
 		"delay",
 		{},
