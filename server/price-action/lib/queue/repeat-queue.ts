@@ -3,9 +3,12 @@ import dayjs from "dayjs";
 import Redis from "ioredis";
 import { fetchAndInsertSnapshot } from "../polygon/requests/snapshot/insert";
 
-// BullMQ wants to connect to Redis separately. For now, we'll use the same
-// store we use elsewhere, but we might want to create a separate Docker service
-// for this eventually.
+/**
+ * BullMQ wants to connect to Redis separately: initialize a new connection.
+ *
+ * @todo For now, we'll use the same store we use elsewhere, but we might want
+ * to create a separate Docker service for this eventually.
+ */
 export const connection = new Redis("redis://store:6379", {
 	maxRetriesPerRequest: null,
 });
