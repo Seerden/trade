@@ -1,3 +1,4 @@
+import { captureMessage } from "@sentry/node";
 import { redisClient } from "../../store/redis-client";
 import { DateDayjsOrString } from "../../types/date.types";
 import { formatYMD } from "../lib/time/format-YMD";
@@ -32,7 +33,16 @@ async function bulkAddSnapshotDates(dates: DateDayjsOrString[]) {
 
 	const ymdDates = dates.map((date) => formatYMD(date));
 
-	if (ymdDates.some((date) => !date)) return; // TODO: send Sentry message.
+	if (ymdDates.some((date) => !date)) {
+		captureMessage("bulkAddSnapshotDates received at least one invalid date", {
+			extra: {
+				dates,
+				ymdDates,
+			},
+		});
+
+		return;
+	}
 
 	for (const date of ymdDates) {
 		pipeline.sadd(redisSnapshotDatesKey, date);
