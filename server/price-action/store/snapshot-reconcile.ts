@@ -17,13 +17,11 @@
  * @todo: Run reconciliation on startup.
  */
 
-import { PriceActionApiObject } from "../../database/pools/query-objects";
+import { PriceAPI } from "../../database/pools/apis";
 import { formatYMD } from "../lib/time/format-YMD";
 
 export async function fetchExistingSnapshotTimestamps() {
-	const [{ timestamps }] = await PriceActionApiObject.query<
-		[{ timestamps: string[] }]
-	>({
+	const [{ timestamps }] = await PriceAPI.query<[{ timestamps: string[] }]>({
 		// Since the snapshot endpoint returns a snapshot of _every_ ticker for a
 		// given date, all we have to do is find a ticker that's always present
 		// and return all existing timestamps for that ticker. Much faster than

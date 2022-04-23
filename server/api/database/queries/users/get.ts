@@ -1,4 +1,4 @@
-import { BackendApiObject as API } from "../../../../database/pools/query-objects";
+import { API } from "../../../../database/pools/apis";
 import { User } from "../../../../types/database.types";
 import { Maybe } from "../../../../types/global";
 

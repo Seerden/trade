@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import tz from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import format from "pg-format";
-import { PriceActionApiObject } from "../../../database/pools/query-objects";
+import { PriceAPI } from "../../../database/pools/apis";
 import { PriceActionRow } from "../../../types/database.types";
 import { DateDayjsOrString } from "../../../types/date.types";
 import { isValidTimespan } from "../../../types/guards/is-valid-timespan";
@@ -66,7 +66,7 @@ export async function getDailyMostActive({
 }) {
 	const text = constructDailyMostActiveQuery(date, timespan, tickerCount);
 	try {
-		return (await PriceActionApiObject.query({
+		return (await PriceAPI.query({
 			text,
 		})) as Array<PriceActionRow>;
 	} catch (error) {

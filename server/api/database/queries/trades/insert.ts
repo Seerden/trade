@@ -1,4 +1,4 @@
-import { BackendApiObject as API } from "../../../../database/pools/query-objects";
+import { API } from "../../../../database/pools/apis";
 import type { Trade } from "../../../../types/database.types";
 
 type Options = {

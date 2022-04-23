@@ -1,5 +1,5 @@
 import format from "pg-format";
-import { PriceActionApiObject } from "../../../database/pools/query-objects";
+import { PriceAPI } from "../../../database/pools/apis";
 import { DateDayjsOrString } from "../../../types/date.types";
 import { dateToEODTimestamp } from "./most-active";
 
@@ -34,7 +34,7 @@ function makeDailyMoversQuery(
 export async function fetchDailyMovers(
 	...options: Parameters<typeof makeDailyMoversQuery>
 ) {
-	const rows = await PriceActionApiObject.query({
+	const rows = await PriceAPI.query({
 		text: makeDailyMoversQuery(...options),
 	});
 

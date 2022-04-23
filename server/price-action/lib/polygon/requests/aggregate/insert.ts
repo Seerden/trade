@@ -3,7 +3,7 @@
 import { captureMessage } from "@sentry/node";
 import format from "pg-format";
 import { Timescale } from "types/store.types";
-import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
+import { PriceAPI } from "../../../../../database/pools/apis";
 import { objectToArray } from "../../../../../helpers/object-to-array";
 import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
 import { priceActionFields } from "../../../constants/fields";
@@ -47,7 +47,7 @@ export async function insertAggregate<T>(
 			rowsForDatabase
 		);
 
-		const timestampsInserted: string[] = await PriceActionApiObject.query({
+		const timestampsInserted: string[] = await PriceAPI.query({
 			text,
 		});
 
