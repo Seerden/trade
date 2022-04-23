@@ -25,17 +25,6 @@ export async function fetchMaxOneMinuteData({
 	return rawResponse;
 }
 
-/** Extract first and last row of fetchMaxOneMinuteData response */
-// eslint-disable-next-line camelcase
-export function dev_firstAndLastMaxOneMinuteDataResultRow(
-	rawResponse: Awaited<ReturnType<typeof fetchMaxOneMinuteData>>
-) {
-	const [firstRow, lastRow] = [0, -1].map((index) =>
-		rawResponse.results.at(index)
-	);
-	return [firstRow, lastRow];
-}
-
 export async function fetchAndInsertMaxOneMinuteData({
 	ticker,
 	to,

@@ -1,3 +1,4 @@
+import { captureMessage } from "@sentry/node";
 import { redisClient } from "../../store/redis-client";
 import { DateDayjsOrString } from "../../types/date.types";
 import { formatYMD } from "../lib/time/format-YMD";
@@ -26,6 +27,30 @@ async function addSnapshotDate(date: DateDayjsOrString) {
 	await redisClient.sadd(redisSnapshotDatesKey, formatYMD(date));
 }
 
+/** Bulk add dates to `snapshot:dates`. */
+async function bulkAddSnapshotDates(dates: DateDayjsOrString[]) {
+	const pipeline = redisClient.pipeline();
+
+	const ymdDates = dates.map((date) => formatYMD(date));
+
+	if (ymdDates.some((date) => !date)) {
+		captureMessage("bulkAddSnapshotDates received at least one invalid date", {
+			extra: {
+				dates,
+				ymdDates,
+			},
+		});
+
+		return;
+	}
+
+	for (const date of ymdDates) {
+		pipeline.sadd(redisSnapshotDatesKey, date);
+	}
+
+	return await pipeline.exec();
+}
+
 /**
  * Redis: remove a date from list of saved Polygon snapshot dates.
  * @returns 0 if date wasn't in the set, 1 if date was successfully removed.
@@ -43,6 +68,7 @@ export const snapshotStore = {
 	get: getSnapshotDates,
 	exists: isSavedSnapshotDate,
 	add: addSnapshotDate,
+	bulkAdd: bulkAddSnapshotDates,
 	remove: removeSnapshotDate,
 	__DELETE: removeAllSnapshotDates,
 };

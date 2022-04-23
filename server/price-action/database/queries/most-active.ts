@@ -4,6 +4,7 @@ import tz from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import format from "pg-format";
 import { PriceActionApiObject } from "../../../database/pools/query-objects";
+import { PriceActionRow } from "../../../types/database.types";
 import { DateDayjsOrString } from "../../../types/date.types";
 import { isValidTimespan } from "../../../types/guards/is-valid-timespan";
 import { timespanToTableMap } from "../../lib/get-table-name";
@@ -65,9 +66,9 @@ export async function getDailyMostActive({
 }) {
 	const text = constructDailyMostActiveQuery(date, timespan, tickerCount);
 	try {
-		return await PriceActionApiObject.query({
+		return (await PriceActionApiObject.query({
 			text,
-		});
+		})) as Array<PriceActionRow>;
 	} catch (error) {
 		captureMessage(`Error fetching most active ticker data for ${date}`, {
 			extra: {

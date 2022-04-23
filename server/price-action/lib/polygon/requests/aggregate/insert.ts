@@ -1,10 +1,13 @@
 /* Insert a number of PriceActionRow objects into the database */
 
+import { captureMessage } from "@sentry/node";
 import format from "pg-format";
 import { Timescale } from "types/store.types";
 import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
+import { objectToArray } from "../../../../../helpers/object-to-array";
 import { storeFetchedDateRange } from "../../../../store/store-fetched-dates";
-import { timescaleToTableName } from "../../../get-table-name";
+import { priceActionFields } from "../../../constants/fields";
+import { timespanToTableMap } from "../../../get-table-name";
 import { aggregateFieldsString } from "../../constants/aggregate";
 import {
 	PermittedTimespan,
@@ -34,27 +37,39 @@ export async function insertAggregate<T>(
 	rowsForDatabase: T,
 	{ ticker, from, to, timespan }: InsertOptions
 ) {
-	const text = format(
-		"insert into %I (%s) values %L returning (timestamp)",
-		timescaleToTableName(timespan),
-		aggregateFieldsString,
-		rowsForDatabase
-	);
+	try {
+		const text = format(
+			`insert into %I (%s) values %L 
+         on conflict do nothing 
+         returning (timestamp)`,
+			timespanToTableMap[timespan],
+			aggregateFieldsString,
+			rowsForDatabase
+		);
 
-	const timestampsInserted: string[] = await PriceActionApiObject.query({
-		text,
-	});
+		const timestampsInserted: string[] = await PriceActionApiObject.query({
+			text,
+		});
 
-	if (!timestampsInserted.length) {
-		return [];
+		if (!timestampsInserted.length) {
+			return [];
+		}
+
+		return storeFetchedDateRange({
+			ticker,
+			timescale: timespanToTimescaleMap[timespan],
+			start: from,
+			end: to,
+		});
+	} catch (error) {
+		captureMessage("Error inserting aggregate into database.", {
+			extra: {
+				error,
+				rowsForDatabase,
+				options: { ticker, from, to, timespan },
+			},
+		});
 	}
-
-	return storeFetchedDateRange({
-		ticker,
-		timescale: timespanToTimescaleMap[timespan],
-		start: from,
-		end: to,
-	});
 }
 
 /**
@@ -81,7 +96,10 @@ export async function fetchAndInsertAggregate({
 		multiplier: 1,
 	});
 
-	const priceActionArrays = aggregateToPriceAction(rawResponse);
+	const priceActionObjects = aggregateToPriceAction(rawResponse);
+	const priceActionArrays = priceActionObjects.map((obj) =>
+		objectToArray(obj, priceActionFields)
+	);
 
 	const response = await insertAggregate(priceActionArrays, {
 		ticker,
