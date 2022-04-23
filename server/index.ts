@@ -98,8 +98,12 @@ async function main() {
 		console.log(`Server started on ${new Date()}`);
 	});
 
-	// Uncomment below to gracefully shut down Express server and polygonSnapshot
-	// BullMQ worker.
+	/**
+	 * Uncomment below to gracefully shut down Express server and polygonSnapshot
+	 * BullMQ worker.
+	 *
+	 * TODO: find a good place to do this. An admin-only API endpoint?
+	 */
 	// instance.close(async () => {
 	// 	await polygonSnapshotFetchWorker.close();
 	// 	console.log("Shut down express server.");
