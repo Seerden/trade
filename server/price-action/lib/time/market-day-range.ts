@@ -52,10 +52,7 @@ export function nMarketDayRange({
 	return range.map((date) => formatYMD(date));
 }
 
-/**
- * Given a `start` and `end` date, list all market days between (and including)
- * `start` and `end`.
- */
+/** Given a `start` and `end` date, list all market days in date interval [`start`, `end`]. */
 export function listMarketDaysInRange(
 	start: DateDayjsOrString,
 	end: DateDayjsOrString
