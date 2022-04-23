@@ -1,23 +1,25 @@
 /* eslint-disable no-continue */
 import format from "pg-format";
-import { BackendApiObject } from "../../../../database/pools/query-objects";
+import { API } from "../../../../database/pools/apis";
 import { NewTicket, Ticket } from "../../../types/ticket.types";
 import { getLatestTradeByTickerWithTickets } from "../trades/get";
 import { insertTradeRow } from "../trades/insert";
 import { getUserId } from "../users/get";
 
-const newTicketFields = "ticker timestamp action quantity price".split(" ") as Array<
-	keyof NewTicket
->;
+const newTicketFields = "ticker timestamp action quantity price".split(
+	" "
+) as Array<keyof NewTicket>;
 
 interface TicketForDatabase extends NewTicket {
 	user_id: number;
 	trade_id: number;
 }
 
-const ticketForDatabaseFields = [...newTicketFields, "user_id", "trade_id"] as Array<
-	keyof TicketForDatabase
->;
+const ticketForDatabaseFields = [
+	...newTicketFields,
+	"user_id",
+	"trade_id",
+] as Array<keyof TicketForDatabase>;
 
 /**
  * TODO: currently, addIdPropsToTicket and ticketObjectToArray are unused,
@@ -93,7 +95,10 @@ export async function insertTickets({ username, tickets }: Args) {
 
 	// Assign the correct trade_id to each to-be-inserted ticket,
 	// which might involve inserting new rows into `trades` first.
-	const latestTrades = await getLatestTradeByTickerWithTickets({ userId, tickers });
+	const latestTrades = await getLatestTradeByTickerWithTickets({
+		userId,
+		tickers,
+	});
 
 	// We'll be appending tickets here after assigning a trade_id to each ticket
 	const ticketsToInsert: Omit<Ticket, "ticket_id">[] = [];
@@ -168,9 +173,11 @@ export async function insertTickets({ username, tickets }: Args) {
 		}
 	}
 
-	const ticketsAsArrays = ticketsToInsert.map((ticket) => ticketObjectToArray(ticket));
+	const ticketsAsArrays = ticketsToInsert.map((ticket) =>
+		ticketObjectToArray(ticket)
+	);
 
-	const response = await BackendApiObject.query({
+	const response = await API.query({
 		text: format(
 			`
             insert into tickets (

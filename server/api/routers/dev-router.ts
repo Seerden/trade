@@ -4,7 +4,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import express from "express";
 import { readFile } from "fs/promises";
-import { PriceActionApiObject } from "../../database/pools/query-objects";
+import { PriceAPI } from "../../database/pools/apis";
 import { getDailyMostActive } from "../../price-action/database/queries/most-active";
 import { fetchSnapshotWithLimiter } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { writeAggregateTickerDateTuplesToFetchToFile } from "../../price-action/lib/queue/aggregate/aggregate-backlog";
@@ -83,7 +83,7 @@ devRouter.get("/queue/polygon/jobs/count/delayed", async (req, res) => {
 });
 
 devRouter.get("/1m/unique-tickers", async (req, res) => {
-	const rows = await PriceActionApiObject.query({
+	const rows = await PriceAPI.query({
 		text: `
    WITH RECURSIVE cte AS (
       (SELECT ticker FROM price_action_1m ORDER BY ticker LIMIT 1)

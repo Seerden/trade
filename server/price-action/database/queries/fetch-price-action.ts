@@ -1,6 +1,6 @@
 import format from "pg-format";
 import { PermittedTimespan } from "price-action/lib/polygon/types/aggregate.types";
-import { PriceActionApiObject } from "../../../database/pools/query-objects";
+import { PriceAPI } from "../../../database/pools/apis";
 import { DateDayjsOrString } from "../../../types/date.types";
 import { timespanToTableMap } from "../../lib/get-table-name";
 import { unixMillis } from "../../lib/time/date-manipulation";
@@ -39,5 +39,5 @@ export async function fetchPriceActionForTicker({
 	);
 
 	// TODO: do not include `ticker` field in response.
-	return await PriceActionApiObject.query({ text });
+	return await PriceAPI.query({ text });
 }

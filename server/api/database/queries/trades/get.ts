@@ -1,8 +1,5 @@
 import format from "pg-format";
-import {
-	BackendApiObject as API,
-	BackendApiObject,
-} from "../../../../database/pools/query-objects";
+import { API } from "../../../../database/pools/apis";
 import { getUserId } from "../users/get";
 
 export type TradeWithTickets = {
@@ -69,7 +66,7 @@ export async function getLatestTradeByTickerWithTickets({
 			userId
 		);
 
-		const response = await BackendApiObject.query({ text });
+		const response = await API.query({ text });
 
 		return response as TradesWithTickets;
 	} catch (e) {
@@ -81,7 +78,7 @@ export async function getLatestTradeByTickerWithTickets({
  * Get a user's trades for the given `ticker`, return the most recent trade.
  */
 export async function getLatestTradeByTicker(ticker: string) {
-	const response = await BackendApiObject.query({
+	const response = await API.query({
 		text: `
       select * from trades t where t.trade_id in (
          select trade_id
@@ -97,7 +94,10 @@ export async function getLatestTradeByTicker(ticker: string) {
 	return response;
 }
 
-export async function getTradesWithTickets(username: string, tickers?: string[]) {
+export async function getTradesWithTickets(
+	username: string,
+	tickers?: string[]
+) {
 	const userId = await getUserId(username);
 	if (!userId) return;
 
@@ -109,14 +109,18 @@ export async function getTradesWithTickets(username: string, tickers?: string[])
          inner join tickets ti
          on ti.trade_id = tr.trade_id
          and tr.user_id = %L
-         ${Array.isArray(tickers) && tickers?.length ? "and tr.ticker in (%L)" : ""}
+         ${
+						Array.isArray(tickers) && tickers?.length
+							? "and tr.ticker in (%L)"
+							: ""
+					}
          group by tr.trade_id
       `,
 		userId,
 		tickers
 	);
 
-	const response: [] | TradesWithTickets = await BackendApiObject.query({ text });
+	const response: [] | TradesWithTickets = await API.query({ text });
 
 	return response;
 }

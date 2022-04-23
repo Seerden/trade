@@ -1,5 +1,5 @@
 import { hash } from "bcrypt";
-import { BackendApiObject as API } from "../../../database/pools/query-objects";
+import { API } from "../../../database/pools/apis";
 
 /**
  * Fetch user from database, by username

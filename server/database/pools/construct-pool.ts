@@ -1,11 +1,22 @@
 import { Pool } from "pg";
-import { DatabasePoolCredentials } from "../../types/pool.types";
+import {
+	apiPoolConfig,
+	DatabasePoolCredentials,
+	priceActionPoolConfig,
+} from "./pool-credentials";
 
-export function constructDatabasePool(poolCredentials: DatabasePoolCredentials) {
-    return new Pool({
-        ...poolCredentials,
-        max: 10,
-        idleTimeoutMillis: 15000,
-        connectionTimeoutMillis: 2000,
-    });
+/**
+ * Create a database pool using some predefined config options, and some
+ * specified `poolCredentials`.
+ */
+function createPool(poolCredentials: DatabasePoolCredentials) {
+	return new Pool({
+		...poolCredentials,
+		max: 10,
+		idleTimeoutMillis: 15000,
+		connectionTimeoutMillis: 2000,
+	});
 }
+
+export const apiPool = createPool(apiPoolConfig);
+export const priceActionPool = createPool(priceActionPoolConfig);

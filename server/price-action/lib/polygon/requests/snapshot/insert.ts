@@ -1,6 +1,6 @@
 import format from "pg-format";
 import { PriceActionRow } from "types/database.types";
-import { PriceActionApiObject } from "../../../../../database/pools/query-objects";
+import { PriceAPI } from "../../../../../database/pools/apis";
 import { objectToArray } from "../../../../../helpers/object-to-array";
 import { DateDayjsOrString } from "../../../../../types/date.types";
 import { snapshotStore } from "../../../../store/snapshot-dates";
@@ -47,7 +47,7 @@ async function insertSnapshot(priceActionObjects: PriceActionRow[]) {
 		priceActionArrays
 	);
 
-	const response = await PriceActionApiObject.query({ text });
+	const response = await PriceAPI.query({ text });
 	return response;
 }
 
