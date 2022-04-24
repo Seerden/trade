@@ -41,7 +41,13 @@ export async function fetchAndInsertMaxOneMinuteData({
 	ticker: string;
 	to?: DateDayjsOrString;
 }) {
-	const [start, end] = nMarketDayRange({ n: maxDaysPerQuery, end: to });
+	// eslint-disable-next-line prefer-const
+	let [start, end] = nMarketDayRange({ n: maxDaysPerQuery, end: to });
+	const twoYearsAgo = dayjs(start).add(-2, "year").add(1, "day");
+
+	if (unixMillis(start) < unixMillis(twoYearsAgo)) {
+		start = formatYMD(twoYearsAgo);
+	}
 
 	try {
 		return await fetchAndInsertAggregate({
