@@ -6,13 +6,14 @@
  * for a more consistent UI feel
  */
 
+import { SharedBaseInput } from "style/shared/input.style";
 import styled, { css } from "styled-components";
 
 export const StyledForm = styled.form`
 	width: max-content;
-	padding: 2em 4em;
-	margin: 2em;
-	margin: 2em auto;
+	padding: ${(p) => p.theme.padding.wide.section};
+	margin: ${(p) => p.theme.padding.medium};
+	margin: ${(p) => p.theme.padding.medium} auto;
 
 	border: 1px solid var(--main);
 	box-shadow: 0 0 0.5em 0 var(--main);
@@ -21,47 +22,35 @@ export const StyledForm = styled.form`
 export const StyledFields = styled.div`
 	display: flex;
 	flex-flow: column wrap;
-	gap: var(--pad-medium);
+	gap: ${(p) => p.theme.padding.tiny};
 	justify-content: center;
 `;
 
 export const StyledLabel = styled.label`
 	display: flex;
-	font-size: var(--text-small);
-	padding-left: var(--pad-small);
-	margin-bottom: 0.3em;
+	font-size: ${(p) => p.theme.font.small};
+	padding-left: ${(p) => p.theme.padding.tiniest};
+	margin-bottom: ${(p) => p.theme.padding.tinier};
 	user-select: none;
 `;
 
 export const StyledTitle = styled.h2`
-	font-size: 1.5em;
-	margin-bottom: var(--pad-medium);
+	font-size: ${(p) => p.theme.font.larger};
+	margin-bottom: ${(p) => p.theme.padding.tiny};
 	user-select: none;
 `;
 
 export const StyledButtons = styled.div`
 	display: flex;
 	justify-content: space-between;
-	gap: var(--pad-medium);
+	gap: ${(p) => p.theme.padding.tiny};
 `;
 
-export const StyledInput = styled.input`
-	font-size: var(--text-medium);
-	padding: var(--pad-small);
-	text-indent: calc(2 * var(--pad-small));
-
-	border: 1px solid var(--secondary);
-	outline: none;
-
-	&:focus,
-	&:hover {
-		outline: 1px solid var(--secondary);
-	}
-`;
+export const StyledInput = styled(SharedBaseInput)``;
 
 export const StyledButton = styled.input<{ isRegisterButton?: boolean }>`
-	padding: var(--pad-medium) 2em;
-	font-size: var(--text-small);
+	padding: ${(p) => p.theme.padding.wide.button.tiny};
+	font-size: ${(p) => p.theme.font.small};
 	outline: 1px solid transparent;
 
 	transition: all 75ms ease-out;

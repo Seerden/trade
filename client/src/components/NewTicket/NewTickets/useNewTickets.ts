@@ -3,7 +3,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import useAxios from "helpers/api/axios-instance";
 import { useAuth } from "hooks/auth/useAuth";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { SavedTicket } from "types/tickets";
 import { isValidTicket, parseNewTicketInputs } from "./helpers/parse-validate";
 import { RawNewTicket } from "./NewTicket";
@@ -24,6 +24,12 @@ export function useNewTickets() {
 	);
 	const [savedTickets, setSavedTickets] = useState<SavedTicket[]>(null);
 	const [showSummary, setShowSummary] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (process.env.APP_ENV === "dev") {
+			console.log({ tickets });
+		}
+	}, [tickets]);
 
 	// Parse and validate tickets.
 	const validTickets = useMemo(() => {

@@ -11,7 +11,7 @@ export const StyledContainer = styled.section`
 	margin-top: 20vh;
 	left: 50%;
 	transform: translateX(-50%);
-	padding: 2rem;
+	padding: ${(p) => p.theme.padding.large};
 	border: 4px solid #444;
 	box-shadow: 0 0 1rem #111;
 	border-radius: 5px;
@@ -30,18 +30,18 @@ export const StyledOverlay = styled.div`
 	background: rgba(0, 0, 0, 0.68);
 `;
 
+const closeButtonSize = "30px";
+
 // TODO: all of this styling is WIP and should at least be refactored to theme values
 export const StyledModalCloseButton = styled.button`
 	display: inline-flex;
 	position: absolute;
 
-	--size: 30px;
+	top: calc(-1 * ${closeButtonSize} / 2);
+	right: calc(-1 * ${closeButtonSize} / 2);
 
-	top: calc(-1 * var(--size) / 2);
-	right: calc(-1 * var(--size) / 2);
-
-	width: var(--size);
-	height: var(--size);
+	width: ${closeButtonSize};
+	height: ${closeButtonSize};
 	background-color: orangered;
 	border: 2px solid orangered;
 
@@ -67,9 +67,9 @@ export const StyledModalCloseButton = styled.button`
 
 // TODO: all of this styling is temporary
 export const StyledSubmitButton = styled.button`
-	margin-top: 1rem;
-	padding: 0.5rem 1.5rem;
-	font-size: 0.82rem;
+	margin-top: ${({ theme }) => theme.padding.small};
+	padding: ${({ theme }) => theme.padding.wide.button.small};
+	font-size: ${({ theme }) => theme.font.smaller};
 	font-weight: 400;
 
 	color: black;
@@ -86,15 +86,15 @@ export const StyledSubmitButton = styled.button`
 
 export const StyledTicketSummary = styled.ul`
 	width: max-content;
-	gap: 0.3rem;
+	gap: ${({ theme }) => theme.padding.tinier};
 `;
 
 export const StyledTicketRow = styled.li<{ saved?: boolean }>`
 	border: 2px solid transparent;
 	border-left-width: 4px;
 	border-radius: 3px;
-	padding: 0.4rem 0.7rem;
-	font-size: 0.9rem;
+	padding: ${({ theme }) => theme.padding.wide.small};
+	font-size: ${({ theme }) => theme.font.medium};
 
 	border-left-color: ${(p) =>
 		typeof p.saved === "boolean"

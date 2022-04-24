@@ -1,34 +1,37 @@
-import { StyledInput as SharedStyledInput } from "components/Authentication/Login/Login.style";
+import { SharedBaseInput } from "style/shared/input.style";
 import styled, { css } from "styled-components";
 import { TradeAction } from "types/tickets";
 
-export const StyledInput = styled(SharedStyledInput)<{ $size?: string }>`
-	height: 2rem;
+const defaultInputWidth = "6.5rem";
+const smallInputWidth = "5rem";
+const largeInputWidth = "9rem";
+const inputHeight = "2rem";
+
+export const StyledInput = styled(SharedBaseInput)<{ $size?: string }>`
+	height: ${inputHeight};
 
 	// This default width is currently only used for the name="time" input
 	// component, it needs slightly more width in locales where AM/PM are
 	// specified instead of using 24-hour times.
-	--width: 6.5rem;
-	min-width: var(--width);
-	width: var(--width);
+	min-width: ${defaultInputWidth};
+	width: ${defaultInputWidth};
 
 	${(p) =>
 		p.$size === "small" &&
 		css`
-			min-width: 5rem;
-			width: 5rem;
+			min-width: ${smallInputWidth};
+			width: ${smallInputWidth};
 		`}
 
 	${(p) =>
 		p.$size === "large" &&
 		css`
-			--large-input-width: 9rem;
-			min-width: var(--large-input-width);
-			width: var(--large-input-width);
+			min-width: ${largeInputWidth};
+			width: ${largeInputWidth};
 		`}
 
 	&::placeholder {
-		font-size: 0.82rem;
+		font-size: ${({ theme }) => theme.font.smaller};
 	}
 
 	&:required {
@@ -67,11 +70,12 @@ export const StyledTradeActionLabel = styled.label<{
 }>`
 	display: inline-block;
 
-	// TODO: use theme values
-	width: 2.5rem;
-	padding: 0.5rem 1rem;
-
-	font-size: var(--text-medium);
+	// smallInputWidth is 5rem. The TradeActionButtons 'field' contains 'buy'
+	// and 'sell' buttons, so the proper width for each button is
+	// smallInputWidth/2.
+	width: calc(${smallInputWidth} / 2);
+	padding: ${(p) => p.theme.padding.wide.medium};
+	font-size: ${(p) => p.theme.font.medium};
 
 	border: 2px solid transparent;
 	border-color: ${(p) => p.active && actionToColor[p.action]};
@@ -82,7 +86,7 @@ export const StyledTradeActionLabel = styled.label<{
 
 	transition: all 35ms fade-out;
 
-	height: 2rem;
+	height: ${inputHeight};
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
@@ -92,4 +96,23 @@ export const StyledTradeActionLabel = styled.label<{
 		css`
 			border-bottom: 2px solid orange;
 		`}
+`;
+
+export const StyledNewTicketHeader = styled.div`
+	display: grid;
+
+	// These column widths and gap size have to match the StyledInput widths in
+	// the NewTicket component.
+	grid-template-columns: repeat(4, ${smallInputWidth}) ${largeInputWidth} ${defaultInputWidth};
+	gap: ${({ theme }) => theme.padding.tiny};
+
+	label {
+		user-select: none;
+		text-align: center;
+		font-size: ${({ theme }) => theme.font.smaller};
+		font-weight: 500;
+		border-bottom: 2px solid #eee;
+		padding-bottom: ${(p) => p.theme.padding.tinier};
+		margin-bottom: ${(p) => p.theme.padding.tinier};
+	}
 `;

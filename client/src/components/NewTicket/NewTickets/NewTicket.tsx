@@ -1,8 +1,11 @@
-import { useCallback, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import { BsX } from "react-icons/bs";
 import { TradeAction } from "types/tickets";
-import { StyledButton, StyledNewTicket } from "./NewTicket.style";
-import Input from "./sub/Input";
+import {
+	StyledNewTicket,
+	StyledNewTicketDeleteButton,
+} from "./NewTicket.style";
+import NewTicketInput from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
 import { useNewTickets } from "./useNewTickets";
 
@@ -68,6 +71,17 @@ const NewTicket = ({
 	);
 
 	/**
+	 * Curried function that returns setField with pre-set `ticketIndex`, so we
+	 * can do onChange={onChange} throughout this component's JSX.
+	 */
+	const onChange = useCallback(
+		(e: ChangeEvent<HTMLInputElement>) => {
+			return setField(e, ticketIndex);
+		},
+		[setField, ticketIndex]
+	);
+
+	/**
 	 * If hasFilledInFields, return `placeholder`, else return null.
 	 * To be used to only display placeholders for certain inputs if hasFilledInFields.
 	 *
@@ -94,6 +108,14 @@ const NewTicket = ({
 		setShouldShowDelete(false);
 	}, [shouldShowDelete, setShouldShowDelete]);
 
+	const sharedInputProps = useMemo(
+		() => ({
+			required: hasFilledInFields,
+			onChange,
+		}),
+		[hasFilledInFields, onChange]
+	);
+
 	return (
 		<StyledNewTicket
 			empty={!hasFilledInFields}
@@ -105,75 +127,69 @@ const NewTicket = ({
 			<span>{actionButtons}</span>
 
 			{/* ticker field */}
-			<Input
+			<NewTicketInput
 				required={hasFilledInFields}
 				$size="small"
 				title="Ticker"
 				name="ticker"
+				defaultValue={ticket.ticker}
 				placeholder={getPlaceholder("ticker")}
-				// TODO: don't repeat e => setField(e, ticketIndex) every time, write
-				// a curried function instead
-				onChange={(e) => setField(e, ticketIndex)}
+				onChange={onChange}
 			/>
 
 			{/* price field */}
-			<Input
-				required={hasFilledInFields}
+			<NewTicketInput
+				{...sharedInputProps}
 				$size="small"
 				title="Price per share"
 				name="price"
+				defaultValue={ticket.price}
 				type="number"
 				min={0}
 				step="any"
 				placeholder={getPlaceholder("price")}
-				onChange={(e) => {
-					setField(e, ticketIndex);
-				}}
 			/>
 
 			{/* quantity field */}
-			<Input
-				required={hasFilledInFields}
+			<NewTicketInput
+				{...sharedInputProps}
 				$size="small"
+				defaultValue={ticket.quantity}
 				title="Share quantity"
 				name="quantity"
 				type="number"
 				min={0}
 				step="any"
 				placeholder={getPlaceholder("quantity")}
-				onChange={(e) => setField(e, ticketIndex)}
 			/>
 
 			{/* date field */}
-			<Input
+			<NewTicketInput
 				required={hasFilledInFields}
 				$size="large"
 				title="Date"
 				name="date"
 				type="date"
-				onChange={(e) => setField(e, ticketIndex)}
 				defaultValue={ticket.date}
 			/>
 
 			{/* time field */}
-			<Input
-				required={hasFilledInFields}
+			<NewTicketInput
 				title="Time of day (market time)"
 				name="time"
 				type="time"
-				onChange={(e) => setField(e, ticketIndex)}
 				defaultValue="09:30"
 			/>
 
 			{shouldShowDelete && (
-				<StyledButton
+				<StyledNewTicketDeleteButton
 					type="button"
 					onClick={() => {
 						deleteTicket(ticketIndex);
 					}}
 				>
 					<BsX type="button" overflow={"visible"} />
-				</StyledButton>
+				</StyledNewTicketDeleteButton>
 			)}
 		</StyledNewTicket>
 	);
