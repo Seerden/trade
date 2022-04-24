@@ -5,9 +5,10 @@ import { TradeAction } from "types/tickets";
 const defaultInputWidth = "6.5rem";
 const smallInputWidth = "5rem";
 const largeInputWidth = "9rem";
+const inputHeight = "2rem";
 
 export const StyledInput = styled(SharedBaseInput)<{ $size?: string }>`
-	height: 2rem;
+	height: ${inputHeight};
 
 	// This default width is currently only used for the name="time" input
 	// component, it needs slightly more width in locales where AM/PM are
@@ -69,8 +70,10 @@ export const StyledTradeActionLabel = styled.label<{
 }>`
 	display: inline-block;
 
-	// TODO: use theme values
-	width: 2.5rem;
+	// smallInputWidth is 5rem. The TradeActionButtons 'field' contains 'buy'
+	// and 'sell' buttons, so the proper width for each button is
+	// smallInputWidth/2.
+	width: calc(${smallInputWidth} / 2);
 	padding: ${(p) => p.theme.padding.wide.medium};
 	font-size: ${(p) => p.theme.font.medium};
 
@@ -83,7 +86,7 @@ export const StyledTradeActionLabel = styled.label<{
 
 	transition: all 35ms fade-out;
 
-	height: 2rem;
+	height: ${inputHeight};
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
