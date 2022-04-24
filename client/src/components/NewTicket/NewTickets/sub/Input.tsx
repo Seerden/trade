@@ -5,6 +5,6 @@ type Props = Partial<
 	InputHTMLAttributes<HTMLInputElement> & { $size?: string }
 >;
 
-export default function Input({ $size, ...inputProps }: Props) {
+export default function NewTicketInput({ $size, ...inputProps }: Props) {
 	return <StyledInput {...{ ...inputProps, $size }} />;
 }

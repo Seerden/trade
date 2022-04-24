@@ -5,7 +5,7 @@ import {
 	StyledNewTicket,
 	StyledNewTicketDeleteButton,
 } from "./NewTicket.style";
-import Input from "./sub/Input";
+import NewTicketInput from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
 import { useNewTickets } from "./useNewTickets";
 
@@ -124,7 +124,7 @@ const NewTicket = ({
 			<span>{actionButtons}</span>
 
 			{/* ticker field */}
-			<Input
+			<NewTicketInput
 				required={hasFilledInFields}
 				$size="small"
 				title="Ticker"
@@ -135,7 +135,7 @@ const NewTicket = ({
 			/>
 
 			{/* price field */}
-			<Input
+			<NewTicketInput
 				{...sharedInputProps}
 				$size="small"
 				title="Price per share"
@@ -148,7 +148,7 @@ const NewTicket = ({
 			/>
 
 			{/* quantity field */}
-			<Input
+			<NewTicketInput
 				{...sharedInputProps}
 				$size="small"
 				defaultValue={ticket.quantity}
@@ -161,7 +161,7 @@ const NewTicket = ({
 			/>
 
 			{/* date field */}
-			<Input
+			<NewTicketInput
 				required={hasFilledInFields}
 				$size="large"
 				title="Date"
@@ -171,7 +171,7 @@ const NewTicket = ({
 			/>
 
 			{/* time field */}
-			<Input
+			<NewTicketInput
 				title="Time of day (market time)"
 				name="time"
 				type="time"
