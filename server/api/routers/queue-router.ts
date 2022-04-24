@@ -1,4 +1,5 @@
 import { captureMessage } from "@sentry/node";
+import { JobType } from "bullmq";
 import { Router } from "express";
 import {
 	listPolygonQueueJobs,
@@ -9,15 +10,30 @@ import { formatYMD } from "../../price-action/lib/time/format-YMD";
 
 export const queueRouter = Router({ mergeParams: true });
 
+/** Check whether `jobType` is one of the job types we care about. */
+function isPermittedJobType(jobType: string): jobType is JobType {
+	// The following are only a subset of all possible JobTypes actually, but we
+	// don't currently care about any other ones.
+	return "active completed stalled failed delayed".split(" ").includes(jobType);
+}
+
 /** Get all jobs tagged 'delayed' from polygonQueue. */
-queueRouter.get("/queue/polygon/jobs/count/delayed", async (req, res) => {
+queueRouter.get("/polygon/jobs/count/:jobType", async (req, res) => {
+	const { jobType } = req.params;
+
+	if (!isPermittedJobType(jobType)) {
+		return res.json({
+			message: "Invalid value specified for parameter :jobType",
+		});
+	}
+
 	res.json({
-		delayedJobCount: await polygonQueue.getJobCountByTypes("delayed"),
+		[`${jobType}jobCount`]: await polygonQueue.getJobCountByTypes(jobType),
 	});
 });
 
 /** Fetch counts and data for a few types of jobs. */
-queueRouter.get("/queue/polygon/jobs", async (req, res) => {
+queueRouter.get("/polygon/jobs", async (req, res) => {
 	res.json({ jobs: await listPolygonQueueJobs() });
 });
 
