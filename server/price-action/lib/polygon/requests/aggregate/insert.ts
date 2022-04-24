@@ -104,6 +104,8 @@ export async function fetchAndInsertAggregate({
 				arguments,
 			},
 		});
+
+		return;
 	}
 
 	const priceActionObjects = aggregateToPriceAction(rawResponse);
