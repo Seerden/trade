@@ -108,10 +108,13 @@ const NewTicket = ({
 		setShouldShowDelete(false);
 	}, [shouldShowDelete, setShouldShowDelete]);
 
-	const sharedInputProps = {
-		required: hasFilledInFields,
-		onChange,
-	};
+	const sharedInputProps = useMemo(
+		() => ({
+			required: hasFilledInFields,
+			onChange,
+		}),
+		[hasFilledInFields, onChange]
+	);
 
 	return (
 		<StyledNewTicket
