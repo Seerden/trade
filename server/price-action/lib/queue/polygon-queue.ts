@@ -110,8 +110,13 @@ export const polygonSnapshotFetchWorker = new Worker(
 	}
 );
 
+/** Get data (and counts) for active, completed, failed and delayed jobs. */
 export async function listPolygonQueueJobs() {
 	return {
+		active: {
+			count: await polygonQueue.getActiveCount(),
+			jobs: await polygonQueue.getActive(),
+		},
 		completed: {
 			count: await polygonQueue.getCompletedCount(),
 			jobs: await polygonQueue.getCompleted(),
@@ -124,6 +129,5 @@ export async function listPolygonQueueJobs() {
 			count: await polygonQueue.getDelayedCount(),
 			jobs: await polygonQueue.getDelayed(),
 		},
-		jobs: await polygonQueue.getJobs(),
 	};
 }
