@@ -108,6 +108,11 @@ const NewTicket = ({
 		setShouldShowDelete(false);
 	}, [shouldShowDelete, setShouldShowDelete]);
 
+	const sharedInputProps = {
+		required: hasFilledInFields,
+		onChange,
+	};
+
 	return (
 		<StyledNewTicket
 			empty={!hasFilledInFields}
@@ -125,14 +130,12 @@ const NewTicket = ({
 				title="Ticker"
 				name="ticker"
 				placeholder={getPlaceholder("ticker")}
-				// TODO: don't repeat e => setField(e, ticketIndex) every time, write
-				// a curried function instead
 				onChange={onChange}
 			/>
 
 			{/* price field */}
 			<Input
-				required={hasFilledInFields}
+				{...sharedInputProps}
 				$size="small"
 				title="Price per share"
 				name="price"
@@ -140,12 +143,11 @@ const NewTicket = ({
 				min={0}
 				step="any"
 				placeholder={getPlaceholder("price")}
-				onChange={onChange}
 			/>
 
 			{/* quantity field */}
 			<Input
-				required={hasFilledInFields}
+				{...sharedInputProps}
 				$size="small"
 				title="Share quantity"
 				name="quantity"
@@ -153,7 +155,6 @@ const NewTicket = ({
 				min={0}
 				step="any"
 				placeholder={getPlaceholder("quantity")}
-				onChange={onChange}
 			/>
 
 			{/* date field */}
@@ -163,17 +164,14 @@ const NewTicket = ({
 				title="Date"
 				name="date"
 				type="date"
-				onChange={onChange}
 				defaultValue={ticket.date}
 			/>
 
 			{/* time field */}
 			<Input
-				required={hasFilledInFields}
 				title="Time of day (market time)"
 				name="time"
 				type="time"
-				onChange={onChange}
 				defaultValue="09:30"
 			/>
 
