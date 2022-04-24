@@ -9,10 +9,7 @@ import { getDailyMostActive } from "../../price-action/database/queries/most-act
 import { fetchSnapshotWithLimiter } from "../../price-action/lib/polygon/requests/snapshot/fetch";
 import { writeAggregateTickerDateTuplesToFetchToFile } from "../../price-action/lib/queue/aggregate/aggregate-backlog";
 import { queueAggregateBacklog } from "../../price-action/lib/queue/aggregate/queue-backlog";
-import {
-	listPolygonQueueJobs,
-	polygonQueue,
-} from "../../price-action/lib/queue/polygon-queue";
+import { polygonQueue } from "../../price-action/lib/queue/polygon-queue";
 import { addSnapshotFetchJobs } from "../../price-action/lib/queue/snapshot/add-fetch-job";
 import { redisClient } from "../../store/redis-client";
 import { snapshotRouter } from "./snapshot-router";
@@ -69,16 +66,6 @@ devRouter.get("/queue-snapshot-fetch-manually", async (req, res) => {
 devRouter.get("/snapshot/raw/:date", async (req, res) => {
 	res.json({
 		response: await fetchSnapshotWithLimiter({ date: req.params.date }),
-	});
-});
-
-devRouter.get("/queue/polygon/jobs", async (req, res) => {
-	res.json({ jobs: await listPolygonQueueJobs() });
-});
-
-devRouter.get("/queue/polygon/jobs/count/delayed", async (req, res) => {
-	res.json({
-		delayedJobCount: await polygonQueue.getJobCountByTypes("delayed"),
 	});
 });
 
