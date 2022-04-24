@@ -1,13 +1,13 @@
 import { useMemo } from "react";
 import NewTicket from "./NewTicket";
 import {
-	StyledButton,
-	StyledButtons,
-	StyledButtonWrapper,
 	StyledNewTickets,
-	StyledSubtitle,
+	StyledNewTicketsButton,
+	StyledNewTicketsButtonBar,
+	StyledNewTicketsButtons,
+	StyledNewTicketsSubtitle,
+	StyledNewTicketsTitle,
 	StyledTickets,
-	StyledTitle,
 } from "./NewTickets.style";
 import Header from "./sub/Header";
 import TicketSummary from "./TicketSummary";
@@ -60,10 +60,10 @@ export default function NewTickets() {
 						}}
 					/>
 				)}
-				<StyledTitle>Add new trade tickets</StyledTitle>
-				<StyledSubtitle>
+				<StyledNewTicketsTitle>Add new trade tickets</StyledNewTicketsTitle>
+				<StyledNewTicketsSubtitle>
 					Each ticket describes one buy or sell transaction.
-				</StyledSubtitle>
+				</StyledNewTicketsSubtitle>
 				<StyledTickets>
 					<Buttons
 						addTicketRows={addTicketRows}
@@ -84,12 +84,12 @@ type ButtonProps = {
 
 function Buttons({ addTicketRows, setShowSummary }: ButtonProps) {
 	return (
-		<StyledButtons>
-			<StyledButtonWrapper>
+		<StyledNewTicketsButtons>
+			<StyledNewTicketsButtonBar>
 				<span>
 					{/*   TODO: should become a button with on-hover effect: start as green 
                      button with arrow, slide text into it on hover */}
-					<StyledButton
+					<StyledNewTicketsButton
 						type="button"
 						value="Save tickets"
 						onClick={() => {
@@ -103,21 +103,21 @@ function Buttons({ addTicketRows, setShowSummary }: ButtonProps) {
 					/>
 				</span>
 				<span>
-					<StyledButton
+					<StyledNewTicketsButton
 						round
 						type="button"
 						onClick={() => addTicketRows(3)}
 						value="+"
 						title="Add 3 rows"
 					/>
-					<StyledButton
+					<StyledNewTicketsButton
 						round
 						type="button"
 						value="x"
 						title="Delete empty tickets"
 					/>
 				</span>
-			</StyledButtonWrapper>
-		</StyledButtons>
+			</StyledNewTicketsButtonBar>
+		</StyledNewTicketsButtons>
 	);
 }

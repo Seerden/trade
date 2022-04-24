@@ -1,10 +1,6 @@
 import styled, { css } from "styled-components";
 
-/**
- * TODO: unify with theme values
- */
-
-export const StyledButtonWrapper = styled.span`
+export const StyledNewTicketsButtonBar = styled.span`
 	display: flex;
 	justify-content: space-between;
 
@@ -15,7 +11,7 @@ export const StyledButtonWrapper = styled.span`
 	}
 `;
 
-export const StyledButton = styled.input<{ round?: boolean }>`
+export const StyledNewTicketsButton = styled.input<{ round?: boolean }>`
 	${(p) =>
 		p.round
 			? css`
@@ -46,14 +42,13 @@ export const StyledButton = styled.input<{ round?: boolean }>`
 	}
 `;
 
-export const StyledButtons = styled.span`
-	margin-bottom: ${(p) => p.theme.padding.small};
+export const StyledNewTicketsButtons = styled.div`
 	display: block;
 	position: sticky;
 	z-index: 2;
 	top: 1rem;
-	flex-direction: row;
 
+	margin-bottom: ${(p) => p.theme.padding.small};
 	gap: ${({ theme }) => theme.padding.tiny};
 `;
 
@@ -68,7 +63,7 @@ export const StyledNewTickets = styled.form`
 	box-shadow: 0 0 0.2rem 0 #ccc;
 `;
 
-export const StyledTitle = styled.h1`
+export const StyledNewTicketsTitle = styled.h1`
 	display: block;
 	width: max-content;
 	position: relative;
@@ -95,7 +90,7 @@ export const StyledTitle = styled.h1`
 	}
 `;
 
-export const StyledSubtitle = styled.h3`
+export const StyledNewTicketsSubtitle = styled.h3`
 	font-size: ${(p) => p.theme.font.medium};
 	word-wrap: break-word;
 	color: #aaa;
