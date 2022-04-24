@@ -78,6 +78,7 @@ export const StyledTitle = styled.h1`
 	user-select: none;
 	margin-bottom: ${(p) => p.theme.padding.tiny};
 
+	// Create an offset border using a box-shadow.
 	&::after {
 		content: "";
 		display: block;
