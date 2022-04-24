@@ -8,6 +8,7 @@ import {
 import { addSnapshotFetchJobs } from "../../price-action/lib/queue/snapshot/add-fetch-job";
 import { formatYMD } from "../../price-action/lib/time/format-YMD";
 
+// TODO: add middleware to only allow admins to access these endpoints
 export const queueRouter = Router({ mergeParams: true });
 
 /** Check whether `jobType` is one of the job types we care about. */
