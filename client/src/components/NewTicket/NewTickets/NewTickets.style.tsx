@@ -98,6 +98,7 @@ export const StyledNewTicketsSubtitle = styled.h3`
 
 	margin: 0 auto;
 
+	// TODO: make this value responsive.
 	max-width: 720px;
 	margin-bottom: ${(p) => p.theme.padding.tiny};
 `;
