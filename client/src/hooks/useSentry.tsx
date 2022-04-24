@@ -11,6 +11,7 @@ export default function useSentry() {
 			release: process.env.SENTRY_RELEASE,
 			integrations: [new BrowserTracing({ routingInstrumentation })],
 			tracesSampleRate: 1,
+			environment: process.env.APP_ENV ?? "dev",
 			autoSessionTracking: false,
 		});
 	}, [routingInstrumentation]);
