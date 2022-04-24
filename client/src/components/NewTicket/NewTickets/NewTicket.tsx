@@ -129,6 +129,7 @@ const NewTicket = ({
 				$size="small"
 				title="Ticker"
 				name="ticker"
+				defaultValue={ticket.ticker}
 				placeholder={getPlaceholder("ticker")}
 				onChange={onChange}
 			/>
@@ -139,6 +140,7 @@ const NewTicket = ({
 				$size="small"
 				title="Price per share"
 				name="price"
+				defaultValue={ticket.price}
 				type="number"
 				min={0}
 				step="any"
@@ -149,6 +151,7 @@ const NewTicket = ({
 			<Input
 				{...sharedInputProps}
 				$size="small"
+				defaultValue={ticket.quantity}
 				title="Share quantity"
 				name="quantity"
 				type="number"
