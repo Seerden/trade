@@ -9,12 +9,7 @@ export default function Input({ $size, ...inputProps }: Props) {
 	return <StyledInput {...{ ...inputProps, $size }} />;
 }
 
-/**
- * RequiredInput is exactly the same as Input, except now required=true always
- *
- * @note declare type props: Props, where Props is also used to define Input
- * props. Using Parameters<typeof Input> doesn't work for some reason
- */
-export function RequiredInput(props: Props) {
+/** RequiredInput is exactly the same as Input, except we set required=true. */
+export function RequiredInput(...props: Parameters<typeof Input>) {
 	return <Input {...props} required />;
 }
