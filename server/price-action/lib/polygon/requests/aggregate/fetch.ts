@@ -52,11 +52,15 @@ async function fetchTickerAggregate({
 	});
 
 	try {
-		const { data } = await axiosPolygon.get<PolygonAggregateResponse>(url, {
+		const response = await axiosPolygon.get<PolygonAggregateResponse>(url, {
 			params: { limit, sort },
 		});
 
-		return data;
+		if (response.data) {
+			return response.data;
+		}
+
+		throw new Error("No response data returned for aggregate fetch request.");
 	} catch (e) {
 		console.error(e);
 	}

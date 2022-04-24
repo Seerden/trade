@@ -96,6 +96,18 @@ export async function fetchAndInsertAggregate({
 		multiplier: 1,
 	});
 
+	if (!rawResponse?.results) {
+		captureMessage("Received aggregate response without `results`.", {
+			extra: {
+				rawResponse,
+				// eslint-disable-next-line prefer-rest-params
+				arguments,
+			},
+		});
+
+		return;
+	}
+
 	const priceActionObjects = aggregateToPriceAction(rawResponse);
 	const priceActionArrays = priceActionObjects.map((obj) =>
 		objectToArray(obj, priceActionFields)
