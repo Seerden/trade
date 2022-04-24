@@ -1,8 +1,11 @@
+import { captureMessage } from "@sentry/node";
 import { Router } from "express";
 import {
 	listPolygonQueueJobs,
 	polygonQueue,
 } from "../../price-action/lib/queue/polygon-queue";
+import { addSnapshotFetchJobs } from "../../price-action/lib/queue/snapshot/add-fetch-job";
+import { formatYMD } from "../../price-action/lib/time/format-YMD";
 
 export const queueRouter = Router({ mergeParams: true });
 
@@ -28,4 +31,27 @@ queueRouter.get("/polygon/job/:id", async (req, res) => {
 	} else {
 		res.json({ job });
 	}
+});
+
+/**
+ * Manually add a snapshot fetch job to the queue.
+ * @todo Check whether or not the snapshot for this date was already fetched.
+ */
+queueRouter.post("/snapshot/:date", async (req, res) => {
+	const formattedDate = formatYMD(req.params.date);
+
+	if (!formattedDate) {
+		captureMessage("Invalid date specified", {
+			extra: {
+				endpoint: "/q/snapshot:date",
+				params: req.params,
+			},
+		});
+
+		return res.json({
+			message: "Specified date parameter could not be parsed to YYYY-MM-DD",
+		});
+	}
+
+	res.json({ addedJobs: await addSnapshotFetchJobs([formattedDate]) });
 });

@@ -10,7 +10,6 @@ import { fetchSnapshotWithLimiter } from "../../price-action/lib/polygon/request
 import { writeAggregateTickerDateTuplesToFetchToFile } from "../../price-action/lib/queue/aggregate/aggregate-backlog";
 import { queueAggregateBacklog } from "../../price-action/lib/queue/aggregate/queue-backlog";
 import { polygonQueue } from "../../price-action/lib/queue/polygon-queue";
-import { addSnapshotFetchJobs } from "../../price-action/lib/queue/snapshot/add-fetch-job";
 import { redisClient } from "../../store/redis-client";
 import { snapshotRouter } from "./snapshot-router";
 
@@ -57,10 +56,6 @@ devRouter.get("/aggregate-backlog/queue", async (req, res) => {
 	} else {
 		res.json({ jobs: await polygonQueue.getJobs() });
 	}
-});
-
-devRouter.get("/queue-snapshot-fetch-manually", async (req, res) => {
-	res.json({ addedJobs: await addSnapshotFetchJobs(["2022-01-22"]) });
 });
 
 devRouter.get("/snapshot/raw/:date", async (req, res) => {
