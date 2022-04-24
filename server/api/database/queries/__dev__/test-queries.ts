@@ -1,4 +1,4 @@
-import { BackendApiObject as API } from "../../../../database/pools/query-objects";
+import { API } from "../../../../database/pools/apis";
 
 export async function testQuery() {
 	const response = await API.query({

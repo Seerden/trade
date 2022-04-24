@@ -8,5 +8,11 @@ node_modules
 /**/api-pg-data
 /**/redis-data
 
-/server/**/.rest
+/server/**/*.rest
 /server/**/*.csv
+
+/server/**/*backup*
+
+/server/data/**
+
+documentation/__learned

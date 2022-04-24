@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/node";
+import * as Tracing from "@sentry/tracing";
 import cors from "cors";
 import { config } from "dotenv";
 import express, { Request, Response } from "express";
@@ -7,13 +9,30 @@ import { strategy } from "./api/helpers/auth/passport/config";
 import { getUser } from "./api/helpers/auth/user";
 import { logRequests } from "./api/helpers/middleware/log-requests";
 import authRouter from "./api/routers/auth-router";
+import { priceActionRouter } from "./api/routers/price-action-router";
 import { tradeRouter } from "./api/routers/trade-router";
+import { polygonSnapshotFetchWorker } from "./price-action/lib/queue/polygon-queue";
 import { redisSession, startRedis } from "./store/redis-client";
 
 config();
 
 async function main() {
 	const app = express();
+
+	Sentry.init({
+		dsn: process.env.SENTRY_DSN,
+		tracesSampleRate: 1,
+		autoSessionTracking: false,
+		normalizeDepth: 10,
+		integrations: [
+			new Tracing.Integrations.Express({
+				app,
+			}),
+		],
+	});
+
+	app.use(Sentry.Handlers.requestHandler() as express.RequestHandler);
+
 	app.use(
 		express.urlencoded({
 			limit: "5mb",
@@ -33,6 +52,9 @@ async function main() {
 	);
 
 	await startRedis();
+	if (!polygonSnapshotFetchWorker.isRunning) {
+		polygonSnapshotFetchWorker.run(); // only necessary if autorun = false
+	}
 	app.use(session(redisSession));
 
 	passport.use(strategy);
@@ -66,14 +88,28 @@ async function main() {
 
 	app.use("/auth", authRouter);
 	app.use("/t", tradeRouter);
+	app.use("/p", priceActionRouter);
 
 	app.get("/", (req, res) => {
 		res.json({ message: "/ GET successful" });
 	});
 
-	app.listen(process.env.PORT || 5000, () => {
+	const instance = app.listen(process.env.PORT || 5000, () => {
 		console.log(`Server started on ${new Date()}`);
 	});
+
+	/**
+	 * Uncomment below to gracefully shut down Express server and polygonSnapshot
+	 * BullMQ worker.
+	 *
+	 * TODO: find a good place to do this. An admin-only API endpoint?
+	 */
+	// instance.close(async () => {
+	// 	await polygonSnapshotFetchWorker.close();
+	// 	console.log("Shut down express server.");
+	// });
+
+	app.use(Sentry.Handlers.errorHandler());
 
 	/**
 	 * Catch-all piece of middleware that handles errors during route handling.
@@ -93,18 +129,25 @@ async function main() {
 	 * and let the client handle what to do next (e.g. retry a few times, force
 	 * the user to log in again, etc).
 	 */
-	app.use((err: Error, req: Request, res: Response, next?: (args?: any) => unknown) => {
-		if (err) {
-			req.session = null;
-			req.logout();
+	app.use(
+		(
+			err: Error,
+			req: Request,
+			res: Response,
+			next?: (args?: any) => unknown
+		) => {
+			if (err) {
+				req.session = null;
+				req.logout();
 
-			// if (next) {
-			// 	next();
-			// } else {
-			res.json({ error: err });
-			// }
+				// if (next) {
+				// 	next();
+				// } else {
+				res.json({ error: err });
+				// }
+			}
 		}
-	});
+	);
 }
 
 main().catch((e) => console.error(e));

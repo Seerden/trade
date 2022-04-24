@@ -16,6 +16,7 @@ services:
         volumes:
             - ./pg-data:/var/lib/postgresql/data
             - ../server/price-action/database-setup:/docker-entrypoint-initdb.d
+            - ../server/price-action/database-backups:/psql-backups
         ports:
             - "5432:5432"
 

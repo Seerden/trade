@@ -1,57 +1,63 @@
+import dayjs from "dayjs";
 import { DateDayjsOrString } from "../../../../types/date.types";
-import { fetchTickerAggregate } from "../../../lib/polygon/requests/aggregate/aggregate-fetch";
-import { fetchAndInsertAggregate } from "../../../lib/polygon/requests/aggregate/aggregate-insert";
+import { fetchAggregateWithLimiter } from "../../../lib/polygon/requests/aggregate/fetch";
+import { fetchAndInsertAggregate } from "../../../lib/polygon/requests/aggregate/insert";
+import { unixMillis } from "../../../lib/time/date-manipulation";
+import { formatYMD } from "../../../lib/time/format-YMD";
 import { nMarketDayRange } from "../../../lib/time/market-day-range";
 
 const maxDaysPerQuery = Math.floor(50_000 / (16 * 60));
 
 export async function fetchMaxOneMinuteData({
-    ticker,
-    to,
+	ticker,
+	to,
 }: {
-    ticker: string;
-    to?: DateDayjsOrString;
+	ticker: string;
+	to?: DateDayjsOrString;
 }) {
-    const [start, end] = nMarketDayRange({ n: maxDaysPerQuery, end: to });
+	// eslint-disable-next-line prefer-const
+	let [start, end] = nMarketDayRange({ n: maxDaysPerQuery, end: to });
+	const twoYearsAgo = dayjs().startOf("day").add(-2, "year").add(1, "day");
 
-    const rawResponse = await fetchTickerAggregate({
-        ticker,
-        from: start,
-        to: end,
-        timespan: "minute",
-        multiplier: 1,
-    });
+	if (unixMillis(start) < unixMillis(twoYearsAgo)) {
+		start = formatYMD(twoYearsAgo);
+	}
 
-    return rawResponse;
-}
+	const rawResponse = await fetchAggregateWithLimiter({
+		ticker,
+		from: start,
+		to: end,
+		timespan: "minute",
+		multiplier: 1,
+	});
 
-/** Extract first and last row of fetchMaxOneMinuteData response */
-// eslint-disable-next-line camelcase
-export function dev_firstAndLastMaxOneMinuteDataResultRow(
-    rawResponse: Awaited<ReturnType<typeof fetchMaxOneMinuteData>>
-) {
-    const [firstRow, lastRow] = [0, -1].map((index) => rawResponse.results.at(index));
-    return [firstRow, lastRow];
+	return rawResponse;
 }
 
 export async function fetchAndInsertMaxOneMinuteData({
-    ticker,
-    to,
+	ticker,
+	to,
 }: {
-    ticker: string;
-    to?: DateDayjsOrString;
+	ticker: string;
+	to?: DateDayjsOrString;
 }) {
-    const [start, end] = nMarketDayRange({ n: maxDaysPerQuery, end: to });
+	// eslint-disable-next-line prefer-const
+	let [start, end] = nMarketDayRange({ n: maxDaysPerQuery, end: to });
+	const twoYearsAgo = dayjs(start).add(-2, "year").add(1, "day");
 
-    try {
-        return await fetchAndInsertAggregate({
-            timespan: "minute",
-            ticker,
-            from: start,
-            to: end,
-        });
-    } catch (error) {
-        console.error(error);
-        return "error";
-    }
+	if (unixMillis(start) < unixMillis(twoYearsAgo)) {
+		start = formatYMD(twoYearsAgo);
+	}
+
+	try {
+		return await fetchAndInsertAggregate({
+			timespan: "minute",
+			ticker,
+			from: start,
+			to: end,
+		});
+	} catch (error) {
+		console.error(error);
+		return "error";
+	}
 }

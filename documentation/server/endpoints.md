@@ -31,7 +31,7 @@ We could turn this into an actual specification (e.g. with Swagger or Postman).
 -   `/daily/all`
 
     -   GET
-        calls `fetchDailyOHLC`
+        calls `fetchSnapshot`
 
 -   `/:ticker/1m/:to`
 

@@ -1,6 +1,5 @@
 {
 	"compilerOptions": {
-		"baseUrl": ".",
 		"module": "commonjs",
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
@@ -14,7 +13,9 @@
 		"skipLibCheck": true,
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"types": ["jest", "node"]
+		"types": ["jest", "node"],
+		"baseUrl": ".",
+		"resolveJsonModule": true
 	},
 	"ts-node": { "files": true },
 	"exclude": ["./node_modules", "node_modules"]
