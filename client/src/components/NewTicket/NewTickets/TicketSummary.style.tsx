@@ -30,18 +30,18 @@ export const StyledOverlay = styled.div`
 	background: rgba(0, 0, 0, 0.68);
 `;
 
+const closeButtonSize = "30px";
+
 // TODO: all of this styling is WIP and should at least be refactored to theme values
 export const StyledModalCloseButton = styled.button`
 	display: inline-flex;
 	position: absolute;
 
-	--size: 30px;
+	top: calc(-1 * ${closeButtonSize} / 2);
+	right: calc(-1 * ${closeButtonSize} / 2);
 
-	top: calc(-1 * var(--size) / 2);
-	right: calc(-1 * var(--size) / 2);
-
-	width: var(--size);
-	height: var(--size);
+	width: ${closeButtonSize};
+	height: ${closeButtonSize};
 	background-color: orangered;
 	border: 2px solid orangered;
 
