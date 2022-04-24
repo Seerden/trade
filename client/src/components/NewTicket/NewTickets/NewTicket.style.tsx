@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 
-// TODO: all this styling needs to be unified with theme styles
+const deleteButtonWidth = "2.5rem";
+
 export const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
 	${(p) =>
 		p.empty &&
@@ -19,26 +20,28 @@ export const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
 	font-size: ${(p) => p.theme.font.small};
 
 	position: relative;
-	// TODO: the +2.5rem is to prevent layout shift when sliding in the delete
-	// button (delete button width is 2.5rem)
-	min-width: calc(100% + 2.5rem);
+
+	// Include delete button's width in min-width so there's no layout shift when
+	// the delete button slides in.
+	min-width: calc(100% + ${deleteButtonWidth});
 
 	transition: filter 75ms linear, opacity 90ms linear;
 `;
 
+const deleteButtonSize = "25px";
+
 export const StyledNewTicketDeleteButton = styled.button`
 	display: inline-flex;
-
 	align-items: center;
 	justify-content: center;
-	background-color: transparent;
 
 	position: absolute;
 	right: 0;
 
-	width: 2.5rem;
-	min-height: 25px;
-	height: 25px;
+	background-color: transparent;
+
+	width: ${deleteButtonWidth};
+	height: ${deleteButtonSize};
 	line-height: 100%;
 
 	border-radius: 50%;
