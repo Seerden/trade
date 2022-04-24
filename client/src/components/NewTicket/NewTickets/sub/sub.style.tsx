@@ -2,29 +2,31 @@ import { SharedBaseInput } from "style/shared/input.style";
 import styled, { css } from "styled-components";
 import { TradeAction } from "types/tickets";
 
+const defaultInputWidth = "6.5rem";
+const smallInputWidth = "5rem";
+const largeInputWidth = "9rem";
+
 export const StyledInput = styled(SharedBaseInput)<{ $size?: string }>`
 	height: 2rem;
 
 	// This default width is currently only used for the name="time" input
 	// component, it needs slightly more width in locales where AM/PM are
 	// specified instead of using 24-hour times.
-	--width: 6.5rem;
-	min-width: var(--width);
-	width: var(--width);
+	min-width: ${defaultInputWidth};
+	width: ${defaultInputWidth};
 
 	${(p) =>
 		p.$size === "small" &&
 		css`
-			min-width: 5rem;
-			width: 5rem;
+			min-width: ${smallInputWidth};
+			width: ${smallInputWidth};
 		`}
 
 	${(p) =>
 		p.$size === "large" &&
 		css`
-			--large-input-width: 9rem;
-			min-width: var(--large-input-width);
-			width: var(--large-input-width);
+			min-width: ${largeInputWidth};
+			width: ${largeInputWidth};
 		`}
 
 	&::placeholder {
@@ -95,11 +97,10 @@ export const StyledTradeActionLabel = styled.label<{
 
 export const StyledNewTicketHeader = styled.div`
 	display: grid;
-	// TODO: these column widths and gap size follow those from the NewTicket
-	// component (specifically, the StyledInput in there). Should combine those
-	// styles with these here so that they're always in sync. Would also make it
-	// easier to manage a responsive version of this component.
-	grid-template-columns: repeat(4, 5rem) 9rem 6.5rem;
+
+	// These column widths and gap size have to match the StyledInput widths in
+	// the NewTicket component.
+	grid-template-columns: repeat(4, ${smallInputWidth}) ${largeInputWidth} ${defaultInputWidth};
 	gap: ${({ theme }) => theme.padding.tiny};
 
 	label {
