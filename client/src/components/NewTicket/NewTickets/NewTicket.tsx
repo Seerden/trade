@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useMemo } from "react";
 import { BsX } from "react-icons/bs";
 import { TradeAction } from "types/tickets";
 import {
@@ -7,6 +7,7 @@ import {
 } from "./NewTicket.style";
 import NewTicketInput from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
+import { useNewTicket } from "./useNewTicket";
 import { useNewTickets } from "./useNewTickets";
 
 const actions = "buy sell".split(" ") as TradeAction[];
@@ -38,16 +39,12 @@ const NewTicket = ({
 	setField,
 	deleteTicket,
 }: Props) => {
-	const hasFilledInFields = useMemo(() => {
-		return "price ticker quantity action"
-			.split(" ")
-			.some(
-				(field) =>
-					field in ticket &&
-					ticket[field] !== undefined &&
-					ticket[field]?.length
-			);
-	}, [ticket]);
+	const {
+		isRequired,
+		getPlaceholder,
+		eventHandlers,
+		shouldShowDelete,
+	} = useNewTicket(ticket);
 
 	const actionButtons = useMemo(
 		() =>
@@ -56,7 +53,10 @@ const NewTicket = ({
 
 				return (
 					<TradeActionButton
-						required={hasFilledInFields && !ticket.action}
+						// The required prop is only used to display a border.
+						// If there is already a ticket.action value, we don't want
+						// the 'required'-specific border.
+						required={isRequired && !ticket.action}
 						index={ticketIndex}
 						key={action}
 						action={action}
@@ -67,7 +67,7 @@ const NewTicket = ({
 					/>
 				);
 			}),
-		[ticket]
+		[ticket, isRequired]
 	);
 
 	/**
@@ -81,47 +81,16 @@ const NewTicket = ({
 		[setField, ticketIndex]
 	);
 
-	/**
-	 * If hasFilledInFields, return `placeholder`, else return null.
-	 * To be used to only display placeholders for certain inputs if hasFilledInFields.
-	 *
-	 * @todo: refine condition hasFilledInFields to something slightly different:
-	 * - also want to display placeholder if user is focused or hovering the
-	 *   ticket, or if they have selected a tradeAction, or changed the `date` or
-	 *   `time` field.
-	 */
-	const getPlaceholder = useCallback(
-		(placeholder: string) => {
-			return hasFilledInFields ? placeholder : null;
-		},
-		[hasFilledInFields]
-	);
-
-	const [shouldShowDelete, setShouldShowDelete] = useState<boolean>(false);
-
-	// TODO: combine showDelete and hideDelete into one function
-	const showDelete = useCallback(() => {
-		setShouldShowDelete(true);
-	}, [shouldShowDelete, setShouldShowDelete]);
-
-	const hideDelete = useCallback(() => {
-		setShouldShowDelete(false);
-	}, [shouldShowDelete, setShouldShowDelete]);
-
 	const sharedInputProps = useMemo(
 		() => ({
-			required: hasFilledInFields,
+			required: isRequired,
 			onChange,
 		}),
-		[hasFilledInFields, onChange]
+		[isRequired, onChange]
 	);
 
 	return (
-		<StyledNewTicket
-			empty={!hasFilledInFields}
-			onMouseEnter={showDelete}
-			onMouseLeave={hideDelete}
-		>
+		<StyledNewTicket required={isRequired} {...eventHandlers}>
 			{/* action buttons */}
 			{/* TODO: I don't like that these are just in a span. Has to be a more semantic way to do this. */}
 			<span>{actionButtons}</span>
@@ -164,7 +133,7 @@ const NewTicket = ({
 
 			{/* date field */}
 			<NewTicketInput
-				required={hasFilledInFields}
+				required={isRequired}
 				$size="large"
 				title="Date"
 				name="date"
@@ -174,6 +143,7 @@ const NewTicket = ({
 
 			{/* time field */}
 			<NewTicketInput
+				required={isRequired}
 				title="Time of day (market time)"
 				name="time"
 				type="time"
@@ -187,7 +157,7 @@ const NewTicket = ({
 						deleteTicket(ticketIndex);
 					}}
 				>
-					<BsX type="button" overflow={"visible"} />
+					<BsX overflow={"visible"} />
 				</StyledNewTicketDeleteButton>
 			)}
 		</StyledNewTicket>
