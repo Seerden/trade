@@ -31,6 +31,7 @@ export const StyledButton = styled.input<{ round?: boolean }>`
 					width: max-content;
 					padding: ${(p) => p.theme.padding.wide.button.tiny};
 			  `}
+
 	display: inline-flex;
 	background-color: transparent;
 	font-size: ${(p) => p.theme.font.tiny};
@@ -38,6 +39,7 @@ export const StyledButton = styled.input<{ round?: boolean }>`
 	border: 2px solid ${(p) => p.theme.colors.grey.light};
 
 	transition: all 75ms ease-out;
+
 	&:hover {
 		box-shadow: 0 4px 0 -2px lightgrey;
 		transform: translateY(-2px);

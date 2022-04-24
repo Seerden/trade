@@ -26,7 +26,7 @@ export const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
 	transition: filter 75ms linear, opacity 90ms linear;
 `;
 
-export const StyledButton = styled.button`
+export const StyledNewTicketDeleteButton = styled.button`
 	display: inline-flex;
 
 	align-items: center;

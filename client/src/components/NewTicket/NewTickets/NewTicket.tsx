@@ -1,7 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 import { BsX } from "react-icons/bs";
 import { TradeAction } from "types/tickets";
-import { StyledButton, StyledNewTicket } from "./NewTicket.style";
+import {
+	StyledNewTicket,
+	StyledNewTicketDeleteButton,
+} from "./NewTicket.style";
 import Input from "./sub/Input";
 import TradeActionButton from "./sub/TradeActionButton";
 import { useNewTickets } from "./useNewTickets";
@@ -166,14 +169,14 @@ const NewTicket = ({
 			/>
 
 			{shouldShowDelete && (
-				<StyledButton
+				<StyledNewTicketDeleteButton
 					type="button"
 					onClick={() => {
 						deleteTicket(ticketIndex);
 					}}
 				>
 					<BsX type="button" overflow={"visible"} />
-				</StyledButton>
+				</StyledNewTicketDeleteButton>
 			)}
 		</StyledNewTicket>
 	);
