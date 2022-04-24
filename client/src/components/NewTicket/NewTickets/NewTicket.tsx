@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import { BsX } from "react-icons/bs";
 import { TradeAction } from "types/tickets";
 import {
@@ -71,6 +71,17 @@ const NewTicket = ({
 	);
 
 	/**
+	 * Curried function that calls setField with `ticketIndex`, so we can do
+	 * onChange={onChange} throughout this component's JSX.
+	 */
+	const onChange = useCallback(
+		(e: ChangeEvent<HTMLInputElement>) => {
+			return setField(e, ticketIndex);
+		},
+		[setField, ticketIndex]
+	);
+
+	/**
 	 * If hasFilledInFields, return `placeholder`, else return null.
 	 * To be used to only display placeholders for certain inputs if hasFilledInFields.
 	 *
@@ -116,7 +127,7 @@ const NewTicket = ({
 				placeholder={getPlaceholder("ticker")}
 				// TODO: don't repeat e => setField(e, ticketIndex) every time, write
 				// a curried function instead
-				onChange={(e) => setField(e, ticketIndex)}
+				onChange={onChange}
 			/>
 
 			{/* price field */}
@@ -129,9 +140,7 @@ const NewTicket = ({
 				min={0}
 				step="any"
 				placeholder={getPlaceholder("price")}
-				onChange={(e) => {
-					setField(e, ticketIndex);
-				}}
+				onChange={onChange}
 			/>
 
 			{/* quantity field */}
@@ -144,7 +153,7 @@ const NewTicket = ({
 				min={0}
 				step="any"
 				placeholder={getPlaceholder("quantity")}
-				onChange={(e) => setField(e, ticketIndex)}
+				onChange={onChange}
 			/>
 
 			{/* date field */}
@@ -154,7 +163,7 @@ const NewTicket = ({
 				title="Date"
 				name="date"
 				type="date"
-				onChange={(e) => setField(e, ticketIndex)}
+				onChange={onChange}
 				defaultValue={ticket.date}
 			/>
 
@@ -164,7 +173,7 @@ const NewTicket = ({
 				title="Time of day (market time)"
 				name="time"
 				type="time"
-				onChange={(e) => setField(e, ticketIndex)}
+				onChange={onChange}
 				defaultValue="09:30"
 			/>
 
