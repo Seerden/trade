@@ -128,13 +128,12 @@ const NewTicket = ({
 
 			{/* ticker field */}
 			<NewTicketInput
-				required={hasFilledInFields}
+				{...sharedInputProps}
 				$size="small"
 				title="Ticker"
 				name="ticker"
 				defaultValue={ticket.ticker}
 				placeholder={getPlaceholder("ticker")}
-				onChange={onChange}
 			/>
 
 			{/* price field */}
