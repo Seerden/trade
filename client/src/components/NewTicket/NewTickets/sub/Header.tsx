@@ -1,4 +1,4 @@
-import { StyledHeader } from "./sub.style";
+import { StyledNewTicketHeader } from "./sub.style";
 
 export default function Header() {
 	const columns = "Action Ticker Price Quantity Date Time".split(" ");
@@ -7,12 +7,12 @@ export default function Header() {
 	};
 
 	return (
-		<StyledHeader>
+		<StyledNewTicketHeader>
 			{columns.map((col, index) => (
 				<label htmlFor={col.toLowerCase()} key={index}>
 					{columnMap[col] ?? col}
 				</label>
 			))}
-		</StyledHeader>
+		</StyledNewTicketHeader>
 	);
 }

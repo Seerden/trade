@@ -93,7 +93,7 @@ export const StyledTradeActionLabel = styled.label<{
 		`}
 `;
 
-export const StyledHeader = styled.div`
+export const StyledNewTicketHeader = styled.div`
 	display: grid;
 	// TODO: these column widths and gap size follow those from the NewTicket
 	// component (specifically, the StyledInput in there). Should combine those
