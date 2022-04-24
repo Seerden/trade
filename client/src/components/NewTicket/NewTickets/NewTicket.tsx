@@ -71,8 +71,8 @@ const NewTicket = ({
 	);
 
 	/**
-	 * Curried function that calls setField with `ticketIndex`, so we can do
-	 * onChange={onChange} throughout this component's JSX.
+	 * Curried function that returns setField with pre-set `ticketIndex`, so we
+	 * can do onChange={onChange} throughout this component's JSX.
 	 */
 	const onChange = useCallback(
 		(e: ChangeEvent<HTMLInputElement>) => {
