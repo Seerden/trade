@@ -2,9 +2,9 @@ import styled, { css } from "styled-components";
 
 const deleteButtonWidth = "2.5rem";
 
-export const StyledNewTicket = styled.fieldset<{ empty?: boolean }>`
+export const StyledNewTicket = styled.fieldset<{ required?: boolean }>`
 	${(p) =>
-		p.empty &&
+		!p.required &&
 		css`
 			transform: translateZ(0);
 			&:not(:hover) {
@@ -44,15 +44,17 @@ export const StyledNewTicketDeleteButton = styled.button`
 	height: ${deleteButtonSize};
 	line-height: 100%;
 
-	border-radius: 50%;
-
 	transition: color 35ms ease-in, transform 50ms ease-out;
 
 	&:hover,
+	&:focus,
 	&:active {
-		color: red;
-		font-weight: 500;
-		transform: scale(1.4);
+		svg {
+			color: red;
+			font-weight: 500;
+			transform: scale(1.4);
+			outline: 1px solid #eee;
+		}
 	}
 
 	animation: 100ms ease-out slide-in;
