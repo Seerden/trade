@@ -47,7 +47,7 @@ export function isValidTicket(ticket: ReturnType<typeof parseNewTicketInputs>) {
 
 	// Early return if ticket doesn't have a value for any of the necessary
 	// fields. TODO: this could just be HTML validation
-	if (!ticket || !fields.every((field) => ticket[field] !== undefined)) {
+	if (!ticket || fields.some((field) => !ticket[field])) {
 		return;
 	}
 
