@@ -36,9 +36,11 @@ export const NewTicketsButton = styled.input<{ round?: boolean }>`
 
 	transition: all 75ms ease-out;
 
-	&:hover {
-		box-shadow: 0 4px 0 -2px lightgrey;
-		transform: translateY(-2px);
+	&:not(:disabled) {
+		&:hover {
+			box-shadow: 0 4px 0 -2px lightgrey;
+			transform: translateY(-2px);
+		}
 	}
 `;
 
