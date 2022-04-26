@@ -20,6 +20,7 @@ export default function Buttons({
                      button with arrow, slide text into it on hover */}
 					{!previewButtonDisabled ? (
 						<S.NewTicketsButton
+							isCTA
 							type="button"
 							value="Save tickets"
 							disabled={previewButtonDisabled}
