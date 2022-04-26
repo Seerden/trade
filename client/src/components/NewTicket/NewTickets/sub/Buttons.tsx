@@ -18,12 +18,16 @@ export default function Buttons({
 				<span>
 					{/*   TODO: should become a button with on-hover effect: start as green 
                      button with arrow, slide text into it on hover */}
-					<S.NewTicketsButton
-						type="button"
-						value="Save tickets"
-						disabled={previewButtonDisabled}
-						onClick={handlePreviewClick}
-					/>
+					{!previewButtonDisabled ? (
+						<S.NewTicketsButton
+							type="button"
+							value="Save tickets"
+							disabled={previewButtonDisabled}
+							onClick={handlePreviewClick}
+						/>
+					) : (
+						<></>
+					)}
 				</span>
 				<span>
 					<S.NewTicketsButton
