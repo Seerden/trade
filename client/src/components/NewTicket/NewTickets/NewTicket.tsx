@@ -48,25 +48,21 @@ const NewTicket = ({
 
 	const actionButtons = useMemo(
 		() =>
-			actions.map((action: TradeAction) => {
-				const active = ticket?.action === action;
-
-				return (
-					<TradeActionButton
-						// The required prop is only used to display a border.
-						// If there is already a ticket.action value, we don't want
-						// the 'required'-specific border.
-						required={isRequired && !ticket.action}
-						index={ticketIndex}
-						key={action}
-						action={action}
-						active={active}
-						onClick={() => {
-							setAction(ticketIndex, action);
-						}}
-					/>
-				);
-			}),
+			actions.map((action: TradeAction) => (
+				<TradeActionButton
+					// The required prop is only used to display a border.
+					// If there is already a ticket.action value, we don't want
+					// the 'required'-specific border.
+					required={isRequired && !ticket.action}
+					index={ticketIndex}
+					key={action}
+					action={action}
+					active={ticket?.action === action}
+					onClick={() => {
+						setAction(ticketIndex, action);
+					}}
+				/>
+			)),
 		[ticket, isRequired]
 	);
 
