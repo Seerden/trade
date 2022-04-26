@@ -1,21 +1,12 @@
 import { useMemo } from "react";
 import NewTicket from "./NewTicket";
-import {
-	StyledNewTickets,
-	StyledNewTicketsButton,
-	StyledNewTicketsButtonBar,
-	StyledNewTicketsButtons,
-	StyledNewTicketsSubtitle,
-	StyledNewTicketsTitle,
-	StyledTickets,
-} from "./NewTickets.style";
+import * as S from "./NewTickets.style";
+import Buttons from "./sub/Buttons";
 import Header from "./sub/Header";
 import TicketSummary from "./TicketSummary";
 import { useNewTickets } from "./useNewTickets";
 
-/**
- * Form that allows for creation of new trade tickets.
- */
+/** Form that allows for creation of new trade tickets. */
 export default function NewTickets() {
 	const {
 		tickets,
@@ -25,9 +16,10 @@ export default function NewTickets() {
 		setShowSummary,
 		setAction,
 		setField,
-		addTicketRows,
 		onSubmit,
 		deleteTicket,
+		handlePreviewClick,
+		handleAddClick,
 	} = useNewTickets();
 
 	const ticketElements = useMemo(() => {
@@ -47,10 +39,10 @@ export default function NewTickets() {
 
 	return (
 		<>
-			<StyledNewTickets onSubmit={onSubmit}>
-				{/*   
-               Render TicketSummary inside the form, so that any submit buttons 
-               in there trigger this form's onSubmit handler */}
+			<S.NewTickets onSubmit={onSubmit}>
+				{/* Render TicketSummary inside the form, so that any submit buttons in 
+                there trigger this form's onSubmit handler. An alternative would be 
+                to give the form an id `formId`, and use form={formId} */}
 				{showSummary && validTickets?.length > 0 && (
 					<TicketSummary
 						tickets={validTickets}
@@ -60,64 +52,22 @@ export default function NewTickets() {
 						}}
 					/>
 				)}
-				<StyledNewTicketsTitle>Add new trade tickets</StyledNewTicketsTitle>
-				<StyledNewTicketsSubtitle>
+				<S.NewTicketsTitle>Add new trade tickets</S.NewTicketsTitle>
+				<S.NewTicketsSubtitle>
 					Each ticket describes one buy or sell transaction.
-				</StyledNewTicketsSubtitle>
-				<StyledTickets>
+				</S.NewTicketsSubtitle>
+				<S.Tickets>
 					<Buttons
-						addTicketRows={addTicketRows}
-						setShowSummary={setShowSummary}
+						{...{
+							handleAddClick,
+							handlePreviewClick,
+							previewButtonDisabled: !validTickets?.length,
+						}}
 					/>
 					<Header />
 					{ticketElements}
-				</StyledTickets>
-			</StyledNewTickets>
+				</S.Tickets>
+			</S.NewTickets>
 		</>
-	);
-}
-
-type ButtonProps = {
-	addTicketRows: (_: number) => void;
-	setShowSummary: (_: boolean) => void;
-};
-
-function Buttons({ addTicketRows, setShowSummary }: ButtonProps) {
-	return (
-		<StyledNewTicketsButtons>
-			<StyledNewTicketsButtonBar>
-				<span>
-					{/*   TODO: should become a button with on-hover effect: start as green 
-                     button with arrow, slide text into it on hover */}
-					<StyledNewTicketsButton
-						type="button"
-						value="Save tickets"
-						onClick={() => {
-							// TODO: only show preview if there is at least one valid
-							// ticket. The best way to do this is probably a function
-							// like maybeShowSummary that only calls setShowSummary if
-							// !!validTickets.length. Then we can pass this function to
-							// this Buttons component without also needing to pass validTickets
-							setShowSummary(true);
-						}}
-					/>
-				</span>
-				<span>
-					<StyledNewTicketsButton
-						round
-						type="button"
-						onClick={() => addTicketRows(3)}
-						value="+"
-						title="Add 3 rows"
-					/>
-					<StyledNewTicketsButton
-						round
-						type="button"
-						value="x"
-						title="Delete empty tickets"
-					/>
-				</span>
-			</StyledNewTicketsButtonBar>
-		</StyledNewTicketsButtons>
 	);
 }

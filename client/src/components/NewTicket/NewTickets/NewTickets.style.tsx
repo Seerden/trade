@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-export const StyledNewTicketsButtonBar = styled.span`
+export const NewTicketsButtonBar = styled.span`
 	display: flex;
 	justify-content: space-between;
 
@@ -11,12 +11,18 @@ export const StyledNewTicketsButtonBar = styled.span`
 	}
 `;
 
-export const StyledNewTicketsButton = styled.input<{ round?: boolean }>`
+const roundButtonSize = "25px;";
+
+export const NewTicketsButton = styled.input<{
+	round?: boolean;
+	isCTA?: boolean;
+}>`
+	height: ${roundButtonSize};
 	${(p) =>
 		p.round
 			? css`
-					width: 25px;
-					height: 25px;
+					width: ${roundButtonSize};
+					height: ${roundButtonSize};
 					border-radius: 50%;
 					justify-content: center;
 					text-align: center;
@@ -34,15 +40,25 @@ export const StyledNewTicketsButton = styled.input<{ round?: boolean }>`
 
 	border: 2px solid ${(p) => p.theme.colors.grey.light};
 
+	${(p) =>
+		p.isCTA &&
+		css`
+			border-color: ${p.theme.colors.green.primary};
+			background-color: ${p.theme.colors.green.primary};
+			color: white;
+		`}
+
 	transition: all 75ms ease-out;
 
-	&:hover {
-		box-shadow: 0 4px 0 -2px lightgrey;
-		transform: translateY(-2px);
+	&:not(:disabled) {
+		&:hover {
+			box-shadow: 0 4px 0 -2px ${(p) => (p.isCTA ? p.theme.colors.green.primary : "lightgrey")};
+			transform: translateY(-2px);
+		}
 	}
 `;
 
-export const StyledNewTicketsButtons = styled.div`
+export const NewTicketsButtons = styled.div`
 	display: block;
 	position: sticky;
 	z-index: 2;
@@ -52,7 +68,7 @@ export const StyledNewTicketsButtons = styled.div`
 	gap: ${({ theme }) => theme.padding.tiny};
 `;
 
-export const StyledNewTickets = styled.form`
+export const NewTickets = styled.form`
 	display: block;
 	margin: 0 auto;
 	max-width: max-content;
@@ -63,7 +79,7 @@ export const StyledNewTickets = styled.form`
 	box-shadow: 0 0 0.2rem 0 #ccc;
 `;
 
-export const StyledNewTicketsTitle = styled.h1`
+export const NewTicketsTitle = styled.h1`
 	display: block;
 	width: max-content;
 	position: relative;
@@ -90,7 +106,7 @@ export const StyledNewTicketsTitle = styled.h1`
 	}
 `;
 
-export const StyledNewTicketsSubtitle = styled.h3`
+export const NewTicketsSubtitle = styled.h3`
 	font-size: ${(p) => p.theme.font.medium};
 	word-wrap: break-word;
 	color: #aaa;
@@ -103,6 +119,6 @@ export const StyledNewTicketsSubtitle = styled.h3`
 	margin-bottom: ${(p) => p.theme.padding.tiny};
 `;
 
-export const StyledTickets = styled.section`
+export const Tickets = styled.section`
 	margin: ${(p) => p.theme.padding.large} 0;
 `;

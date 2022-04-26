@@ -3,7 +3,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import useAxios from "helpers/api/axios-instance";
 import { useAuth } from "hooks/auth/useAuth";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { SavedTicket } from "types/tickets";
 import { isValidTicket, parseNewTicketInputs } from "./helpers/parse-validate";
 import { RawNewTicket } from "./NewTicket";
@@ -116,6 +116,24 @@ export function useNewTickets() {
 		});
 	}
 
+	/**
+	 * Handler for the "Save tickets" button. It only triggers the Preview modal
+	 * if there is at least one valid ticket, otherwise it doesn't do anything.
+	 */
+	const handlePreviewClick = useCallback(
+		(e: MouseEvent<HTMLInputElement>) => {
+			if (validTickets?.length) {
+				setShowSummary(true);
+			}
+		},
+		[validTickets, setShowSummary]
+	);
+
+	/** Handler for the `+` button, which represents "Add `n` ticket rows". */
+	const handleAddClick = (e: MouseEvent<HTMLInputElement>, _: number) => {
+		addTicketRows(_);
+	};
+
 	return {
 		tickets,
 		validTickets,
@@ -127,5 +145,7 @@ export function useNewTickets() {
 		savedTickets,
 		showSummary,
 		setShowSummary,
+		handleAddClick,
+		handlePreviewClick,
 	} as const;
 }
