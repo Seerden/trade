@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import NewTicket from "./NewTicket";
 import * as S from "./NewTickets.style";
 import Buttons from "./sub/Buttons";
@@ -16,28 +16,11 @@ export default function NewTickets() {
 		setShowSummary,
 		setAction,
 		setField,
-		addTicketRows,
 		onSubmit,
 		deleteTicket,
+		handlePreviewClick,
+		handleAddClick,
 	} = useNewTickets();
-
-	/**
-	 * Handler for the "Save tickets" button. It only triggers the Preview modal
-	 * if there is at least one valid ticket, otherwise it doesn't do anything.
-	 */
-	const handlePreviewClick = useCallback(
-		(e: MouseEvent<HTMLInputElement>) => {
-			if (validTickets?.length) {
-				setShowSummary(true);
-			}
-		},
-		[validTickets, setShowSummary]
-	);
-
-	/** Handler for the `+` button, which represents "Add `n` ticket rows". */
-	const handleAddClick = (e: MouseEvent<HTMLInputElement>, _: number) => {
-		addTicketRows(_);
-	};
 
 	const ticketElements = useMemo(() => {
 		return tickets.map((ticket, ticketIndex) => {
