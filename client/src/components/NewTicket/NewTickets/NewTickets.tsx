@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { MouseEvent, useCallback, useMemo } from "react";
 import NewTicket from "./NewTicket";
 import {
 	StyledNewTickets,
@@ -27,6 +27,24 @@ export default function NewTickets() {
 		onSubmit,
 		deleteTicket,
 	} = useNewTickets();
+
+	/**
+	 * Handler for the "Save tickets" button. It only triggers the Preview modal
+	 * if there is at least one valid ticket, otherwise it doesn't do anything.
+	 */
+	const handlePreviewClick = useCallback(
+		(e: MouseEvent<HTMLInputElement>) => {
+			if (validTickets?.length) {
+				setShowSummary(true);
+			}
+		},
+		[validTickets, setShowSummary]
+	);
+
+	/** Handler for the `+` button, which represents "Add `n` ticket rows". */
+	const handleAddClick = (e: MouseEvent<HTMLInputElement>, _: number) => {
+		addTicketRows(_);
+	};
 
 	const ticketElements = useMemo(() => {
 		return tickets.map((ticket, ticketIndex) => {
@@ -64,8 +82,11 @@ export default function NewTickets() {
 				</StyledNewTicketsSubtitle>
 				<StyledTickets>
 					<Buttons
-						addTicketRows={addTicketRows}
-						setShowSummary={setShowSummary}
+						{...{
+							handleAddClick,
+							handlePreviewClick,
+							disabledPreviewButton: !validTickets?.length,
+						}}
 					/>
 					<Header />
 					{ticketElements}
@@ -76,11 +97,16 @@ export default function NewTickets() {
 }
 
 type ButtonProps = {
-	addTicketRows: (_: number) => void;
-	setShowSummary: (_: boolean) => void;
+	handleAddClick: (e: MouseEvent<HTMLInputElement>, _: number) => void;
+	handlePreviewClick: (e: MouseEvent<HTMLInputElement>) => void;
+	disabledPreviewButton?: boolean;
 };
 
-function Buttons({ addTicketRows, setShowSummary }: ButtonProps) {
+function Buttons({
+	handleAddClick,
+	handlePreviewClick,
+	disabledPreviewButton,
+}: ButtonProps) {
 	return (
 		<StyledNewTicketsButtons>
 			<StyledNewTicketsButtonBar>
@@ -90,24 +116,19 @@ function Buttons({ addTicketRows, setShowSummary }: ButtonProps) {
 					<StyledNewTicketsButton
 						type="button"
 						value="Save tickets"
-						onClick={() => {
-							// TODO: only show preview if there is at least one valid
-							// ticket. The best way to do this is probably a function
-							// like maybeShowSummary that only calls setShowSummary if
-							// !!validTickets.length. Then we can pass this function to
-							// this Buttons component without also needing to pass validTickets
-							setShowSummary(true);
-						}}
+						disabled={disabledPreviewButton}
+						onClick={handlePreviewClick}
 					/>
 				</span>
 				<span>
 					<StyledNewTicketsButton
 						round
 						type="button"
-						onClick={() => addTicketRows(3)}
+						onClick={(e) => handleAddClick(e, 3)}
 						value="+"
 						title="Add 3 rows"
 					/>
+					{/* TODO: this button is nonfuctional currently. */}
 					<StyledNewTicketsButton
 						round
 						type="button"
