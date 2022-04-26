@@ -1,14 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { RawNewTicket } from "./NewTicket";
 
 export function useNewTicket(ticket: Partial<RawNewTicket>) {
 	const [isHovering, setIsHovering] = useState<boolean>(false);
 	const [isFocused, setIsFocused] = useState<boolean>(false);
 	const [shouldShowDelete, setShouldShowDelete] = useState<boolean>(false);
-
-	useEffect(() => {
-		console.log({ shouldShowDelete });
-	}, [shouldShowDelete]);
 
 	// TODO: combine showDelete and hideDelete into one function
 	const showDelete = () => setShouldShowDelete(true);
