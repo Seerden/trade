@@ -1,6 +1,7 @@
 import { MouseEvent, useCallback, useMemo } from "react";
 import NewTicket from "./NewTicket";
 import * as S from "./NewTickets.style";
+import Buttons from "./sub/Buttons";
 import Header from "./sub/Header";
 import TicketSummary from "./TicketSummary";
 import { useNewTickets } from "./useNewTickets";
@@ -77,7 +78,7 @@ export default function NewTickets() {
 						{...{
 							handleAddClick,
 							handlePreviewClick,
-							disabledPreviewButton: !validTickets?.length,
+							previewButtonDisabled: !validTickets?.length,
 						}}
 					/>
 					<Header />
@@ -85,50 +86,5 @@ export default function NewTickets() {
 				</S.Tickets>
 			</S.NewTickets>
 		</>
-	);
-}
-
-type ButtonProps = {
-	handleAddClick: (e: MouseEvent<HTMLInputElement>, _: number) => void;
-	handlePreviewClick: (e: MouseEvent<HTMLInputElement>) => void;
-	disabledPreviewButton?: boolean;
-};
-
-function Buttons({
-	handleAddClick,
-	handlePreviewClick,
-	disabledPreviewButton,
-}: ButtonProps) {
-	return (
-		<S.NewTicketsButtons>
-			<S.NewTicketsButtonBar>
-				<span>
-					{/*   TODO: should become a button with on-hover effect: start as green 
-                     button with arrow, slide text into it on hover */}
-					<S.NewTicketsButton
-						type="button"
-						value="Save tickets"
-						disabled={disabledPreviewButton}
-						onClick={handlePreviewClick}
-					/>
-				</span>
-				<span>
-					<S.NewTicketsButton
-						round
-						type="button"
-						onClick={(e) => handleAddClick(e, 3)}
-						value="+"
-						title="Add 3 rows"
-					/>
-					{/* TODO: this button is nonfuctional currently. */}
-					<S.NewTicketsButton
-						round
-						type="button"
-						value="x"
-						title="Delete empty tickets"
-					/>
-				</span>
-			</S.NewTicketsButtonBar>
-		</S.NewTicketsButtons>
 	);
 }
