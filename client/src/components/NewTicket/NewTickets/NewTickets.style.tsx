@@ -13,7 +13,10 @@ export const NewTicketsButtonBar = styled.span`
 
 const roundButtonSize = "25px;";
 
-export const NewTicketsButton = styled.input<{ round?: boolean }>`
+export const NewTicketsButton = styled.input<{
+	round?: boolean;
+	isCTA?: boolean;
+}>`
 	height: ${roundButtonSize};
 	${(p) =>
 		p.round
@@ -31,17 +34,25 @@ export const NewTicketsButton = styled.input<{ round?: boolean }>`
 					padding: ${(p) => p.theme.padding.wide.button.tiny};
 			  `}
 
-	display: flex;
+	display: inline-flex;
 	background-color: transparent;
 	font-size: ${(p) => p.theme.font.tiny};
 
 	border: 2px solid ${(p) => p.theme.colors.grey.light};
 
+	${(p) =>
+		p.isCTA &&
+		css`
+			border-color: ${p.theme.colors.green.primary};
+			background-color: ${p.theme.colors.green.primary};
+			color: white;
+		`}
+
 	transition: all 75ms ease-out;
 
 	&:not(:disabled) {
 		&:hover {
-			box-shadow: 0 4px 0 -2px lightgrey;
+			box-shadow: 0 4px 0 -2px ${(p) => (p.isCTA ? p.theme.colors.green.primary : "lightgrey")};
 			transform: translateY(-2px);
 		}
 	}
