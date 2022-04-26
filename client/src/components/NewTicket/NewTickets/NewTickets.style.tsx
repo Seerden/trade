@@ -11,12 +11,15 @@ export const NewTicketsButtonBar = styled.span`
 	}
 `;
 
+const roundButtonSize = "25px;";
+
 export const NewTicketsButton = styled.input<{ round?: boolean }>`
+	height: ${roundButtonSize};
 	${(p) =>
 		p.round
 			? css`
-					width: 25px;
-					height: 25px;
+					width: ${roundButtonSize};
+					height: ${roundButtonSize};
 					border-radius: 50%;
 					justify-content: center;
 					text-align: center;
@@ -28,7 +31,7 @@ export const NewTicketsButton = styled.input<{ round?: boolean }>`
 					padding: ${(p) => p.theme.padding.wide.button.tiny};
 			  `}
 
-	display: inline-flex;
+	display: flex;
 	background-color: transparent;
 	font-size: ${(p) => p.theme.font.tiny};
 
