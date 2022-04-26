@@ -91,11 +91,9 @@ const NewTicket = ({
 
 	return (
 		<StyledNewTicket required={isRequired} {...eventHandlers}>
-			{/* action buttons */}
 			{/* TODO: I don't like that these are just in a span. Has to be a more semantic way to do this. */}
 			<span>{actionButtons}</span>
 
-			{/* ticker field */}
 			<NewTicketInput
 				{...sharedInputProps}
 				$size="small"
@@ -105,7 +103,6 @@ const NewTicket = ({
 				placeholder={getPlaceholder("ticker")}
 			/>
 
-			{/* price field */}
 			<NewTicketInput
 				{...sharedInputProps}
 				$size="small"
@@ -118,7 +115,6 @@ const NewTicket = ({
 				placeholder={getPlaceholder("price")}
 			/>
 
-			{/* quantity field */}
 			<NewTicketInput
 				{...sharedInputProps}
 				$size="small"
@@ -131,7 +127,6 @@ const NewTicket = ({
 				placeholder={getPlaceholder("quantity")}
 			/>
 
-			{/* date field */}
 			<NewTicketInput
 				required={isRequired}
 				$size="large"
@@ -141,7 +136,6 @@ const NewTicket = ({
 				defaultValue={ticket.date}
 			/>
 
-			{/* time field */}
 			<NewTicketInput
 				required={isRequired}
 				title="Time of day (market time)"
