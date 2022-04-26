@@ -1,14 +1,6 @@
 import { MouseEvent, useCallback, useMemo } from "react";
 import NewTicket from "./NewTicket";
-import {
-	StyledNewTickets,
-	StyledNewTicketsButton,
-	StyledNewTicketsButtonBar,
-	StyledNewTicketsButtons,
-	StyledNewTicketsSubtitle,
-	StyledNewTicketsTitle,
-	StyledTickets,
-} from "./NewTickets.style";
+import * as S from "./NewTickets.style";
 import Header from "./sub/Header";
 import TicketSummary from "./TicketSummary";
 import { useNewTickets } from "./useNewTickets";
@@ -63,7 +55,7 @@ export default function NewTickets() {
 
 	return (
 		<>
-			<StyledNewTickets onSubmit={onSubmit}>
+			<S.NewTickets onSubmit={onSubmit}>
 				{/* Render TicketSummary inside the form, so that any submit buttons in 
                 there trigger this form's onSubmit handler. An alternative would be 
                 to give the form an id `formId`, and use form={formId} */}
@@ -76,11 +68,11 @@ export default function NewTickets() {
 						}}
 					/>
 				)}
-				<StyledNewTicketsTitle>Add new trade tickets</StyledNewTicketsTitle>
-				<StyledNewTicketsSubtitle>
+				<S.NewTicketsTitle>Add new trade tickets</S.NewTicketsTitle>
+				<S.NewTicketsSubtitle>
 					Each ticket describes one buy or sell transaction.
-				</StyledNewTicketsSubtitle>
-				<StyledTickets>
+				</S.NewTicketsSubtitle>
+				<S.Tickets>
 					<Buttons
 						{...{
 							handleAddClick,
@@ -90,8 +82,8 @@ export default function NewTickets() {
 					/>
 					<Header />
 					{ticketElements}
-				</StyledTickets>
-			</StyledNewTickets>
+				</S.Tickets>
+			</S.NewTickets>
 		</>
 	);
 }
@@ -108,12 +100,12 @@ function Buttons({
 	disabledPreviewButton,
 }: ButtonProps) {
 	return (
-		<StyledNewTicketsButtons>
-			<StyledNewTicketsButtonBar>
+		<S.NewTicketsButtons>
+			<S.NewTicketsButtonBar>
 				<span>
 					{/*   TODO: should become a button with on-hover effect: start as green 
                      button with arrow, slide text into it on hover */}
-					<StyledNewTicketsButton
+					<S.NewTicketsButton
 						type="button"
 						value="Save tickets"
 						disabled={disabledPreviewButton}
@@ -121,7 +113,7 @@ function Buttons({
 					/>
 				</span>
 				<span>
-					<StyledNewTicketsButton
+					<S.NewTicketsButton
 						round
 						type="button"
 						onClick={(e) => handleAddClick(e, 3)}
@@ -129,14 +121,14 @@ function Buttons({
 						title="Add 3 rows"
 					/>
 					{/* TODO: this button is nonfuctional currently. */}
-					<StyledNewTicketsButton
+					<S.NewTicketsButton
 						round
 						type="button"
 						value="x"
 						title="Delete empty tickets"
 					/>
 				</span>
-			</StyledNewTicketsButtonBar>
-		</StyledNewTicketsButtons>
+			</S.NewTicketsButtonBar>
+		</S.NewTicketsButtons>
 	);
 }
