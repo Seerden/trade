@@ -157,7 +157,7 @@ const NewTicket = ({
 						deleteTicket(ticketIndex);
 					}}
 				>
-					<BsX overflow={"visible"} />
+					<BsX />
 				</StyledNewTicketDeleteButton>
 			)}
 		</StyledNewTicket>
