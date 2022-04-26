@@ -13,9 +13,7 @@ import Header from "./sub/Header";
 import TicketSummary from "./TicketSummary";
 import { useNewTickets } from "./useNewTickets";
 
-/**
- * Form that allows for creation of new trade tickets.
- */
+/** Form that allows for creation of new trade tickets. */
 export default function NewTickets() {
 	const {
 		tickets,
@@ -48,9 +46,9 @@ export default function NewTickets() {
 	return (
 		<>
 			<StyledNewTickets onSubmit={onSubmit}>
-				{/*   
-               Render TicketSummary inside the form, so that any submit buttons 
-               in there trigger this form's onSubmit handler */}
+				{/* Render TicketSummary inside the form, so that any submit buttons in 
+                there trigger this form's onSubmit handler. An alternative would be 
+                to give the form an id `formId`, and use form={formId} */}
 				{showSummary && validTickets?.length > 0 && (
 					<TicketSummary
 						tickets={validTickets}
