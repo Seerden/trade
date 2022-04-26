@@ -10,6 +10,9 @@ export const colors = {
 	text: {
 		secondary: "#e3e3e3",
 	},
+	green: {
+		primary: "forestgreen",
+	},
 };
 
 export const size = {
