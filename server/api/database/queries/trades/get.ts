@@ -25,9 +25,7 @@ export type TradeWithTickets = {
 };
 export type TradesWithTickets = TradeWithTickets[];
 
-/**
- * Fetch all of a single user's trades.
- */
+/** Fetch all of a single user's trades. */
 export function getTradesByUser({ userId }: { userId: number }) {
 	API.query({
 		text: "select * from trades where user_id = $1",
@@ -36,7 +34,8 @@ export function getTradesByUser({ userId }: { userId: number }) {
 }
 
 /**
- * Get a user's latest trade, including all associated tickets for each of the provided `tickers`.
+ * Get a user's latest trade, including all associated tickets for each of the
+ * provided `tickers`.
  */
 export async function getLatestTradeByTickerWithTickets({
 	userId,
@@ -74,9 +73,7 @@ export async function getLatestTradeByTickerWithTickets({
 	}
 }
 
-/**
- * Get a user's trades for the given `ticker`, return the most recent trade.
- */
+/** Get a user's trades for the given `ticker`, return the most recent trade. */
 export async function getLatestTradeByTicker(ticker: string) {
 	const response = await API.query({
 		text: `
