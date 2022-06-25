@@ -12,7 +12,7 @@ dayjs.extend(timezone);
  * Note that the yf API expects a timestamp in seconds, whereas in JS we
  * typically work with milliseconds.
  */
-export function dateToTimestamp(date: DateDayjsOrString) {
+export function dateToTimestampSeconds(date: DateDayjsOrString) {
 	return dayjs(date).valueOf() / 1000;
 }
 

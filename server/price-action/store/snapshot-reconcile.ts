@@ -1,13 +1,14 @@
 /**
- * In development, databases might not always be in sync.
+ * In development, our local databases (spread across machines) might not always
+ * be in sync.
  *
- * Since we only update key/value pairs when fetching from a given instance, we
- * might end up with out-of-sync data between database and redis store. Take for
- * example the case where we use a database backup from one machine on another
- * machine. The redis store on the 'other machine' then doesn't know about the
- * newly changed data. To make sure we don't subsequently accidentally attempt
- * to fetch data we already have, we reconcile store state with database state
- * on startup.
+ * Since key/value pairs are instance-specific, we might end up with out-of-sync
+ * data between database (which we back up) and redis store (which is
+ * instance-specific). Take for example the case where we use a database backup
+ * from one machine on another machine. The redis store on the 'other machine'
+ * then doesn't know about the newly changed data. To make sure we don't
+ * subsequently accidentally attempt to fetch data we already have, we reconcile
+ * store state with database state on startup.
  *
  * The reconciliation can be implemented as follows (TODO: WIP):
  * - map existing timestamps (fetchExistingSnapshotTimestamps) to dates

@@ -26,7 +26,7 @@ export function getAllMarketDaysInPastTwoYears() {
 	return dates;
 }
 
-// Return true if the dateA occurs on a future day w.r.t dateB. So if dateA and
+// Return true if the dateA occurs on a future day as dateB. So if dateA and
 // dateB are different times on the same day, this returns false.
 export function isDayInFuture(
 	dateA: DateDayjsOrString | number,
@@ -38,6 +38,11 @@ export function isDayInFuture(
 	return dateAYMD.valueOf() > dateBYMD.valueOf();
 }
 
+/**
+ * Return true is dateA and dateB are YMD-formattable and dateA and dateB occur
+ * on the same calendar day.
+ */
 export function isSameDay(dateA: DateDayjsOrString, dateB: DateDayjsOrString) {
-	return formatYMD(dateA) === formatYMD(dateB);
+	const [formattedA, formattedB] = [formatYMD(dateA), formatYMD(dateB)];
+	return formattedA && formattedB && formattedA === formattedB;
 }

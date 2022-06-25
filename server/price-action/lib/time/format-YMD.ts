@@ -8,5 +8,5 @@ import { DateDayjsOrString } from "../../../types/date.types";
 export function formatYMD(date: DateDayjsOrString): Maybe<string> {
 	const formattedDate = dayjs(date).format("YYYY-MM-DD");
 
-	if (!(formattedDate === "Invalid Date")) return formattedDate;
+	if (formattedDate !== "Invalid Date") return formattedDate;
 }

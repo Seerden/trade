@@ -30,10 +30,10 @@ type InsertOptions = Pick<
 
 /**
  * Take an array of aggregate rows (presumably parsed from an aggregate fetch using
- * aggregateToPriceActionObjects, but could also be a manually constructed array),
+ * aggregateToPriceAction, but could also be a manually constructed array),
  * and save the rows to table price_action_<1m|1h|1d>
  */
-export async function insertAggregate<T>(
+async function insertAggregate<T>(
 	rowsForDatabase: T,
 	{ ticker, from, to, timespan }: InsertOptions
 ) {
