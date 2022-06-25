@@ -13,6 +13,8 @@ import { formatYMD } from "../lib/time/format-YMD";
  * @note we store each fetched range as `YYYY-MM-DD,YYYY-MM-DD`, which represents `start,end`
  * of the interval.
  *
+ * @todo Consider synchronizing with database on server startup.
+ *
  * @returns all values in the redis list that we pushed the just-fetched range to.
  */
 export async function storeFetchedDateRange({
