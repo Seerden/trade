@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { DateDayjsOrString } from "../../../../types/date.types";
+import { Datelike } from "../../../../types/date.types";
 import { fetchAggregateWithLimiter } from "../../../lib/polygon/requests/aggregate/fetch";
 import { fetchAndInsertAggregate } from "../../../lib/polygon/requests/aggregate/insert";
 import { unixMillis } from "../../../lib/time/date-manipulation";
@@ -13,7 +13,7 @@ export async function fetchMaxOneMinuteData({
 	to,
 }: {
 	ticker: string;
-	to?: DateDayjsOrString;
+	to?: Datelike;
 }) {
 	// eslint-disable-next-line prefer-const
 	let [start, end] = nMarketDayRange({ n: maxDaysPerQuery, end: to });
@@ -39,7 +39,7 @@ export async function fetchAndInsertMaxOneMinuteData({
 	to,
 }: {
 	ticker: string;
-	to?: DateDayjsOrString;
+	to?: Datelike;
 }) {
 	// eslint-disable-next-line prefer-const
 	let [start, end] = nMarketDayRange({ n: maxDaysPerQuery, end: to });

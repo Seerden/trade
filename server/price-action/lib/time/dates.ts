@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { DateDayjsOrString } from "../../../types/date.types";
+import { Datelike } from "../../../types/date.types";
 import { isHoliday, isWorkday } from "./check-date";
 import { formatYMD } from "./format-YMD";
 
@@ -29,8 +29,8 @@ export function getAllMarketDaysInPastTwoYears() {
 // Return true if the dateA occurs on a future day as dateB. So if dateA and
 // dateB are different times on the same day, this returns false.
 export function isDayInFuture(
-	dateA: DateDayjsOrString | number,
-	dateB: DateDayjsOrString | number
+	dateA: Datelike | number,
+	dateB: Datelike | number
 ) {
 	const dateAYMD = formatYMD(dayjs(dateA));
 	const dateBYMD = formatYMD(dayjs(dateB));
@@ -42,7 +42,7 @@ export function isDayInFuture(
  * Return true is dateA and dateB are YMD-formattable and dateA and dateB occur
  * on the same calendar day.
  */
-export function isSameDay(dateA: DateDayjsOrString, dateB: DateDayjsOrString) {
+export function isSameDay(dateA: Datelike, dateB: Datelike) {
 	const [formattedA, formattedB] = [formatYMD(dateA), formatYMD(dateB)];
 	return formattedA && formattedB && formattedA === formattedB;
 }

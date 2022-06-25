@@ -1,16 +1,16 @@
 import dayjs from "dayjs";
-import { DateDayjsOrString } from "../../../types/date.types";
+import { Datelike } from "../../../types/date.types";
 import { formatYMD } from "./format-YMD";
 import { marketHolidays } from "./market-holidays";
 
 /** Check if a date is a workday (workdays are Monday through Friday). */
-export function isWorkday(date: DateDayjsOrString) {
+export function isWorkday(date: Datelike) {
 	const dayOfWeek = dayjs(date).day();
 	return dayOfWeek > 0 && dayOfWeek < 6;
 }
 
 /** Check whether a date (date can be at any time throughout the day) is a market holiday. */
-export function isHoliday(date: DateDayjsOrString) {
+export function isHoliday(date: Datelike) {
 	return marketHolidays.includes(formatYMD(date));
 }
 
@@ -18,6 +18,6 @@ export function isHoliday(date: DateDayjsOrString) {
  * Check whether a date (`date` can be set to any time of day) is an active market
  * day. Returns `false` on weekends and market holidays.
  */
-export function isActiveMarketDay(date: DateDayjsOrString) {
+export function isActiveMarketDay(date: Datelike) {
 	return isWorkday(date) && !isHoliday(date);
 }

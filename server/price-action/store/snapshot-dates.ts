@@ -1,6 +1,6 @@
 import { captureMessage } from "@sentry/node";
 import { redisClient } from "../../store/redis-client";
-import { DateDayjsOrString } from "../../types/date.types";
+import { Datelike } from "../../types/date.types";
 import { formatYMD } from "../lib/time/format-YMD";
 
 const redisSnapshotDatesKey = "snapshot:dates";
@@ -14,7 +14,7 @@ async function getSnapshotDates() {
  * Redis: check if a snapshot was already saved (0: no, 1: yes) for the given
  * date.
  */
-async function isSavedSnapshotDate(date: DateDayjsOrString) {
+async function isSavedSnapshotDate(date: Datelike) {
 	return await redisClient.sismember(redisSnapshotDatesKey, formatYMD(date));
 }
 
@@ -23,12 +23,12 @@ async function isSavedSnapshotDate(date: DateDayjsOrString) {
  * @returns 0 if already included or not added for some reason, 1 if added
  * successfully.
  * */
-async function addSnapshotDate(date: DateDayjsOrString) {
+async function addSnapshotDate(date: Datelike) {
 	await redisClient.sadd(redisSnapshotDatesKey, formatYMD(date));
 }
 
 /** Bulk add dates to Redis cache at key `snapshot:dates`. */
-async function bulkAddSnapshotDates(dates: DateDayjsOrString[]) {
+async function bulkAddSnapshotDates(dates: Datelike[]) {
 	const ymdDates = dates.map((date) => formatYMD(date));
 
 	if (ymdDates.some((date) => !date)) {
@@ -55,7 +55,7 @@ async function bulkAddSnapshotDates(dates: DateDayjsOrString[]) {
  * Redis: remove a date from list of saved Polygon snapshot dates.
  * @returns 0 if date wasn't in the set, 1 if date was successfully removed.
  */
-async function removeSnapshotDate(date: DateDayjsOrString) {
+async function removeSnapshotDate(date: Datelike) {
 	await redisClient.srem(redisSnapshotDatesKey, formatYMD(date));
 }
 

@@ -2,7 +2,7 @@ import format from "pg-format";
 import { PriceActionRow } from "types/database.types";
 import { PriceAPI } from "../../../../../database/pools/apis";
 import { objectToArray } from "../../../../../helpers/object-to-array";
-import { DateDayjsOrString } from "../../../../../types/date.types";
+import { Datelike } from "../../../../../types/date.types";
 import { snapshotStore } from "../../../../store/snapshot-dates";
 import {
 	priceActionFields,
@@ -55,7 +55,7 @@ async function insertSnapshot(priceActionObjects: PriceActionRow[]) {
  * Fetch daily OHLCV snapshot for all tickers, convert the response to priceAction
  * rows, then insert these rows into our database.
  */
-export async function fetchAndInsertSnapshot(date: DateDayjsOrString) {
+export async function fetchAndInsertSnapshot(date: Datelike) {
 	// Check if snapshot was already fetched previously.
 	if (await snapshotStore.exists(date)) return;
 

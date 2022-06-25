@@ -5,7 +5,7 @@ import utc from "dayjs/plugin/utc";
 import format from "pg-format";
 import { PriceAPI } from "../../../database/pools/apis";
 import { PriceActionRow } from "../../../types/database.types";
-import { DateDayjsOrString } from "../../../types/date.types";
+import { Datelike } from "../../../types/date.types";
 import { isValidTimespan } from "../../../types/guards/is-valid-timespan";
 import { timespanToTableMap } from "../../lib/get-table-name";
 import { PermittedTimespan } from "../../lib/polygon/types/aggregate.types";
@@ -19,7 +19,7 @@ dayjs.extend(tz);
  * Convert a date to a timestamp corresponding to the market close of that day.
  * Doesn't account for non-trading days, but does recognize half-days.
  */
-export function dateToEODTimestamp(date: DateDayjsOrString) {
+export function dateToEODTimestamp(date: Datelike) {
 	const ymdDate = formatYMD(date);
 
 	const closeTime = isEarlyClose(date) ? "13:00" : "16:00";
@@ -32,7 +32,7 @@ export function dateToEODTimestamp(date: DateDayjsOrString) {
 
 /** Construct the query text for getDailyMostActive(). */
 function constructDailyMostActiveQuery(
-	date: DateDayjsOrString,
+	date: Datelike,
 	timespan: PermittedTimespan = "day",
 	tickerCount = 300
 ) {
@@ -60,7 +60,7 @@ export async function getDailyMostActive({
 	timespan = "day",
 	tickerCount = 300,
 }: {
-	date: DateDayjsOrString;
+	date: Datelike;
 	timespan?: PermittedTimespan;
 	tickerCount?: number;
 }) {

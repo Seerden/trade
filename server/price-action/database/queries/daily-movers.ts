@@ -1,6 +1,6 @@
 import format from "pg-format";
 import { PriceAPI } from "../../../database/pools/apis";
-import { DateDayjsOrString } from "../../../types/date.types";
+import { Datelike } from "../../../types/date.types";
 import { dateToEODTimestamp } from "./most-active";
 
 /**
@@ -8,7 +8,7 @@ import { dateToEODTimestamp } from "./most-active";
  * date.
  */
 function makeDailyMoversQuery(
-	date: DateDayjsOrString,
+	date: Datelike,
 	tickerCount = 300,
 	type: "gainers" | "losers" = "gainers"
 ) {

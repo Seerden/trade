@@ -1,15 +1,15 @@
 import format from "pg-format";
 import { PermittedTimespan } from "price-action/lib/polygon/types/aggregate.types";
 import { PriceAPI } from "../../../database/pools/apis";
-import { DateDayjsOrString } from "../../../types/date.types";
+import { Datelike } from "../../../types/date.types";
 import { timespanToTableMap } from "../../lib/get-table-name";
 import { unixMillis } from "../../lib/time/date-manipulation";
 
 type Options = {
 	timespan: PermittedTimespan;
 	tickers: string[];
-	from: DateDayjsOrString;
-	to: DateDayjsOrString;
+	from: Datelike;
+	to: Datelike;
 	limit?: string | number;
 };
 

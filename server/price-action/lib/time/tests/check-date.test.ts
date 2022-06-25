@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { DateDayjsOrString } from "../../../../types/date.types";
+import { Datelike } from "../../../../types/date.types";
 import { isActiveMarketDay, isWorkday } from "../check-date";
 
 /* dates given are friday, saturday, sunday */
@@ -7,7 +7,7 @@ let cases = [
 	["Dec 10, 2021", true],
 	["Dec 11, 2021", false],
 	["Jan 2, 2022", false],
-] as Array<[DateDayjsOrString, boolean]>;
+] as Array<[Datelike, boolean]>;
 
 describe("isWorkday", () => {
 	test.each(cases)("returns correct day of week", (date, expected) => {

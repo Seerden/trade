@@ -1,6 +1,6 @@
 import { captureMessage } from "@sentry/node";
 import dayjs from "dayjs";
-import { DateDayjsOrString } from "../../../types/date.types";
+import { Datelike } from "../../../types/date.types";
 import { isActiveMarketDay } from "./check-date";
 import { formatYMD } from "./format-YMD";
 
@@ -23,8 +23,8 @@ export function nMarketDayRange({
 	end,
 }: {
 	n: number;
-	start?: DateDayjsOrString;
-	end?: DateDayjsOrString;
+	start?: Datelike;
+	end?: Datelike;
 }): string[] | undefined {
 	if (n === 0) return;
 
@@ -53,10 +53,7 @@ export function nMarketDayRange({
 }
 
 /** Given a `start` and `end` date, list all market days in date interval [`start`, `end`]. */
-export function listMarketDaysInRange(
-	start: DateDayjsOrString,
-	end: DateDayjsOrString
-) {
+export function listMarketDaysInRange(start: Datelike, end: Datelike) {
 	if (dayjs(formatYMD(end)).valueOf() <= dayjs(formatYMD(start)).valueOf()) {
 		captureMessage("listMarketDaysInRange: provided end <= start.");
 		return;

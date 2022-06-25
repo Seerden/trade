@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { DateDayjsOrString } from "../../../types/date.types";
+import { Datelike } from "../../../types/date.types";
 import { formatYMD } from "./format-YMD";
 
 /* Market holidays calendar: https://www.nyse.com/markets/hours-calendars
@@ -29,6 +29,6 @@ export const halfDays =
 		" "
 	);
 
-export function isEarlyClose(date: DateDayjsOrString) {
+export function isEarlyClose(date: Datelike) {
 	return halfDays.includes(formatYMD(date));
 }

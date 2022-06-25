@@ -1,9 +1,9 @@
-import { DateDayjsOrString } from "../../../../types/date.types";
+import { Datelike } from "../../../../types/date.types";
 import { SnapshotResults } from "./results.types";
 
 export type OHLCFetchOptions = {
 	adjusted?: boolean;
-	date: DateDayjsOrString;
+	date: Datelike;
 };
 
 /** @see https://polygon.io/docs/stocks/get_v2_aggs_grouped_locale_us_market_stocks__date */

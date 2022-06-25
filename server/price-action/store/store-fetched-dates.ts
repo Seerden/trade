@@ -1,5 +1,5 @@
 import { redisClient } from "../../store/redis-client";
-import type { DateDayjsOrString } from "../../types/date.types";
+import type { Datelike } from "../../types/date.types";
 import type { Timescale } from "../../types/store.types";
 import { formatYMD } from "../lib/time/format-YMD";
 
@@ -25,8 +25,8 @@ export async function storeFetchedDateRange({
 }: {
 	ticker: string;
 	timescale: Timescale;
-	start: DateDayjsOrString;
-	end: DateDayjsOrString;
+	start: Datelike;
+	end: Datelike;
 }) {
 	const [startString, endString] = [start, end].map((date) => formatYMD(date));
 

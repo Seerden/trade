@@ -1,4 +1,4 @@
-import { DateDayjsOrString } from "../../../../types/date.types";
+import { Datelike } from "../../../../types/date.types";
 import { PolygonAggregateResults } from "./results.types";
 
 /** @note We'll probably only be using 'minute', 'hour' and 'day'. */
@@ -22,9 +22,9 @@ export type PolygonAggregateOptions = {
 	/** The size of the time window. */
 	timespan: PermittedTimespan;
 	/** The start of the aggregate time window. */
-	from: DateDayjsOrString;
+	from: Datelike;
 	/** The end of the aggregate time window. */
-	to: DateDayjsOrString;
+	to: Datelike;
 	/** Whether or not the results are adjusted for splits. By default, results are adjusted. Set this to false to get results that are NOT adjusted for splits.  */
 	adjusted?: boolean;
 	/** Sort the results by timestamp. asc will return results in ascending order (oldest at the top), desc will return results in descending order (newest at the top). */
