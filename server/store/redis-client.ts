@@ -6,6 +6,10 @@ import Redis from "ioredis";
 export const redisClient = new Redis("redis://store:6379");
 export const RedisStore = connectRedis(session);
 
+/**
+ * Initialize a Redis session for use with express-session.
+ * @usage Will be used in index.ts `as app.use(session(redisSession))`.
+ */
 export const redisSession: session.SessionOptions = {
 	store: new RedisStore({ client: redisClient }),
 	saveUninitialized: false,
@@ -17,6 +21,10 @@ export const redisSession: session.SessionOptions = {
 	},
 };
 
+/**
+ * Connect to redisClient if not connected yet.
+ * @todo Consider implementing retry functionality.
+ */
 export async function startRedis() {
 	try {
 		if ((await redisClient.ping()) !== "PONG") {
