@@ -1,12 +1,28 @@
 import { redisClient } from "../../store/redis-client";
 import { delay } from "../lib/wait";
 
+/**
+ * The purpose of the rateLimiter helper is to prevent making too many requests
+ * to the Polygon API. As it stands, we're on a free plan, meaning we can only
+ * make 5 requests per minute. This helper ensures that we don't exceed that
+ * limit as follows: when we make a request, we reset the expiry in our memory
+ * store to 60 seconds. When the counter reaches 5 (requests in the past
+ * minute), we wait 60 seconds before making the next request.
+ *
+ * @note This is a very crudely implemented solution. Instead of tracking how
+ * many requests we made in the past minute, we're just resetting the expiry
+ * after every request, meaning that if we make successive requests spaced by 59.999...
+ * seconds, the counter will only reset itself after it forces a 60 seconds wait
+ * after request #5.
+ */
+
 const requestCountKey = "request-count";
 
 async function getRequestCount() {
 	return await redisClient.get(requestCountKey);
 }
 
+/** Increment request count by one and reset expiry to 60 seconds hence. */
 async function incrementRequestCount() {
 	return await redisClient
 		.multi()
