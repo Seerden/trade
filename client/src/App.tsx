@@ -10,9 +10,10 @@ import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { Wrapper } from "./App.style";
-const NewTickets = lazy(
-	() => import("components/NewTicket/NewTickets/NewTickets")
+const NewTickets = lazy(() =>
+	import("components/NewTicket/NewTickets/NewTickets")
 );
+const Activity = lazy(() => import("components/Trades/Activity"));
 
 const App = () => {
 	useReconcileSession();
@@ -43,6 +44,15 @@ const App = () => {
 								<Suspense fallback={<></>}>
 									<Login />
 									<Register />
+								</Suspense>
+							}
+						/>
+
+						<Route
+							path="activity"
+							element={
+								<Suspense fallback={<></>}>
+									<Activity />
 								</Suspense>
 							}
 						/>
